@@ -1,0 +1,61 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "costql"
+dynamic = ["version"]
+description = "Price GraphQL queries before you run them: calibrate a live API into a static pricing pack, then quote any query offline."
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+authors = [{ name = "Shape Machine", email = "sean@shapemachine.com" }]
+keywords = ["graphql", "cost", "pricing", "metering", "query-cost", "rate-limiting"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Software Development :: Libraries",
+]
+dependencies = ["numpy>=1.24"]
+
+[project.optional-dependencies]
+build = ["requests>=2.31"]
+demo = ["strawberry-graphql", "uvicorn", "starlette", "httpx", "anthropic", "python-multipart"]
+dev = ["pytest>=8", "pytest-cov", "ruff", "requests>=2.31"]
+
+[project.urls]
+Homepage = "https://costql.com"
+Documentation = "https://costql.com/docs/quickstart"
+Repository = "https://github.com/shapemachine/costql"
+Changelog = "https://github.com/shapemachine/costql/blob/main/CHANGELOG.md"
+
+[project.scripts]
+costql = "costql.cli:main"
+
+[tool.hatch.version]
+path = "src/costql/_version.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/costql"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/costql", "README.md", "LICENSE", "CHANGELOG.md"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["live: requires a running demo server or public-internet API (opt in with --run-live)"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP"]
+ignore = ["E501", "E702", "E741"]  # repo style: compact statements, math-y names

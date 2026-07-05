@@ -1,0 +1,20 @@
+---
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import Playground from '../components/Playground.tsx';
+import '../styles/playground.css';
+---
+
+<StarlightPage
+  frontmatter={{
+    title: 'Playground',
+    tableOfContents: false,
+    pagefind: false,
+  }}
+>
+  <p>
+    Build a query on the left — click schema fields or type with autocomplete — and watch its
+    price on the right. Three real pricing packs to switch between; everything runs in your
+    browser against static files.
+  </p>
+  <Playground client:only="react" />
+</StarlightPage>

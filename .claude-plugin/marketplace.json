@@ -1,0 +1,11 @@
+{
+  "name": "costql",
+  "owner": { "name": "Shape Machine", "url": "https://shapemachine.com" },
+  "plugins": [
+    {
+      "name": "costql",
+      "source": ".",
+      "description": "Skills for costQL workflows: write an adapter for a new GraphQL API, build a pricing pack, and interpret/debug quote results."
+    }
+  ]
+}

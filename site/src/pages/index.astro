@@ -1,0 +1,281 @@
+---
+// costql.com — landing. Custom page; Starlight serves /docs/*, /playground has the live tool.
+const year = new Date().getFullYear();
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>costQL — price GraphQL queries before you run them</title>
+    <meta
+      name="description"
+      content="Calibrate a live GraphQL API into a static pricing pack, then quote any query offline — in Python or JavaScript. ~4% mean error on an API we don't own, from a 93-line adapter."
+    />
+    <link rel="icon" href="/favicon.svg" />
+    <script is:inline>
+      const t = localStorage.getItem('starlight-theme');
+      if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+    </script>
+  </head>
+  <body>
+    <nav>
+      <a class="brand" href="/">cost<span>QL</span></a>
+      <div class="links">
+        <a href="/docs/quickstart/">Docs</a>
+        <a href="/playground/">Playground</a>
+        <a href="https://github.com/shapemachine/costql">GitHub</a>
+      </div>
+    </nav>
+
+    <header>
+      <h1>Price GraphQL queries<br /><em>before</em> you run them.</h1>
+      <p class="sub">
+        costQL calibrates a live GraphQL API into a <strong>pricing pack</strong> — one
+        self-contained file — then quotes any query against it fully offline. No pricing
+        service, no per-request round-trip, no dollars: a safe billable ceiling in cost-units,
+        from a static file your app vendors like an asset.
+      </p>
+      <div class="installs">
+        <code>pip install costql</code>
+        <code>npm install costql</code>
+      </div>
+      <div class="ctas">
+        <a class="btn primary" href="/playground/">Try the playground</a>
+        <a class="btn" href="/docs/quickstart/">Quickstart →</a>
+      </div>
+    </header>
+
+    <section class="proof">
+      <div class="stat">
+        <div class="n">~4%</div>
+        <div class="d">
+          mean error pricing a <a href="/docs/results/rickmorty/">public API we don't own</a>,
+          from a 93-line adapter, quoted fully offline
+        </div>
+      </div>
+      <div class="stat">
+        <div class="n">5 / 5</div>
+        <div class="d">held-out queries where the billable ceiling was never under the real cost</div>
+      </div>
+      <div class="stat">
+        <div class="n">38.5×</div>
+        <div class="d">
+          real DB coalescing observed and priced by
+          <a href="/docs/results/northwind/">learned batch curves</a> at T3
+        </div>
+      </div>
+    </section>
+
+    <section class="how">
+      <h2>Build once. Quote anywhere, forever.</h2>
+      <div class="cols">
+        <div class="col">
+          <h3>1 · Adapt</h3>
+          <p>
+            Write a ~90-line adapter: where the API is, real IDs to query with, and clean
+            calibration shapes. Three worked examples ship in the repo.
+            <a href="/docs/adapters/">The adapter guide →</a>
+          </p>
+        </div>
+        <div class="col">
+          <h3>2 · Build</h3>
+          <p>
+            <code>costql build</code> introspects the endpoint, measures calibration queries,
+            fits per-resolver costs, and writes the pack — schema, rates, and authored fees in
+            one JSON file.
+          </p>
+        </div>
+        <div class="col">
+          <h3>3 · Quote</h3>
+          <p>
+            Load the pack in Python or JavaScript and price queries locally — the JS port is
+            conformance-tested to reproduce the Python engine exactly.
+            <a href="/docs/js/">How that's guaranteed →</a>
+          </p>
+        </div>
+      </div>
+      <pre><code>{`from costql import PricingPack
+
+pack = PricingPack.load("tmdb_t3.json")          # one static file
+quote = pack.quote('{ movie(id:"27205"){ cast(limit:8){ person{ name } } } }')
+
+quote["price"]        # 50.5  — safe billable ceiling (work-ms, never dollars)
+quote["typical_price"]# 36.4  — fair average estimate
+quote["confidence"]   # "high" — cyclic queries come back "low", flagged not billed`}</code></pre>
+    </section>
+
+    <section class="tiers">
+      <h2>One currency, three fidelities</h2>
+      <p class="tiers-lead">
+        costQL prices in <strong>work-ms</strong> — the summed real work a query causes. The
+        tiers aren't different products; they're how sharply your API's instrumentation lets
+        the same engine see.
+      </p>
+      <div class="tier-cards">
+        <div class="tier-card">
+          <div class="tier-tag t1">T1</div>
+          <h3>Any API. Today.</h3>
+          <p>
+            Black-box wall-clock. Works against any GraphQL endpoint you can send queries to —
+            zero server changes. This is where every API starts, at ~4% measured error.
+          </p>
+        </div>
+        <div class="tier-card">
+          <div class="tier-tag t2">T2</div>
+          <h3>Per-resolver work</h3>
+          <p>
+            Your server emits per-resolver timings; parallel work stops hiding inside elapsed
+            time. Under light sharing, T2 already matched T3 (11% vs 11%).
+          </p>
+        </div>
+        <div class="tier-card">
+          <div class="tier-tag t3">T3</div>
+          <h3>Sharing, observed</h3>
+          <p>
+            Loader keys and cache status: dedup counted exactly, batch curves learned, paid
+            hosts named. Where schemas share heavily, this is the difference between 315% and
+            12% error.
+          </p>
+        </div>
+      </div>
+      <p class="honesty">
+        <strong>Straight talk:</strong> the demo packs are T3 because we instrumented the demo
+        servers. Your first pack will be T1 — that's the designed starting point, and it
+        already gives you a safe ceiling. T2/T3 need your server to emit
+        <a href="/docs/instrumentation/">one trace extension</a>.
+        <a href="/docs/tiers/">The full tier story →</a>
+      </p>
+    </section>
+
+    <section class="closing">
+      <h2>Kick the tires in 60 seconds</h2>
+      <p>
+        The <a href="/playground/">playground</a> runs the real engine in your browser against
+        three committed packs — including a deliberately cyclic query so you can watch the
+        low-confidence flag do its job. Or go straight to the
+        <a href="/docs/quickstart/">quickstart</a> and build a pack against a live public API
+        with no keys.
+      </p>
+      <div class="ctas">
+        <a class="btn primary" href="/playground/">Open the playground</a>
+        <a class="btn" href="https://github.com/shapemachine/costql">Star on GitHub</a>
+      </div>
+    </section>
+
+    <footer>
+      <span>© {year} Shape Machine · Apache-2.0</span>
+      <span>
+        <a href="/docs/limitations/">Honest limitations</a> ·
+        <a href="/docs/evaluation/">How we measured</a> ·
+        <a href="/llms.txt">llms.txt</a>
+      </span>
+    </footer>
+  </body>
+</html>
+
+<style>
+  :root {
+    --paper: #f6f6f2; --panel: #ffffff; --ink: #17191f; --muted: #5c626e;
+    --hair: #e4e4de; --accent: #0c7c8c; --accent-ink: #ffffff;
+    --accent-soft: rgba(12, 124, 140, 0.1); --safe: #2e7d52; --flag: #a8710e; --ext: #6b47c4;
+    --mono: ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+    --sans: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #0e1015; --panel: #15181e; --ink: #e8eaef; --muted: #99a0ac;
+      --hair: #262a33; --accent: #3db2c2; --accent-ink: #0e1015;
+      --accent-soft: rgba(61, 178, 194, 0.12); --safe: #4caf7d; --flag: #d79b32; --ext: #9a7ce0;
+    }
+  }
+  :root[data-theme='light'] {
+    --paper: #f6f6f2; --panel: #ffffff; --ink: #17191f; --muted: #5c626e;
+    --hair: #e4e4de; --accent: #0c7c8c; --accent-ink: #ffffff;
+    --accent-soft: rgba(12, 124, 140, 0.1); --safe: #2e7d52; --flag: #a8710e; --ext: #6b47c4;
+  }
+  :root[data-theme='dark'] {
+    --paper: #0e1015; --panel: #15181e; --ink: #e8eaef; --muted: #99a0ac;
+    --hair: #262a33; --accent: #3db2c2; --accent-ink: #0e1015;
+    --accent-soft: rgba(61, 178, 194, 0.12); --safe: #4caf7d; --flag: #d79b32; --ext: #9a7ce0;
+  }
+
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: var(--paper); color: var(--ink); font-family: var(--sans);
+    line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  code { font-family: var(--mono); }
+
+  nav {
+    display: flex; justify-content: space-between; align-items: center;
+    max-width: 1060px; margin: 0 auto; padding: 1.1rem 1.5rem;
+  }
+  .brand { font-weight: 800; font-size: 1.15rem; color: var(--ink); letter-spacing: -0.01em; }
+  .brand span { color: var(--accent); }
+  .links { display: flex; gap: 1.3rem; font-size: 0.92rem; }
+  .links a { color: var(--muted); }
+  .links a:hover { color: var(--accent); text-decoration: none; }
+
+  header { max-width: 1060px; margin: 0 auto; padding: 4.5rem 1.5rem 3rem; text-align: center; }
+  h1 { font-size: clamp(2.1rem, 5.5vw, 3.4rem); line-height: 1.12; letter-spacing: -0.02em; }
+  h1 em { color: var(--accent); font-style: italic; }
+  .sub { max-width: 46rem; margin: 1.4rem auto 0; color: var(--muted); font-size: 1.08rem; }
+  .installs { display: flex; gap: 0.8rem; justify-content: center; margin-top: 1.8rem; flex-wrap: wrap; }
+  .installs code {
+    background: var(--panel); border: 1px solid var(--hair); border-radius: 8px;
+    padding: 0.55rem 1rem; font-size: 0.92rem;
+  }
+  .ctas { display: flex; gap: 0.8rem; justify-content: center; margin-top: 1.6rem; flex-wrap: wrap; }
+  .btn {
+    border: 1px solid var(--hair); border-radius: 8px; padding: 0.55rem 1.2rem;
+    font-size: 0.95rem; color: var(--ink); background: var(--panel);
+  }
+  .btn:hover { text-decoration: none; border-color: var(--accent); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 600; }
+
+  section { max-width: 1060px; margin: 0 auto; padding: 2.6rem 1.5rem; }
+  h2 { font-size: 1.7rem; letter-spacing: -0.01em; margin-bottom: 1rem; }
+
+  .proof { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+  .stat { background: var(--panel); border: 1px solid var(--hair); border-radius: 12px; padding: 1.3rem 1.4rem; }
+  .stat .n { font-size: 2.3rem; font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .stat .d { color: var(--muted); font-size: 0.92rem; margin-top: 0.3rem; }
+
+  .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.4rem; margin: 1.2rem 0 1.8rem; }
+  .col h3 { color: var(--accent); font-size: 1rem; margin-bottom: 0.4rem; }
+  .col p { color: var(--muted); font-size: 0.94rem; }
+  pre {
+    background: var(--panel); border: 1px solid var(--hair); border-radius: 12px;
+    padding: 1.2rem 1.4rem; overflow-x: auto; font-size: 0.86rem; line-height: 1.55;
+  }
+
+  .tiers-lead { color: var(--muted); max-width: 44rem; }
+  .tier-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1.4rem; }
+  .tier-card { background: var(--panel); border: 1px solid var(--hair); border-radius: 12px; padding: 1.3rem 1.4rem; }
+  .tier-card h3 { font-size: 1.05rem; margin: 0.6rem 0 0.4rem; }
+  .tier-card p { color: var(--muted); font-size: 0.9rem; }
+  .tier-tag {
+    display: inline-block; font-weight: 800; font-size: 0.8rem; border-radius: 6px;
+    padding: 0.15rem 0.55rem; color: white;
+  }
+  .t1 { background: var(--muted); }
+  .t2 { background: var(--flag); }
+  .t3 { background: var(--safe); }
+  .honesty {
+    margin-top: 1.6rem; background: var(--accent-soft); border-left: 3px solid var(--accent);
+    padding: 0.9rem 1.1rem; border-radius: 0 10px 10px 0; font-size: 0.95rem;
+  }
+
+  .closing { text-align: center; padding-bottom: 3.5rem; }
+  .closing p { max-width: 44rem; margin: 0 auto 1.4rem; color: var(--muted); }
+
+  footer {
+    border-top: 1px solid var(--hair); color: var(--muted); font-size: 0.84rem;
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;
+    max-width: 1060px; margin: 0 auto; padding: 1.4rem 1.5rem 2.2rem;
+  }
+</style>

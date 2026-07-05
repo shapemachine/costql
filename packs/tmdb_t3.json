@@ -1,0 +1,2393 @@
+{
+  "adjustments": {
+    "_comment": "costQL #6 hand-authored adjustments (cost-units, NEVER dollars). Auto-generated; edit the added_unit_cost values, survives rebuild.",
+    "adjustments": {
+      "Movie.aiSummary": {
+        "added_unit_cost": 0.0,
+        "downstream_host": "api.anthropic.com",
+        "note": "seller sets per-call fee in cost-units; counted once per deduped call",
+        "reason": "paid external call"
+      }
+    },
+    "schema_hash": "26c786209ec27586"
+  },
+  "currency": "work_ms",
+  "introspection": {
+    "data": {
+      "__schema": {
+        "directives": [
+          {
+            "args": [
+              {
+                "defaultValue": null,
+                "description": "Included when true.",
+                "name": "if",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  }
+                }
+              }
+            ],
+            "description": "Directs the executor to include this field or fragment only when the `if` argument is true.",
+            "locations": [
+              "FIELD",
+              "FRAGMENT_SPREAD",
+              "INLINE_FRAGMENT"
+            ],
+            "name": "include"
+          },
+          {
+            "args": [
+              {
+                "defaultValue": null,
+                "description": "Skipped when true.",
+                "name": "if",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  }
+                }
+              }
+            ],
+            "description": "Directs the executor to skip this field or fragment when the `if` argument is true.",
+            "locations": [
+              "FIELD",
+              "FRAGMENT_SPREAD",
+              "INLINE_FRAGMENT"
+            ],
+            "name": "skip"
+          },
+          {
+            "args": [
+              {
+                "defaultValue": "\"No longer supported\"",
+                "description": "Explains why this element was deprecated, usually also including a suggestion for how to access supported similar data. Formatted using the Markdown syntax, as specified by [CommonMark](https://commonmark.org/).",
+                "name": "reason",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            ],
+            "description": "Marks an element of a GraphQL schema as no longer supported.",
+            "locations": [
+              "FIELD_DEFINITION",
+              "ARGUMENT_DEFINITION",
+              "INPUT_FIELD_DEFINITION",
+              "ENUM_VALUE",
+              "DIRECTIVE_DEFINITION"
+            ],
+            "name": "deprecated"
+          },
+          {
+            "args": [
+              {
+                "defaultValue": null,
+                "description": "The URL that specifies the behavior of this scalar.",
+                "name": "url",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                }
+              }
+            ],
+            "description": "Exposes a URL that specifies the behavior of this scalar.",
+            "locations": [
+              "SCALAR"
+            ],
+            "name": "specifiedBy"
+          },
+          {
+            "args": [],
+            "description": "Indicates an Input Object is a OneOf Input Object.",
+            "locations": [
+              "INPUT_OBJECT"
+            ],
+            "name": "oneOf"
+          }
+        ],
+        "mutationType": null,
+        "queryType": {
+          "kind": "OBJECT",
+          "name": "Query"
+        },
+        "subscriptionType": null,
+        "types": [
+          {
+            "description": null,
+            "enumValues": null,
+            "fields": [
+              {
+                "args": [
+                  {
+                    "defaultValue": null,
+                    "description": null,
+                    "name": "id",
+                    "type": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "ID",
+                        "ofType": null
+                      }
+                    }
+                  }
+                ],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "movie",
+                "type": {
+                  "kind": "OBJECT",
+                  "name": "Movie",
+                  "ofType": null
+                }
+              },
+              {
+                "args": [
+                  {
+                    "defaultValue": null,
+                    "description": null,
+                    "name": "id",
+                    "type": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "ID",
+                        "ofType": null
+                      }
+                    }
+                  }
+                ],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "person",
+                "type": {
+                  "kind": "OBJECT",
+                  "name": "Person",
+                  "ofType": null
+                }
+              },
+              {
+                "args": [
+                  {
+                    "defaultValue": null,
+                    "description": null,
+                    "name": "id",
+                    "type": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "ID",
+                        "ofType": null
+                      }
+                    }
+                  }
+                ],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "genre",
+                "type": {
+                  "kind": "OBJECT",
+                  "name": "Genre",
+                  "ofType": null
+                }
+              },
+              {
+                "args": [
+                  {
+                    "defaultValue": null,
+                    "description": null,
+                    "name": "query",
+                    "type": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "String",
+                        "ofType": null
+                      }
+                    }
+                  },
+                  {
+                    "defaultValue": "1",
+                    "description": null,
+                    "name": "page",
+                    "type": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Int",
+                        "ofType": null
+                      }
+                    }
+                  }
+                ],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "searchMovies",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "OBJECT",
+                        "name": "Movie",
+                        "ofType": null
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "args": [
+                  {
+                    "defaultValue": "DAY",
+                    "description": null,
+                    "name": "window",
+                    "type": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "ENUM",
+                        "name": "TimeWindow",
+                        "ofType": null
+                      }
+                    }
+                  },
+                  {
+                    "defaultValue": "1",
+                    "description": null,
+                    "name": "page",
+                    "type": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Int",
+                        "ofType": null
+                      }
+                    }
+                  }
+                ],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "trendingMovies",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "OBJECT",
+                        "name": "Movie",
+                        "ofType": null
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "args": [
+                  {
+                    "defaultValue": "null",
+                    "description": null,
+                    "name": "genre",
+                    "type": {
+                      "kind": "SCALAR",
+                      "name": "ID",
+                      "ofType": null
+                    }
+                  },
+                  {
+                    "defaultValue": "null",
+                    "description": null,
+                    "name": "year",
+                    "type": {
+                      "kind": "SCALAR",
+                      "name": "Int",
+                      "ofType": null
+                    }
+                  },
+                  {
+                    "defaultValue": "POPULARITY_DESC",
+                    "description": null,
+                    "name": "sortBy",
+                    "type": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "ENUM",
+                        "name": "MovieSort",
+                        "ofType": null
+                      }
+                    }
+                  },
+                  {
+                    "defaultValue": "1",
+                    "description": null,
+                    "name": "page",
+                    "type": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Int",
+                        "ofType": null
+                      }
+                    }
+                  }
+                ],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "discoverMovies",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "OBJECT",
+                        "name": "Movie",
+                        "ofType": null
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "inputFields": null,
+            "interfaces": [],
+            "kind": "OBJECT",
+            "name": "Query",
+            "possibleTypes": null
+          },
+          {
+            "description": null,
+            "enumValues": null,
+            "fields": [
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "id",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "ID",
+                    "ofType": null
+                  }
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "title",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "releaseYear",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "runtime",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "revenue",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Float",
+                  "ofType": null
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "voteAverage",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Float",
+                  "ofType": null
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "genres",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "OBJECT",
+                        "name": "Genre",
+                        "ofType": null
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "args": [
+                  {
+                    "defaultValue": "20",
+                    "description": null,
+                    "name": "limit",
+                    "type": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Int",
+                        "ofType": null
+                      }
+                    }
+                  }
+                ],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "cast",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "OBJECT",
+                        "name": "Credit",
+                        "ofType": null
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "args": [
+                  {
+                    "defaultValue": "20",
+                    "description": null,
+                    "name": "limit",
+                    "type": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Int",
+                        "ofType": null
+                      }
+                    }
+                  }
+                ],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "crew",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "OBJECT",
+                        "name": "Credit",
+                        "ofType": null
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "args": [
+                  {
+                    "defaultValue": "1",
+                    "description": null,
+                    "name": "page",
+                    "type": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Int",
+                        "ofType": null
+                      }
+                    }
+                  }
+                ],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "recommendations",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "OBJECT",
+                        "name": "Movie",
+                        "ofType": null
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "args": [
+                  {
+                    "defaultValue": "1",
+                    "description": null,
+                    "name": "page",
+                    "type": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Int",
+                        "ofType": null
+                      }
+                    }
+                  }
+                ],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "similar",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "OBJECT",
+                        "name": "Movie",
+                        "ofType": null
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "collection",
+                "type": {
+                  "kind": "OBJECT",
+                  "name": "Collection",
+                  "ofType": null
+                }
+              },
+              {
+                "args": [
+                  {
+                    "defaultValue": "20",
+                    "description": null,
+                    "name": "limit",
+                    "type": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Int",
+                        "ofType": null
+                      }
+                    }
+                  }
+                ],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "chemistryScore",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Float",
+                  "ofType": null
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "aiSummary",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            ],
+            "inputFields": null,
+            "interfaces": [],
+            "kind": "OBJECT",
+            "name": "Movie",
+            "possibleTypes": null
+          },
+          {
+            "description": "The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `\"4\"`) or integer (such as `4`) input value will be accepted as an ID.",
+            "enumValues": null,
+            "fields": null,
+            "inputFields": null,
+            "interfaces": null,
+            "kind": "SCALAR",
+            "name": "ID",
+            "possibleTypes": null
+          },
+          {
+            "description": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+            "enumValues": null,
+            "fields": null,
+            "inputFields": null,
+            "interfaces": null,
+            "kind": "SCALAR",
+            "name": "String",
+            "possibleTypes": null
+          },
+          {
+            "description": "The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.",
+            "enumValues": null,
+            "fields": null,
+            "inputFields": null,
+            "interfaces": null,
+            "kind": "SCALAR",
+            "name": "Int",
+            "possibleTypes": null
+          },
+          {
+            "description": "The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](https://en.wikipedia.org/wiki/IEEE_floating_point).",
+            "enumValues": null,
+            "fields": null,
+            "inputFields": null,
+            "interfaces": null,
+            "kind": "SCALAR",
+            "name": "Float",
+            "possibleTypes": null
+          },
+          {
+            "description": null,
+            "enumValues": null,
+            "fields": [
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "id",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "ID",
+                    "ofType": null
+                  }
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "name",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                }
+              },
+              {
+                "args": [
+                  {
+                    "defaultValue": "1",
+                    "description": null,
+                    "name": "page",
+                    "type": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Int",
+                        "ofType": null
+                      }
+                    }
+                  }
+                ],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "movies",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "OBJECT",
+                        "name": "Movie",
+                        "ofType": null
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "inputFields": null,
+            "interfaces": [],
+            "kind": "OBJECT",
+            "name": "Genre",
+            "possibleTypes": null
+          },
+          {
+            "description": null,
+            "enumValues": null,
+            "fields": [
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "character",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "job",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "department",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "order",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "movie",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "Movie",
+                    "ofType": null
+                  }
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "person",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "Person",
+                    "ofType": null
+                  }
+                }
+              }
+            ],
+            "inputFields": null,
+            "interfaces": [],
+            "kind": "OBJECT",
+            "name": "Credit",
+            "possibleTypes": null
+          },
+          {
+            "description": null,
+            "enumValues": null,
+            "fields": [
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "id",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "ID",
+                    "ofType": null
+                  }
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "name",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "knownForDepartment",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "popularity",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Float",
+                  "ofType": null
+                }
+              },
+              {
+                "args": [
+                  {
+                    "defaultValue": "20",
+                    "description": null,
+                    "name": "limit",
+                    "type": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Int",
+                        "ofType": null
+                      }
+                    }
+                  }
+                ],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "filmography",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "OBJECT",
+                        "name": "Credit",
+                        "ofType": null
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "knownFor",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "OBJECT",
+                        "name": "Movie",
+                        "ofType": null
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "inputFields": null,
+            "interfaces": [],
+            "kind": "OBJECT",
+            "name": "Person",
+            "possibleTypes": null
+          },
+          {
+            "description": null,
+            "enumValues": null,
+            "fields": [
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "id",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "ID",
+                    "ofType": null
+                  }
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "name",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "parts",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "OBJECT",
+                        "name": "Movie",
+                        "ofType": null
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "inputFields": null,
+            "interfaces": [],
+            "kind": "OBJECT",
+            "name": "Collection",
+            "possibleTypes": null
+          },
+          {
+            "description": null,
+            "enumValues": [
+              {
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "DAY"
+              },
+              {
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "WEEK"
+              }
+            ],
+            "fields": null,
+            "inputFields": null,
+            "interfaces": null,
+            "kind": "ENUM",
+            "name": "TimeWindow",
+            "possibleTypes": null
+          },
+          {
+            "description": null,
+            "enumValues": [
+              {
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "POPULARITY_DESC"
+              },
+              {
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "REVENUE_DESC"
+              },
+              {
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "RELEASE_DESC"
+              },
+              {
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "VOTE_DESC"
+              }
+            ],
+            "fields": null,
+            "inputFields": null,
+            "interfaces": null,
+            "kind": "ENUM",
+            "name": "MovieSort",
+            "possibleTypes": null
+          },
+          {
+            "description": "The `Boolean` scalar type represents `true` or `false`.",
+            "enumValues": null,
+            "fields": null,
+            "inputFields": null,
+            "interfaces": null,
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "possibleTypes": null
+          },
+          {
+            "description": "A GraphQL Schema defines the capabilities of a GraphQL server. It exposes all available types and directives on the server, as well as the entry points for query, mutation, and subscription operations.",
+            "enumValues": null,
+            "fields": [
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "description",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": "A list of all types supported by this server.",
+                "isDeprecated": false,
+                "name": "types",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "OBJECT",
+                        "name": "__Type",
+                        "ofType": null
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": "The type that query operations will be rooted at.",
+                "isDeprecated": false,
+                "name": "queryType",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "__Type",
+                    "ofType": null
+                  }
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": "If this server supports mutation, the type that mutation operations will be rooted at.",
+                "isDeprecated": false,
+                "name": "mutationType",
+                "type": {
+                  "kind": "OBJECT",
+                  "name": "__Type",
+                  "ofType": null
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": "If this server supports subscription, the type that subscription operations will be rooted at.",
+                "isDeprecated": false,
+                "name": "subscriptionType",
+                "type": {
+                  "kind": "OBJECT",
+                  "name": "__Type",
+                  "ofType": null
+                }
+              },
+              {
+                "args": [
+                  {
+                    "defaultValue": "false",
+                    "description": null,
+                    "name": "includeDeprecated",
+                    "type": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Boolean",
+                        "ofType": null
+                      }
+                    }
+                  }
+                ],
+                "deprecationReason": null,
+                "description": "A list of all directives supported by this server.",
+                "isDeprecated": false,
+                "name": "directives",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "OBJECT",
+                        "name": "__Directive",
+                        "ofType": null
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "inputFields": null,
+            "interfaces": [],
+            "kind": "OBJECT",
+            "name": "__Schema",
+            "possibleTypes": null
+          },
+          {
+            "description": "The fundamental unit of any GraphQL Schema is the type. There are many kinds of types in GraphQL as represented by the `__TypeKind` enum.\n\nDepending on the kind of a type, certain fields describe information about that type. Scalar types provide no information beyond a name, description and optional `specifiedByURL`, while Enum types provide their values. Object and Interface types provide the fields they describe. Abstract types, Union and Interface, provide the Object types possible at runtime. List and NonNull types compose other types.",
+            "enumValues": null,
+            "fields": [
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "kind",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "__TypeKind",
+                    "ofType": null
+                  }
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "name",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "description",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "specifiedByURL",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              {
+                "args": [
+                  {
+                    "defaultValue": "false",
+                    "description": null,
+                    "name": "includeDeprecated",
+                    "type": {
+                      "kind": "SCALAR",
+                      "name": "Boolean",
+                      "ofType": null
+                    }
+                  }
+                ],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "fields",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "__Field",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "interfaces",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "__Type",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "possibleTypes",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "__Type",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              {
+                "args": [
+                  {
+                    "defaultValue": "false",
+                    "description": null,
+                    "name": "includeDeprecated",
+                    "type": {
+                      "kind": "SCALAR",
+                      "name": "Boolean",
+                      "ofType": null
+                    }
+                  }
+                ],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "enumValues",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "__EnumValue",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              {
+                "args": [
+                  {
+                    "defaultValue": "false",
+                    "description": null,
+                    "name": "includeDeprecated",
+                    "type": {
+                      "kind": "SCALAR",
+                      "name": "Boolean",
+                      "ofType": null
+                    }
+                  }
+                ],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "inputFields",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "__InputValue",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "ofType",
+                "type": {
+                  "kind": "OBJECT",
+                  "name": "__Type",
+                  "ofType": null
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "isOneOf",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              }
+            ],
+            "inputFields": null,
+            "interfaces": [],
+            "kind": "OBJECT",
+            "name": "__Type",
+            "possibleTypes": null
+          },
+          {
+            "description": "An enum describing what kind of type a given `__Type` is.",
+            "enumValues": [
+              {
+                "deprecationReason": null,
+                "description": "Indicates this type is a scalar.",
+                "isDeprecated": false,
+                "name": "SCALAR"
+              },
+              {
+                "deprecationReason": null,
+                "description": "Indicates this type is an object. `fields` and `interfaces` are valid fields.",
+                "isDeprecated": false,
+                "name": "OBJECT"
+              },
+              {
+                "deprecationReason": null,
+                "description": "Indicates this type is an interface. `fields`, `interfaces`, and `possibleTypes` are valid fields.",
+                "isDeprecated": false,
+                "name": "INTERFACE"
+              },
+              {
+                "deprecationReason": null,
+                "description": "Indicates this type is a union. `possibleTypes` is a valid field.",
+                "isDeprecated": false,
+                "name": "UNION"
+              },
+              {
+                "deprecationReason": null,
+                "description": "Indicates this type is an enum. `enumValues` is a valid field.",
+                "isDeprecated": false,
+                "name": "ENUM"
+              },
+              {
+                "deprecationReason": null,
+                "description": "Indicates this type is an input object. `inputFields` is a valid field.",
+                "isDeprecated": false,
+                "name": "INPUT_OBJECT"
+              },
+              {
+                "deprecationReason": null,
+                "description": "Indicates this type is a list. `ofType` is a valid field.",
+                "isDeprecated": false,
+                "name": "LIST"
+              },
+              {
+                "deprecationReason": null,
+                "description": "Indicates this type is a non-null. `ofType` is a valid field.",
+                "isDeprecated": false,
+                "name": "NON_NULL"
+              }
+            ],
+            "fields": null,
+            "inputFields": null,
+            "interfaces": null,
+            "kind": "ENUM",
+            "name": "__TypeKind",
+            "possibleTypes": null
+          },
+          {
+            "description": "Object and Interface types are described by a list of Fields, each of which has a name, potentially a list of arguments, and a return type.",
+            "enumValues": null,
+            "fields": [
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "name",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "description",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              {
+                "args": [
+                  {
+                    "defaultValue": "false",
+                    "description": null,
+                    "name": "includeDeprecated",
+                    "type": {
+                      "kind": "SCALAR",
+                      "name": "Boolean",
+                      "ofType": null
+                    }
+                  }
+                ],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "args",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "OBJECT",
+                        "name": "__InputValue",
+                        "ofType": null
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "type",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "__Type",
+                    "ofType": null
+                  }
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "isDeprecated",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  }
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "deprecationReason",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            ],
+            "inputFields": null,
+            "interfaces": [],
+            "kind": "OBJECT",
+            "name": "__Field",
+            "possibleTypes": null
+          },
+          {
+            "description": "Arguments provided to Fields or Directives and the input fields of an InputObject are represented as Input Values which describe their type and optionally a default value.",
+            "enumValues": null,
+            "fields": [
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "name",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "description",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "type",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "__Type",
+                    "ofType": null
+                  }
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": "A GraphQL-formatted string representing the default value for this input value.",
+                "isDeprecated": false,
+                "name": "defaultValue",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "isDeprecated",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  }
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "deprecationReason",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            ],
+            "inputFields": null,
+            "interfaces": [],
+            "kind": "OBJECT",
+            "name": "__InputValue",
+            "possibleTypes": null
+          },
+          {
+            "description": "One possible value for a given Enum. Enum values are unique values, not a placeholder for a string or numeric value. However an Enum value is returned in a JSON response as a string.",
+            "enumValues": null,
+            "fields": [
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "name",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "description",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "isDeprecated",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  }
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "deprecationReason",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            ],
+            "inputFields": null,
+            "interfaces": [],
+            "kind": "OBJECT",
+            "name": "__EnumValue",
+            "possibleTypes": null
+          },
+          {
+            "description": "A Directive provides a way to describe alternate runtime execution and type validation behavior in a GraphQL document.\n\nIn some cases, you need to provide options to alter GraphQL's execution behavior in ways field arguments will not suffice, such as conditionally including or skipping a field. Directives provide this by describing additional information to the executor.",
+            "enumValues": null,
+            "fields": [
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "name",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "description",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "isRepeatable",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  }
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "locations",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "ENUM",
+                        "name": "__DirectiveLocation",
+                        "ofType": null
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "args": [
+                  {
+                    "defaultValue": "false",
+                    "description": null,
+                    "name": "includeDeprecated",
+                    "type": {
+                      "kind": "SCALAR",
+                      "name": "Boolean",
+                      "ofType": null
+                    }
+                  }
+                ],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "args",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "OBJECT",
+                        "name": "__InputValue",
+                        "ofType": null
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "isDeprecated",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  }
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "description": null,
+                "isDeprecated": false,
+                "name": "deprecationReason",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            ],
+            "inputFields": null,
+            "interfaces": [],
+            "kind": "OBJECT",
+            "name": "__Directive",
+            "possibleTypes": null
+          },
+          {
+            "description": "A Directive can be adjacent to many parts of the GraphQL language, a __DirectiveLocation describes one such possible adjacencies.",
+            "enumValues": [
+              {
+                "deprecationReason": null,
+                "description": "Location adjacent to a query operation.",
+                "isDeprecated": false,
+                "name": "QUERY"
+              },
+              {
+                "deprecationReason": null,
+                "description": "Location adjacent to a mutation operation.",
+                "isDeprecated": false,
+                "name": "MUTATION"
+              },
+              {
+                "deprecationReason": null,
+                "description": "Location adjacent to a subscription operation.",
+                "isDeprecated": false,
+                "name": "SUBSCRIPTION"
+              },
+              {
+                "deprecationReason": null,
+                "description": "Location adjacent to a field.",
+                "isDeprecated": false,
+                "name": "FIELD"
+              },
+              {
+                "deprecationReason": null,
+                "description": "Location adjacent to a fragment definition.",
+                "isDeprecated": false,
+                "name": "FRAGMENT_DEFINITION"
+              },
+              {
+                "deprecationReason": null,
+                "description": "Location adjacent to a fragment spread.",
+                "isDeprecated": false,
+                "name": "FRAGMENT_SPREAD"
+              },
+              {
+                "deprecationReason": null,
+                "description": "Location adjacent to an inline fragment.",
+                "isDeprecated": false,
+                "name": "INLINE_FRAGMENT"
+              },
+              {
+                "deprecationReason": null,
+                "description": "Location adjacent to a variable definition.",
+                "isDeprecated": false,
+                "name": "VARIABLE_DEFINITION"
+              },
+              {
+                "deprecationReason": null,
+                "description": "Location adjacent to a schema definition.",
+                "isDeprecated": false,
+                "name": "SCHEMA"
+              },
+              {
+                "deprecationReason": null,
+                "description": "Location adjacent to a scalar definition.",
+                "isDeprecated": false,
+                "name": "SCALAR"
+              },
+              {
+                "deprecationReason": null,
+                "description": "Location adjacent to an object type definition.",
+                "isDeprecated": false,
+                "name": "OBJECT"
+              },
+              {
+                "deprecationReason": null,
+                "description": "Location adjacent to a field definition.",
+                "isDeprecated": false,
+                "name": "FIELD_DEFINITION"
+              },
+              {
+                "deprecationReason": null,
+                "description": "Location adjacent to an argument definition.",
+                "isDeprecated": false,
+                "name": "ARGUMENT_DEFINITION"
+              },
+              {
+                "deprecationReason": null,
+                "description": "Location adjacent to an interface definition.",
+                "isDeprecated": false,
+                "name": "INTERFACE"
+              },
+              {
+                "deprecationReason": null,
+                "description": "Location adjacent to a union definition.",
+                "isDeprecated": false,
+                "name": "UNION"
+              },
+              {
+                "deprecationReason": null,
+                "description": "Location adjacent to an enum definition.",
+                "isDeprecated": false,
+                "name": "ENUM"
+              },
+              {
+                "deprecationReason": null,
+                "description": "Location adjacent to an enum value definition.",
+                "isDeprecated": false,
+                "name": "ENUM_VALUE"
+              },
+              {
+                "deprecationReason": null,
+                "description": "Location adjacent to an input object type definition.",
+                "isDeprecated": false,
+                "name": "INPUT_OBJECT"
+              },
+              {
+                "deprecationReason": null,
+                "description": "Location adjacent to an input object field definition.",
+                "isDeprecated": false,
+                "name": "INPUT_FIELD_DEFINITION"
+              },
+              {
+                "deprecationReason": null,
+                "description": "Location adjacent to a directive definition.",
+                "isDeprecated": false,
+                "name": "DIRECTIVE_DEFINITION"
+              }
+            ],
+            "fields": null,
+            "inputFields": null,
+            "interfaces": null,
+            "kind": "ENUM",
+            "name": "__DirectiveLocation",
+            "possibleTypes": null
+          }
+        ]
+      }
+    },
+    "extensions": {
+      "cost_trace": {
+        "invocations": {},
+        "loaders": {},
+        "resolver_work_ms": {},
+        "sql": [],
+        "work_ms": 0.0
+      }
+    }
+  },
+  "model": {
+    "batch_groups": {
+      "Credit.movie": "/movie/{id}",
+      "Credit.person": "/person/{id}",
+      "Genre.movies": "/discover/movie",
+      "Movie.cast": "/movie/{id}/credits",
+      "Movie.recommendations": "/movie/{id}/recommendations",
+      "Movie.similar": "/movie/{id}/similar",
+      "Person.filmography": "/person/{id}/movie_credits",
+      "Query.searchMovies": "/search/movie",
+      "Query.trendingMovies": "/trending/movie/{window}"
+    },
+    "cost_currency": "work_ms",
+    "default_cap": 20,
+    "loader_fns": {
+      "/discover/movie": {
+        "base": 32.70785,
+        "cap": 1,
+        "kind": "const",
+        "points": [
+          [
+            1,
+            32.70784999999999
+          ]
+        ],
+        "root": "/discover/movie",
+        "safety": 1.0,
+        "slope": 0.0,
+        "typical": 1
+      },
+      "/movie/{id}": {
+        "base": 34.05005,
+        "cap": 1,
+        "kind": "const",
+        "points": [
+          [
+            1,
+            34.05005
+          ]
+        ],
+        "root": "/movie/{id}",
+        "safety": 1.0,
+        "slope": 0.0,
+        "typical": 1
+      },
+      "/movie/{id}/credits": {
+        "base": 38.63315,
+        "cap": 1,
+        "kind": "const",
+        "points": [
+          [
+            1,
+            38.63315
+          ]
+        ],
+        "root": "/movie/{id}/credits",
+        "safety": 1.0,
+        "slope": 0.0,
+        "typical": 1
+      },
+      "/movie/{id}/recommendations": {
+        "base": 33.67585,
+        "cap": 1,
+        "kind": "const",
+        "points": [
+          [
+            1,
+            33.67585
+          ]
+        ],
+        "root": "/movie/{id}/recommendations",
+        "safety": 1.0,
+        "slope": 0.0,
+        "typical": 1
+      },
+      "/movie/{id}/similar": {
+        "base": 32.1597,
+        "cap": 1,
+        "kind": "const",
+        "points": [
+          [
+            1,
+            32.1597
+          ]
+        ],
+        "root": "/movie/{id}/similar",
+        "safety": 1.0,
+        "slope": 0.0,
+        "typical": 1
+      },
+      "/person/{id}": {
+        "base": 32.11225,
+        "cap": 1,
+        "kind": "const",
+        "points": [
+          [
+            1,
+            32.11225
+          ]
+        ],
+        "root": "/person/{id}",
+        "safety": 1.0,
+        "slope": 0.0,
+        "typical": 1
+      },
+      "/person/{id}/movie_credits": {
+        "base": 43.61415,
+        "cap": 1,
+        "kind": "const",
+        "points": [
+          [
+            1,
+            43.614149999999995
+          ]
+        ],
+        "root": "/person/{id}/movie_credits",
+        "safety": 1.0,
+        "slope": 0.0,
+        "typical": 1
+      },
+      "/search/movie": {
+        "base": 78.0451,
+        "cap": 1,
+        "kind": "const",
+        "points": [
+          [
+            1,
+            78.04509999999999
+          ]
+        ],
+        "root": "/search/movie",
+        "safety": 1.0,
+        "slope": 0.0,
+        "typical": 1
+      },
+      "/trending/movie/{window}": {
+        "base": 33.5593,
+        "cap": 1,
+        "kind": "const",
+        "points": [
+          [
+            1,
+            33.5593
+          ]
+        ],
+        "root": "/trending/movie/{window}",
+        "safety": 1.0,
+        "slope": 0.0,
+        "typical": 1
+      }
+    },
+    "max_size": {
+      "Credit.movie": 1,
+      "Credit.person": 1,
+      "Genre.movies": 20,
+      "Genre.name": 1,
+      "Movie.cast": 12,
+      "Movie.crew": 6,
+      "Movie.genres": 3,
+      "Movie.recommendations": 20,
+      "Movie.similar": 20,
+      "Movie.title": 1,
+      "Person.filmography": 20,
+      "Person.name": 1,
+      "Query.discoverMovies": 20,
+      "Query.genre": 1,
+      "Query.movie": 1,
+      "Query.person": 1,
+      "Query.searchMovies": 20,
+      "Query.trendingMovies": 20
+    },
+    "noise_buffer_ms": 0.0,
+    "safety": 1.3893,
+    "scan_before_paginate": [],
+    "schema_hash": "26c786209ec27586",
+    "typical_size": {
+      "Credit.movie": 1,
+      "Credit.person": 1,
+      "Genre.movies": 20,
+      "Genre.name": 1,
+      "Movie.cast": 9,
+      "Movie.crew": 6,
+      "Movie.genres": 2,
+      "Movie.recommendations": 20,
+      "Movie.similar": 20,
+      "Movie.title": 1,
+      "Person.filmography": 14,
+      "Person.name": 1,
+      "Query.discoverMovies": 20,
+      "Query.genre": 1,
+      "Query.movie": 1,
+      "Query.person": 1,
+      "Query.searchMovies": 20,
+      "Query.trendingMovies": 20
+    },
+    "uncovered_edges": [],
+    "unit_cost": {
+      "Credit.movie": 0.29370775719670605,
+      "Credit.person": 0.14114211127252585,
+      "Genre.movies": 0.008995289552841654,
+      "Movie.aiSummary": 1690.41,
+      "Movie.cast": 1.5016853329263278,
+      "Movie.crew": 1.1071773122101305,
+      "Movie.genres": 0.0,
+      "Movie.recommendations": 0.08963802000701113,
+      "Movie.similar": 0.0,
+      "Person.filmography": 0.016540116180840954,
+      "Query.discoverMovies": 30.496383627392483,
+      "Query.genre": 26.985868658474292,
+      "Query.movie": 29.679508936382984,
+      "Query.person": 49.62034854241967,
+      "Query.searchMovies": 30.719688228085182,
+      "Query.trendingMovies": 33.27618912841221,
+      "__doc_fields__": 1.263632089995824
+    }
+  },
+  "note": "Self-contained static pricing reference. Prices queries locally with no server/network/measurement. Cost-units only (never dollars) \u2014 the consuming app converts to money.",
+  "pack_version": 1,
+  "schema_hash": "26c786209ec27586",
+  "tier": "T3"
+}

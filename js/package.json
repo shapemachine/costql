@@ -1,0 +1,49 @@
+{
+  "name": "costql",
+  "version": "0.1.0",
+  "description": "Quote GraphQL query costs offline from a costQL pricing pack — the JS/TS consumer of packs built with the Python costql package.",
+  "keywords": [
+    "graphql",
+    "cost",
+    "pricing",
+    "metering",
+    "query-cost"
+  ],
+  "license": "Apache-2.0",
+  "homepage": "https://costql.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shapemachine/costql.git",
+    "directory": "js"
+  },
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --sourcemap --clean",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0",
+    "vitest": "^2.0.0"
+  }
+}

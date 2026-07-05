@@ -1,0 +1,59 @@
+{
+  "_comment": "The conformance corpus inputs: for each committed pack, queries spanning simple, fanout, size-declared, sharing-heavy, external-cost, and cyclic (low-confidence) shapes. scripts/export_conformance.py runs each through the Python engine and freezes the full contract results into quotes.json — the oracle for the Python golden tests AND the JS port's conformance suite.",
+  "packs/tmdb_t3.json": [
+    "{ movie(id:\"27205\"){ title } }",
+    "{ movie(id:\"27205\"){ title genres{ name } } }",
+    "{ movie(id:\"27205\"){ cast(limit:8){ person{ name } } } }",
+    "{ movie(id:\"27205\"){ crew(limit:6){ person{ name } } } }",
+    "{ person(id:\"6193\"){ name filmography{ movie{ title } } } }",
+    "{ person(id:\"6193\"){ filmography(limit:8){ movie{ title } } } }",
+    "{ genre(id:\"28\"){ name movies{ title } } }",
+    "{ searchMovies(query:\"star\"){ title } }",
+    "{ trendingMovies{ title } }",
+    "{ movie(id:\"27205\"){ recommendations{ title } } }",
+    "{ movie(id:\"27205\"){ aiSummary } }",
+    "{ movie(id:\"27205\"){ recommendations{ recommendations{ title } } } }",
+    "{ movie(id:\"27205\"){ similar{ similar{ title } } } }",
+    "{ person(id:\"500\"){ filmography{ movie{ recommendations{ title } } } } }",
+    "{ movie(id:\"27205\"){ title cast(limit:4){ person{ name filmography(limit:3){ movie{ title } } } } } }"
+  ],
+  "packs/rickmorty_t1.json": [
+    "{ character(id:\"1\"){ name status species gender } }",
+    "{ character(id:\"1\"){ name origin{ name dimension } location{ name } } }",
+    "{ character(id:\"1\"){ name episode{ name air_date } } }",
+    "{ episode(id:\"40\"){ name air_date episode characters{ name } } }",
+    "{ location(id:\"60\"){ name type dimension residents{ name } } }",
+    "{ characters { info { count } results { name status } } }",
+    "{ episodes { info { count } results { name } } }",
+    "{ character(id:\"1\"){ episode{ characters{ name } } } }",
+    "{ episode(id:\"40\"){ characters{ episode{ name } } } }",
+    "{ location(id:\"60\"){ residents{ location{ name } } } }"
+  ],
+  "packs/northwind_t1.json": [
+    "{ product(id:\"1\"){ name unitPrice category{ name } } }",
+    "{ order(id:\"15000\"){ orderDate details(first:15){ quantity product{ name } } } }",
+    "{ categories{ name description } }",
+    "{ orders(first:40){ orderDate shipCountry } }",
+    "{ orders(first:20){ details(first:15){ product{ category{ name } } } } }"
+  ],
+  "packs/northwind_t2.json": [
+    "{ product(id:\"1\"){ name unitPrice category{ name } } }",
+    "{ order(id:\"15000\"){ orderDate details(first:15){ quantity product{ name } } } }",
+    "{ categories{ name description } }",
+    "{ orders(first:40){ orderDate shipCountry } }",
+    "{ orders(first:20){ details(first:15){ product{ category{ name } } } } }"
+  ],
+  "packs/northwind_t3.json": [
+    "{ product(id:\"1\"){ name unitPrice category{ name description } } }",
+    "{ product(id:\"1\"){ supplier{ name country } } }",
+    "{ order(id:\"15000\"){ orderDate details(first:15){ quantity product{ name } } } }",
+    "{ order(id:\"15000\"){ customer{ name country } } }",
+    "{ category(id:\"1\"){ name products(first:15){ name } } }",
+    "{ customer(id:\"ALFKI\"){ name orders(first:15){ orderDate } } }",
+    "{ products(first:40){ name unitPrice } }",
+    "{ categories{ name description } }",
+    "{ orders(first:20){ details(first:15){ product{ category{ name } } } } }",
+    "{ orders(first:40){ details(first:15){ product{ name } } } }",
+    "{ products(first:40){ supplier{ country } } }"
+  ]
+}

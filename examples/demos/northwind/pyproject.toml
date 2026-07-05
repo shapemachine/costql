@@ -1,0 +1,11 @@
+[project]
+name = "northwind-demo"
+version = "0.1.0"
+description = "Northwind SQLite Passthrough — costQL heavy-sharing tier calibration demo"
+requires-python = ">=3.10"
+dependencies = [
+    "strawberry-graphql>=0.235",
+    "uvicorn>=0.30",
+    "starlette>=0.37",
+    "python-multipart>=0.0.9",
+]

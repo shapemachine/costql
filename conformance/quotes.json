@@ -1,0 +1,1443 @@
+{
+  "quotes": [
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 29.6795,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Query.movie"
+          }
+        ],
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 44.7449,
+        "query": "{ movie(id:\"27205\"){ title } }",
+        "schema_hash": "26c786209ec27586",
+        "tier": "T3",
+        "typical_price": 32.2068
+      },
+      "pack": "packs/tmdb_t3.json",
+      "query": "{ movie(id:\"27205\"){ title } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 29.6795,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Query.movie"
+          }
+        ],
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 48.256,
+        "query": "{ movie(id:\"27205\"){ title genres{ name } } }",
+        "schema_hash": "26c786209ec27586",
+        "tier": "T3",
+        "typical_price": 34.734
+      },
+      "pack": "packs/tmdb_t3.json",
+      "query": "{ movie(id:\"27205\"){ title genres{ name } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 29.6795,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Query.movie"
+          },
+          {
+            "cost": 1.5017,
+            "invocations": 1,
+            "list_size": 8,
+            "resolver_id": "Movie.cast"
+          },
+          {
+            "cost": 0.1411,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Credit.person"
+          }
+        ],
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 50.5384,
+        "query": "{ movie(id:\"27205\"){ cast(limit:8){ person{ name } } } }",
+        "schema_hash": "26c786209ec27586",
+        "sharing": [
+          {
+            "counted_once": true,
+            "folds": [
+              "Movie.cast"
+            ],
+            "loader": "/movie/{id}/credits"
+          },
+          {
+            "counted_once": true,
+            "folds": [
+              "Credit.person"
+            ],
+            "loader": "/person/{id}"
+          }
+        ],
+        "tier": "T3",
+        "typical_price": 36.3769
+      },
+      "pack": "packs/tmdb_t3.json",
+      "query": "{ movie(id:\"27205\"){ cast(limit:8){ person{ name } } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 29.6795,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Query.movie"
+          },
+          {
+            "cost": 1.1072,
+            "invocations": 1,
+            "list_size": 6,
+            "resolver_id": "Movie.crew"
+          },
+          {
+            "cost": 0.1411,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Credit.person"
+          }
+        ],
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 49.9903,
+        "query": "{ movie(id:\"27205\"){ crew(limit:6){ person{ name } } } }",
+        "schema_hash": "26c786209ec27586",
+        "sharing": [
+          {
+            "counted_once": true,
+            "folds": [
+              "Credit.person"
+            ],
+            "loader": "/person/{id}"
+          }
+        ],
+        "tier": "T3",
+        "typical_price": 35.9824
+      },
+      "pack": "packs/tmdb_t3.json",
+      "query": "{ movie(id:\"27205\"){ crew(limit:6){ person{ name } } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 49.6203,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Query.person"
+          },
+          {
+            "cost": 0.0165,
+            "invocations": 1,
+            "list_size": 20,
+            "resolver_id": "Person.filmography"
+          },
+          {
+            "cost": 0.2937,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Credit.movie"
+          }
+        ],
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 78.1464,
+        "query": "{ person(id:\"6193\"){ name filmography{ movie{ title } } } }",
+        "schema_hash": "26c786209ec27586",
+        "sharing": [
+          {
+            "counted_once": true,
+            "folds": [
+              "Credit.movie"
+            ],
+            "loader": "/movie/{id}"
+          },
+          {
+            "counted_once": true,
+            "folds": [
+              "Person.filmography"
+            ],
+            "loader": "/person/{id}/movie_credits"
+          }
+        ],
+        "tier": "T3",
+        "typical_price": 56.2488
+      },
+      "pack": "packs/tmdb_t3.json",
+      "query": "{ person(id:\"6193\"){ name filmography{ movie{ title } } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 49.6203,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Query.person"
+          },
+          {
+            "cost": 0.0165,
+            "invocations": 1,
+            "list_size": 8,
+            "resolver_id": "Person.filmography"
+          },
+          {
+            "cost": 0.2937,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Credit.movie"
+          }
+        ],
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 76.3908,
+        "query": "{ person(id:\"6193\"){ filmography(limit:8){ movie{ title } } } }",
+        "schema_hash": "26c786209ec27586",
+        "sharing": [
+          {
+            "counted_once": true,
+            "folds": [
+              "Credit.movie"
+            ],
+            "loader": "/movie/{id}"
+          },
+          {
+            "counted_once": true,
+            "folds": [
+              "Person.filmography"
+            ],
+            "loader": "/person/{id}/movie_credits"
+          }
+        ],
+        "tier": "T3",
+        "typical_price": 54.9851
+      },
+      "pack": "packs/tmdb_t3.json",
+      "query": "{ person(id:\"6193\"){ filmography(limit:8){ movie{ title } } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 26.9859,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Query.genre"
+          },
+          {
+            "cost": 0.009,
+            "invocations": 1,
+            "list_size": 20,
+            "resolver_id": "Genre.movies"
+          }
+        ],
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 44.5262,
+        "query": "{ genre(id:\"28\"){ name movies{ title } } }",
+        "schema_hash": "26c786209ec27586",
+        "sharing": [
+          {
+            "counted_once": true,
+            "folds": [
+              "Genre.movies"
+            ],
+            "loader": "/discover/movie"
+          }
+        ],
+        "tier": "T3",
+        "typical_price": 32.0494
+      },
+      "pack": "packs/tmdb_t3.json",
+      "query": "{ genre(id:\"28\"){ name movies{ title } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 30.7197,
+            "invocations": 1,
+            "list_size": 20,
+            "resolver_id": "Query.searchMovies"
+          }
+        ],
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 46.19,
+        "query": "{ searchMovies(query:\"star\"){ title } }",
+        "schema_hash": "26c786209ec27586",
+        "sharing": [
+          {
+            "counted_once": true,
+            "folds": [
+              "Query.searchMovies"
+            ],
+            "loader": "/search/movie"
+          }
+        ],
+        "tier": "T3",
+        "typical_price": 33.247
+      },
+      "pack": "packs/tmdb_t3.json",
+      "query": "{ searchMovies(query:\"star\"){ title } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 33.2762,
+            "invocations": 1,
+            "list_size": 20,
+            "resolver_id": "Query.trendingMovies"
+          }
+        ],
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 49.7417,
+        "query": "{ trendingMovies{ title } }",
+        "schema_hash": "26c786209ec27586",
+        "sharing": [
+          {
+            "counted_once": true,
+            "folds": [
+              "Query.trendingMovies"
+            ],
+            "loader": "/trending/movie/{window}"
+          }
+        ],
+        "tier": "T3",
+        "typical_price": 35.8035
+      },
+      "pack": "packs/tmdb_t3.json",
+      "query": "{ trendingMovies{ title } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 29.6795,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Query.movie"
+          },
+          {
+            "cost": 0.0896,
+            "invocations": 1,
+            "list_size": 20,
+            "resolver_id": "Movie.recommendations"
+          }
+        ],
+        "caveats": [
+          "cyclic recursion re-enters a type through a list edge at 2 path(s) (movie.recommendations, movie.recommendations.title); the static fanout counts the worst case, but the real backend dedups overlapping entities by an amount that only running the query reveals. Price is a structural upper bound, confidence downgraded; run it for the exact T3 cost."
+        ],
+        "confidence": "low",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 46.625,
+        "query": "{ movie(id:\"27205\"){ recommendations{ title } } }",
+        "schema_hash": "26c786209ec27586",
+        "sharing": [
+          {
+            "counted_once": true,
+            "folds": [
+              "Movie.recommendations"
+            ],
+            "loader": "/movie/{id}/recommendations"
+          }
+        ],
+        "tier": "T3",
+        "typical_price": 33.56
+      },
+      "pack": "packs/tmdb_t3.json",
+      "query": "{ movie(id:\"27205\"){ recommendations{ title } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 29.6795,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Query.movie"
+          },
+          {
+            "cost": 1690.41,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Movie.aiSummary"
+          }
+        ],
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "external_costs": [
+          {
+            "authored_fee": 0.0,
+            "host": "api.anthropic.com",
+            "measured_fee": false,
+            "resolver_id": "Movie.aiSummary"
+          }
+        ],
+        "price": 2393.2315,
+        "query": "{ movie(id:\"27205\"){ aiSummary } }",
+        "schema_hash": "26c786209ec27586",
+        "tier": "T3",
+        "typical_price": 1722.6168
+      },
+      "pack": "packs/tmdb_t3.json",
+      "query": "{ movie(id:\"27205\"){ aiSummary } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 29.6795,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Query.movie"
+          },
+          {
+            "cost": 0.0896,
+            "invocations": 1,
+            "list_size": 20,
+            "resolver_id": "Movie.recommendations"
+          }
+        ],
+        "caveats": [
+          "cyclic recursion re-enters a type through a list edge at 3 path(s) (movie.recommendations, movie.recommendations.recommendations, movie.recommendations.recommendations.title); the static fanout counts the worst case, but the real backend dedups overlapping entities by an amount that only running the query reveals. Price is a structural upper bound, confidence downgraded; run it for the exact T3 cost.",
+          "un-declared list sizes compound at 2 path(s) (movie.recommendations.recommendations, movie.recommendations.recommendations.title); how many items they yield and de-duplicate to is data-dependent, so the typical estimate can drift (the ceiling stays a safe upper bound). Declare sizes (pagination) for an exact quote, or run it."
+        ],
+        "confidence": "low",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 48.3805,
+        "query": "{ movie(id:\"27205\"){ recommendations{ recommendations{ title } } } }",
+        "schema_hash": "26c786209ec27586",
+        "sharing": [
+          {
+            "counted_once": true,
+            "folds": [
+              "Movie.recommendations"
+            ],
+            "loader": "/movie/{id}/recommendations"
+          }
+        ],
+        "tier": "T3",
+        "typical_price": 34.8237
+      },
+      "pack": "packs/tmdb_t3.json",
+      "query": "{ movie(id:\"27205\"){ recommendations{ recommendations{ title } } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 29.6795,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Query.movie"
+          }
+        ],
+        "caveats": [
+          "cyclic recursion re-enters a type through a list edge at 3 path(s) (movie.similar, movie.similar.similar, movie.similar.similar.title); the static fanout counts the worst case, but the real backend dedups overlapping entities by an amount that only running the query reveals. Price is a structural upper bound, confidence downgraded; run it for the exact T3 cost.",
+          "un-declared list sizes compound at 2 path(s) (movie.similar.similar, movie.similar.similar.title); how many items they yield and de-duplicate to is data-dependent, so the typical estimate can drift (the ceiling stays a safe upper bound). Declare sizes (pagination) for an exact quote, or run it."
+        ],
+        "confidence": "low",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 48.256,
+        "query": "{ movie(id:\"27205\"){ similar{ similar{ title } } } }",
+        "schema_hash": "26c786209ec27586",
+        "sharing": [
+          {
+            "counted_once": true,
+            "folds": [
+              "Movie.similar"
+            ],
+            "loader": "/movie/{id}/similar"
+          }
+        ],
+        "tier": "T3",
+        "typical_price": 34.734
+      },
+      "pack": "packs/tmdb_t3.json",
+      "query": "{ movie(id:\"27205\"){ similar{ similar{ title } } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 49.6203,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Query.person"
+          },
+          {
+            "cost": 0.0165,
+            "invocations": 1,
+            "list_size": 20,
+            "resolver_id": "Person.filmography"
+          },
+          {
+            "cost": 0.2937,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Credit.movie"
+          },
+          {
+            "cost": 0.0896,
+            "invocations": 1,
+            "list_size": 20,
+            "resolver_id": "Movie.recommendations"
+          }
+        ],
+        "caveats": [
+          "cyclic recursion re-enters a type through a list edge at 2 path(s) (person.filmography.movie.recommendations, person.filmography.movie.recommendations.title); the static fanout counts the worst case, but the real backend dedups overlapping entities by an amount that only running the query reveals. Price is a structural upper bound, confidence downgraded; run it for the exact T3 cost.",
+          "un-declared list sizes compound at 2 path(s) (person.filmography.movie.recommendations, person.filmography.movie.recommendations.title); how many items they yield and de-duplicate to is data-dependent, so the typical estimate can drift (the ceiling stays a safe upper bound). Declare sizes (pagination) for an exact quote, or run it."
+        ],
+        "confidence": "low",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 78.2709,
+        "query": "{ person(id:\"500\"){ filmography{ movie{ recommendations{ title } } } } }",
+        "schema_hash": "26c786209ec27586",
+        "sharing": [
+          {
+            "counted_once": true,
+            "folds": [
+              "Credit.movie"
+            ],
+            "loader": "/movie/{id}"
+          },
+          {
+            "counted_once": true,
+            "folds": [
+              "Movie.recommendations"
+            ],
+            "loader": "/movie/{id}/recommendations"
+          },
+          {
+            "counted_once": true,
+            "folds": [
+              "Person.filmography"
+            ],
+            "loader": "/person/{id}/movie_credits"
+          }
+        ],
+        "tier": "T3",
+        "typical_price": 56.3384
+      },
+      "pack": "packs/tmdb_t3.json",
+      "query": "{ person(id:\"500\"){ filmography{ movie{ recommendations{ title } } } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 29.6795,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Query.movie"
+          },
+          {
+            "cost": 1.5017,
+            "invocations": 1,
+            "list_size": 4,
+            "resolver_id": "Movie.cast"
+          },
+          {
+            "cost": 0.1411,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Credit.person"
+          },
+          {
+            "cost": 0.0165,
+            "invocations": 1,
+            "list_size": 3,
+            "resolver_id": "Person.filmography"
+          },
+          {
+            "cost": 0.2937,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Credit.movie"
+          }
+        ],
+        "caveats": [
+          "cyclic recursion re-enters a type through a list edge at 3 path(s) (movie.cast.person.filmography, movie.cast.person.filmography.movie, movie.cast.person.filmography.movie.title); the static fanout counts the worst case, but the real backend dedups overlapping entities by an amount that only running the query reveals. Price is a structural upper bound, confidence downgraded; run it for the exact T3 cost."
+        ],
+        "confidence": "low",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 57.9917,
+        "query": "{ movie(id:\"27205\"){ title cast(limit:4){ person{ name filmography(limit:3){ movie{ title } } } } } }",
+        "schema_hash": "26c786209ec27586",
+        "sharing": [
+          {
+            "counted_once": true,
+            "folds": [
+              "Credit.movie"
+            ],
+            "loader": "/movie/{id}"
+          },
+          {
+            "counted_once": true,
+            "folds": [
+              "Movie.cast"
+            ],
+            "loader": "/movie/{id}/credits"
+          },
+          {
+            "counted_once": true,
+            "folds": [
+              "Credit.person"
+            ],
+            "loader": "/person/{id}"
+          },
+          {
+            "counted_once": true,
+            "folds": [
+              "Person.filmography"
+            ],
+            "loader": "/person/{id}/movie_credits"
+          }
+        ],
+        "tier": "T3",
+        "typical_price": 41.7416
+      },
+      "pack": "packs/tmdb_t3.json",
+      "query": "{ movie(id:\"27205\"){ title cast(limit:4){ person{ name filmography(limit:3){ movie{ title } } } } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "wall_time_ms",
+        "price": 432.2919,
+        "query": "{ character(id:\"1\"){ name status species gender } }",
+        "schema_hash": "d0af9f9975b12932",
+        "tier": "T1",
+        "typical_price": 417.4716
+      },
+      "pack": "packs/rickmorty_t1.json",
+      "query": "{ character(id:\"1\"){ name status species gender } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "wall_time_ms",
+        "price": 432.2919,
+        "query": "{ character(id:\"1\"){ name origin{ name dimension } location{ name } } }",
+        "schema_hash": "d0af9f9975b12932",
+        "tier": "T1",
+        "typical_price": 417.4716
+      },
+      "pack": "packs/rickmorty_t1.json",
+      "query": "{ character(id:\"1\"){ name origin{ name dimension } location{ name } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "wall_time_ms",
+        "price": 432.2919,
+        "query": "{ character(id:\"1\"){ name episode{ name air_date } } }",
+        "schema_hash": "d0af9f9975b12932",
+        "tier": "T1",
+        "typical_price": 417.4716
+      },
+      "pack": "packs/rickmorty_t1.json",
+      "query": "{ character(id:\"1\"){ name episode{ name air_date } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "wall_time_ms",
+        "price": 431.2917,
+        "query": "{ episode(id:\"40\"){ name air_date episode characters{ name } } }",
+        "schema_hash": "d0af9f9975b12932",
+        "tier": "T1",
+        "typical_price": 416.5057
+      },
+      "pack": "packs/rickmorty_t1.json",
+      "query": "{ episode(id:\"40\"){ name air_date episode characters{ name } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "wall_time_ms",
+        "price": 436.4625,
+        "query": "{ location(id:\"60\"){ name type dimension residents{ name } } }",
+        "schema_hash": "d0af9f9975b12932",
+        "tier": "T1",
+        "typical_price": 421.4993
+      },
+      "pack": "packs/rickmorty_t1.json",
+      "query": "{ location(id:\"60\"){ name type dimension residents{ name } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "wall_time_ms",
+        "price": 421.6906,
+        "query": "{ characters { info { count } results { name status } } }",
+        "schema_hash": "d0af9f9975b12932",
+        "tier": "T1",
+        "typical_price": 407.2338
+      },
+      "pack": "packs/rickmorty_t1.json",
+      "query": "{ characters { info { count } results { name status } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "wall_time_ms",
+        "price": 419.9368,
+        "query": "{ episodes { info { count } results { name } } }",
+        "schema_hash": "d0af9f9975b12932",
+        "tier": "T1",
+        "typical_price": 405.5401
+      },
+      "pack": "packs/rickmorty_t1.json",
+      "query": "{ episodes { info { count } results { name } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "caveats": [
+          "cyclic recursion re-enters a type through a list edge at 2 path(s) (character.episode.characters, character.episode.characters.name); the static fanout counts the worst case, but the real backend dedups overlapping entities by an amount that only running the query reveals. Price is a structural upper bound, confidence downgraded; run it for the exact T3 cost.",
+          "un-declared list sizes compound at 2 path(s) (character.episode.characters, character.episode.characters.name); how many items they yield and de-duplicate to is data-dependent, so the typical estimate can drift (the ceiling stays a safe upper bound). Declare sizes (pagination) for an exact quote, or run it."
+        ],
+        "confidence": "low",
+        "contract_version": "1.0",
+        "currency": "wall_time_ms",
+        "price": 439.6214,
+        "query": "{ character(id:\"1\"){ episode{ characters{ name } } } }",
+        "schema_hash": "d0af9f9975b12932",
+        "tier": "T1",
+        "typical_price": 421.0801
+      },
+      "pack": "packs/rickmorty_t1.json",
+      "query": "{ character(id:\"1\"){ episode{ characters{ name } } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "caveats": [
+          "cyclic recursion re-enters a type through a list edge at 2 path(s) (episode.characters.episode, episode.characters.episode.name); the static fanout counts the worst case, but the real backend dedups overlapping entities by an amount that only running the query reveals. Price is a structural upper bound, confidence downgraded; run it for the exact T3 cost.",
+          "un-declared list sizes compound at 2 path(s) (episode.characters.episode, episode.characters.episode.name); how many items they yield and de-duplicate to is data-dependent, so the typical estimate can drift (the ceiling stays a safe upper bound). Declare sizes (pagination) for an exact quote, or run it."
+        ],
+        "confidence": "low",
+        "contract_version": "1.0",
+        "currency": "wall_time_ms",
+        "price": 431.2917,
+        "query": "{ episode(id:\"40\"){ characters{ episode{ name } } } }",
+        "schema_hash": "d0af9f9975b12932",
+        "tier": "T1",
+        "typical_price": 416.5057
+      },
+      "pack": "packs/rickmorty_t1.json",
+      "query": "{ episode(id:\"40\"){ characters{ episode{ name } } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "caveats": [
+          "cyclic recursion re-enters a type through a list edge at 2 path(s) (location.residents.location, location.residents.location.name); the static fanout counts the worst case, but the real backend dedups overlapping entities by an amount that only running the query reveals. Price is a structural upper bound, confidence downgraded; run it for the exact T3 cost."
+        ],
+        "confidence": "low",
+        "contract_version": "1.0",
+        "currency": "wall_time_ms",
+        "price": 436.4625,
+        "query": "{ location(id:\"60\"){ residents{ location{ name } } } }",
+        "schema_hash": "d0af9f9975b12932",
+        "tier": "T1",
+        "typical_price": 421.4993
+      },
+      "pack": "packs/rickmorty_t1.json",
+      "query": "{ location(id:\"60\"){ residents{ location{ name } } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "wall_time_ms",
+        "price": 2.6557,
+        "query": "{ product(id:\"1\"){ name unitPrice category{ name } } }",
+        "schema_hash": "53b4f8fc00490e61",
+        "tier": "T1",
+        "typical_price": 1.9839
+      },
+      "pack": "packs/northwind_t1.json",
+      "query": "{ product(id:\"1\"){ name unitPrice category{ name } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "wall_time_ms",
+        "price": 3.5451,
+        "query": "{ order(id:\"15000\"){ orderDate details(first:15){ quantity product{ name } } } }",
+        "schema_hash": "53b4f8fc00490e61",
+        "tier": "T1",
+        "typical_price": 2.6483
+      },
+      "pack": "packs/northwind_t1.json",
+      "query": "{ order(id:\"15000\"){ orderDate details(first:15){ quantity product{ name } } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "wall_time_ms",
+        "price": 2.1123,
+        "query": "{ categories{ name description } }",
+        "schema_hash": "53b4f8fc00490e61",
+        "tier": "T1",
+        "typical_price": 1.578
+      },
+      "pack": "packs/northwind_t1.json",
+      "query": "{ categories{ name description } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "wall_time_ms",
+        "price": 2.9509,
+        "query": "{ orders(first:40){ orderDate shipCountry } }",
+        "schema_hash": "53b4f8fc00490e61",
+        "tier": "T1",
+        "typical_price": 2.2045
+      },
+      "pack": "packs/northwind_t1.json",
+      "query": "{ orders(first:40){ orderDate shipCountry } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "wall_time_ms",
+        "price": 17.817,
+        "query": "{ orders(first:20){ details(first:15){ product{ category{ name } } } } }",
+        "schema_hash": "53b4f8fc00490e61",
+        "tier": "T1",
+        "typical_price": 13.3102
+      },
+      "pack": "packs/northwind_t1.json",
+      "query": "{ orders(first:20){ details(first:15){ product{ category{ name } } } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 0.0393,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Query.product"
+          }
+        ],
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 0.0849,
+        "query": "{ product(id:\"1\"){ name unitPrice category{ name } } }",
+        "schema_hash": "53b4f8fc00490e61",
+        "tier": "T2",
+        "typical_price": 0.0488
+      },
+      "pack": "packs/northwind_t2.json",
+      "query": "{ product(id:\"1\"){ name unitPrice category{ name } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 0.0767,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Query.order"
+          },
+          {
+            "cost": 0.0228,
+            "invocations": 1,
+            "list_size": 15,
+            "resolver_id": "Order.details"
+          },
+          {
+            "cost": 0.0228,
+            "invocations": 15,
+            "list_size": 1,
+            "resolver_id": "OrderDetail.product"
+          }
+        ],
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 0.2326,
+        "query": "{ order(id:\"15000\"){ orderDate details(first:15){ quantity product{ name } } } }",
+        "schema_hash": "53b4f8fc00490e61",
+        "tier": "T2",
+        "typical_price": 0.1336
+      },
+      "pack": "packs/northwind_t2.json",
+      "query": "{ order(id:\"15000\"){ orderDate details(first:15){ quantity product{ name } } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 0.0099,
+        "query": "{ categories{ name description } }",
+        "schema_hash": "53b4f8fc00490e61",
+        "tier": "T2",
+        "typical_price": 0.0057
+      },
+      "pack": "packs/northwind_t2.json",
+      "query": "{ categories{ name description } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 0.0099,
+        "query": "{ orders(first:40){ orderDate shipCountry } }",
+        "schema_hash": "53b4f8fc00490e61",
+        "tier": "T2",
+        "typical_price": 0.0057
+      },
+      "pack": "packs/northwind_t2.json",
+      "query": "{ orders(first:40){ orderDate shipCountry } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 0.4551,
+            "invocations": 20,
+            "list_size": 15,
+            "resolver_id": "Order.details"
+          },
+          {
+            "cost": 0.4551,
+            "invocations": 300,
+            "list_size": 1,
+            "resolver_id": "OrderDetail.product"
+          }
+        ],
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 1.6013,
+        "query": "{ orders(first:20){ details(first:15){ product{ category{ name } } } } }",
+        "schema_hash": "53b4f8fc00490e61",
+        "tier": "T2",
+        "typical_price": 0.9196
+      },
+      "pack": "packs/northwind_t2.json",
+      "query": "{ orders(first:20){ details(first:15){ product{ category{ name } } } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 0.0393,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Query.product"
+          }
+        ],
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 0.0806,
+        "query": "{ product(id:\"1\"){ name unitPrice category{ name description } } }",
+        "schema_hash": "53b4f8fc00490e61",
+        "sharing": [
+          {
+            "counted_once": true,
+            "folds": [
+              "Product.category"
+            ],
+            "loader": "categories"
+          }
+        ],
+        "tier": "T3",
+        "typical_price": 0.0507
+      },
+      "pack": "packs/northwind_t3.json",
+      "query": "{ product(id:\"1\"){ name unitPrice category{ name description } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 0.0393,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Query.product"
+          },
+          {
+            "cost": 0.0011,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Product.supplier"
+          }
+        ],
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 0.0763,
+        "query": "{ product(id:\"1\"){ supplier{ name country } } }",
+        "schema_hash": "53b4f8fc00490e61",
+        "sharing": [
+          {
+            "counted_once": true,
+            "folds": [
+              "Product.supplier"
+            ],
+            "loader": "suppliers"
+          }
+        ],
+        "tier": "T3",
+        "typical_price": 0.048
+      },
+      "pack": "packs/northwind_t3.json",
+      "query": "{ product(id:\"1\"){ supplier{ name country } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 0.0767,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Query.order"
+          },
+          {
+            "cost": 0.0228,
+            "invocations": 1,
+            "list_size": 15,
+            "resolver_id": "Order.details"
+          },
+          {
+            "cost": 0.034,
+            "invocations": 15,
+            "list_size": 1,
+            "resolver_id": "OrderDetail.product"
+          }
+        ],
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 0.2302,
+        "query": "{ order(id:\"15000\"){ orderDate details(first:15){ quantity product{ name } } } }",
+        "schema_hash": "53b4f8fc00490e61",
+        "sharing": [
+          {
+            "counted_once": true,
+            "folds": [
+              "Order.details"
+            ],
+            "loader": "order_details:byOrder"
+          },
+          {
+            "counted_once": true,
+            "folds": [
+              "OrderDetail.product"
+            ],
+            "loader": "products"
+          }
+        ],
+        "tier": "T3",
+        "typical_price": 0.1448
+      },
+      "pack": "packs/northwind_t3.json",
+      "query": "{ order(id:\"15000\"){ orderDate details(first:15){ quantity product{ name } } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 0.0767,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Query.order"
+          }
+        ],
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 0.134,
+        "query": "{ order(id:\"15000\"){ customer{ name country } } }",
+        "schema_hash": "53b4f8fc00490e61",
+        "sharing": [
+          {
+            "counted_once": true,
+            "folds": [
+              "Order.customer"
+            ],
+            "loader": "customers"
+          }
+        ],
+        "tier": "T3",
+        "typical_price": 0.0843
+      },
+      "pack": "packs/northwind_t3.json",
+      "query": "{ order(id:\"15000\"){ customer{ name country } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 0.057,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Query.category"
+          },
+          {
+            "cost": 0.0,
+            "invocations": 1,
+            "list_size": 12,
+            "resolver_id": "Category.products"
+          }
+        ],
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 0.1027,
+        "query": "{ category(id:\"1\"){ name products(first:15){ name } } }",
+        "schema_hash": "53b4f8fc00490e61",
+        "sharing": [
+          {
+            "counted_once": true,
+            "folds": [
+              "Category.products"
+            ],
+            "loader": "products:byCategory"
+          }
+        ],
+        "tier": "T3",
+        "typical_price": 0.0646
+      },
+      "pack": "packs/northwind_t3.json",
+      "query": "{ category(id:\"1\"){ name products(first:15){ name } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 1.4626,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Query.customer"
+          },
+          {
+            "cost": 0.0005,
+            "invocations": 1,
+            "list_size": 15,
+            "resolver_id": "Customer.orders"
+          }
+        ],
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 2.3382,
+        "query": "{ customer(id:\"ALFKI\"){ name orders(first:15){ orderDate } } }",
+        "schema_hash": "53b4f8fc00490e61",
+        "sharing": [
+          {
+            "counted_once": true,
+            "folds": [
+              "Customer.orders"
+            ],
+            "loader": "orders:byCustomer"
+          }
+        ],
+        "tier": "T3",
+        "typical_price": 1.4707
+      },
+      "pack": "packs/northwind_t3.json",
+      "query": "{ customer(id:\"ALFKI\"){ name orders(first:15){ orderDate } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 0.0091,
+        "query": "{ products(first:40){ name unitPrice } }",
+        "schema_hash": "53b4f8fc00490e61",
+        "tier": "T3",
+        "typical_price": 0.0057
+      },
+      "pack": "packs/northwind_t3.json",
+      "query": "{ products(first:40){ name unitPrice } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 0.0091,
+        "query": "{ categories{ name description } }",
+        "schema_hash": "53b4f8fc00490e61",
+        "tier": "T3",
+        "typical_price": 0.0057
+      },
+      "pack": "packs/northwind_t3.json",
+      "query": "{ categories{ name description } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 0.0793,
+            "invocations": 20,
+            "list_size": 15,
+            "resolver_id": "Order.details"
+          },
+          {
+            "cost": 0.1266,
+            "invocations": 55,
+            "list_size": 1,
+            "resolver_id": "OrderDetail.product"
+          },
+          {
+            "cost": 0.0321,
+            "invocations": 8,
+            "list_size": 1,
+            "resolver_id": "Product.category"
+          }
+        ],
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 0.3935,
+        "query": "{ orders(first:20){ details(first:15){ product{ category{ name } } } } }",
+        "schema_hash": "53b4f8fc00490e61",
+        "sharing": [
+          {
+            "counted_once": true,
+            "folds": [
+              "Product.category"
+            ],
+            "loader": "categories"
+          },
+          {
+            "counted_once": true,
+            "folds": [
+              "Order.details"
+            ],
+            "loader": "order_details:byOrder"
+          },
+          {
+            "counted_once": true,
+            "folds": [
+              "OrderDetail.product"
+            ],
+            "loader": "products"
+          }
+        ],
+        "tier": "T3",
+        "typical_price": 0.2475
+      },
+      "pack": "packs/northwind_t3.json",
+      "query": "{ orders(first:20){ details(first:15){ product{ category{ name } } } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 0.1388,
+            "invocations": 40,
+            "list_size": 15,
+            "resolver_id": "Order.details"
+          },
+          {
+            "cost": 0.1266,
+            "invocations": 55,
+            "list_size": 1,
+            "resolver_id": "OrderDetail.product"
+          }
+        ],
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 0.4341,
+        "query": "{ orders(first:40){ details(first:15){ product{ name } } } }",
+        "schema_hash": "53b4f8fc00490e61",
+        "sharing": [
+          {
+            "counted_once": true,
+            "folds": [
+              "Order.details"
+            ],
+            "loader": "order_details:byOrder"
+          },
+          {
+            "counted_once": true,
+            "folds": [
+              "OrderDetail.product"
+            ],
+            "loader": "products"
+          }
+        ],
+        "tier": "T3",
+        "typical_price": 0.273
+      },
+      "pack": "packs/northwind_t3.json",
+      "query": "{ orders(first:40){ details(first:15){ product{ name } } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 0.023,
+            "invocations": 19,
+            "list_size": 1,
+            "resolver_id": "Product.supplier"
+          }
+        ],
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 0.0457,
+        "query": "{ products(first:40){ supplier{ country } } }",
+        "schema_hash": "53b4f8fc00490e61",
+        "sharing": [
+          {
+            "counted_once": true,
+            "folds": [
+              "Product.supplier"
+            ],
+            "loader": "suppliers"
+          }
+        ],
+        "tier": "T3",
+        "typical_price": 0.0287
+      },
+      "pack": "packs/northwind_t3.json",
+      "query": "{ products(first:40){ supplier{ country } } }"
+    }
+  ],
+  "tolerance": {
+    "_comment": "JS port: numbers must match within max(absolute, relative*|expected|); all non-numeric fields must be deep-equal",
+    "absolute": 1e-06,
+    "relative": 1e-09
+  }
+}

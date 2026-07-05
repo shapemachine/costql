@@ -1,0 +1,38 @@
+/* costQL palette — carried over from the project's cost-report design system.
+   Accent teal + semantic safe/flag/external colors, light & dark. */
+
+:root {
+  --costql-accent: #0c7c8c;
+  --costql-safe: #2e7d52;
+  --costql-safe-soft: rgba(46, 125, 82, 0.12);
+  --costql-flag: #a8710e;
+  --costql-flag-soft: rgba(168, 113, 14, 0.13);
+  --costql-ext: #6b47c4;
+  --costql-ext-soft: rgba(107, 71, 196, 0.12);
+
+  /* Starlight light theme */
+  --sl-color-accent-low: rgba(12, 124, 140, 0.12);
+  --sl-color-accent: #0c7c8c;
+  --sl-color-accent-high: #085a66;
+}
+
+:root[data-theme='light'] {
+  --sl-color-bg: #f6f6f2;
+  --sl-color-bg-nav: #ffffff;
+  --sl-color-bg-sidebar: #f6f6f2;
+  --sl-color-hairline: #e4e4de;
+  --sl-color-text: #17191f;
+}
+
+:root[data-theme='dark'] {
+  --sl-color-accent-low: rgba(61, 178, 194, 0.15);
+  --sl-color-accent: #3db2c2;
+  --sl-color-accent-high: #7fd4df;
+  --sl-color-bg: #0e1015;
+  --sl-color-bg-nav: #15181e;
+  --sl-color-bg-sidebar: #0e1015;
+  --sl-color-hairline: #262a33;
+  --costql-safe: #4caf7d;
+  --costql-flag: #d79b32;
+  --costql-ext: #9a7ce0;
+}

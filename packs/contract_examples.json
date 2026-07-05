@@ -1,0 +1,535 @@
+{
+  "contract_version": "1.0",
+  "note": "Real per-tier examples against the TMDB demo, each validated against the frozen contract. Predicted = pre-execution quote; measured = post-execution receipt (same run downgraded per tier).",
+  "total_examples": 18,
+  "contract_violations": 0,
+  "examples": [
+    {
+      "label": "predictable: movie title + genres",
+      "basis": "predicted",
+      "tier": "T1",
+      "query": "{ movie(id:\"27205\"){ title genres{ name } } }",
+      "result": {
+        "contract_version": "1.0",
+        "tier": "T1",
+        "basis": "predicted",
+        "currency": "wall_time_ms",
+        "price": 44.8753,
+        "typical_price": 39.9994,
+        "confidence": "high",
+        "schema_hash": "26c786209ec27586",
+        "caveats": []
+      },
+      "violations": []
+    },
+    {
+      "label": "predictable: movie title + genres",
+      "basis": "predicted",
+      "tier": "T2",
+      "query": "{ movie(id:\"27205\"){ title genres{ name } } }",
+      "result": {
+        "contract_version": "1.0",
+        "tier": "T2",
+        "basis": "predicted",
+        "currency": "work_ms",
+        "price": 43.8242,
+        "typical_price": 34.9782,
+        "confidence": "high",
+        "schema_hash": "26c786209ec27586",
+        "caveats": [],
+        "breakdown": [
+          {
+            "resolver_id": "Query.movie",
+            "invocations": 1,
+            "list_size": 1,
+            "cost": 30.1528
+          }
+        ]
+      },
+      "violations": []
+    },
+    {
+      "label": "predictable: movie title + genres",
+      "basis": "predicted",
+      "tier": "T3",
+      "query": "{ movie(id:\"27205\"){ title genres{ name } } }",
+      "result": {
+        "contract_version": "1.0",
+        "tier": "T3",
+        "basis": "predicted",
+        "currency": "work_ms",
+        "price": 43.8242,
+        "typical_price": 34.9782,
+        "confidence": "high",
+        "schema_hash": "26c786209ec27586",
+        "caveats": [],
+        "breakdown": [
+          {
+            "resolver_id": "Query.movie",
+            "invocations": 1,
+            "list_size": 1,
+            "cost": 30.1528
+          }
+        ]
+      },
+      "violations": []
+    },
+    {
+      "label": "predictable: person filmography",
+      "basis": "predicted",
+      "tier": "T1",
+      "query": "{ person(id:\"6193\"){ filmography{ movie{ title } } } }",
+      "result": {
+        "contract_version": "1.0",
+        "tier": "T1",
+        "basis": "predicted",
+        "currency": "wall_time_ms",
+        "price": 57.2035,
+        "typical_price": 50.9395,
+        "confidence": "high",
+        "schema_hash": "26c786209ec27586",
+        "caveats": []
+      },
+      "violations": []
+    },
+    {
+      "label": "predictable: person filmography",
+      "basis": "predicted",
+      "tier": "T2",
+      "query": "{ person(id:\"6193\"){ filmography{ movie{ title } } } }",
+      "result": {
+        "contract_version": "1.0",
+        "tier": "T2",
+        "basis": "predicted",
+        "currency": "work_ms",
+        "price": 76.9713,
+        "typical_price": 59.8142,
+        "confidence": "high",
+        "schema_hash": "26c786209ec27586",
+        "caveats": [],
+        "breakdown": [
+          {
+            "resolver_id": "Query.person",
+            "invocations": 1,
+            "list_size": 1,
+            "cost": 51.191
+          },
+          {
+            "resolver_id": "Person.filmography",
+            "invocations": 1,
+            "list_size": 20,
+            "cost": 0.0171
+          },
+          {
+            "resolver_id": "Credit.movie",
+            "invocations": 20,
+            "list_size": 1,
+            "cost": 5.401
+          }
+        ]
+      },
+      "violations": []
+    },
+    {
+      "label": "predictable: person filmography",
+      "basis": "predicted",
+      "tier": "T3",
+      "query": "{ person(id:\"6193\"){ filmography{ movie{ title } } } }",
+      "result": {
+        "contract_version": "1.0",
+        "tier": "T3",
+        "basis": "predicted",
+        "currency": "work_ms",
+        "price": 70.5427,
+        "typical_price": 56.3035,
+        "confidence": "high",
+        "schema_hash": "26c786209ec27586",
+        "caveats": [],
+        "breakdown": [
+          {
+            "resolver_id": "Query.person",
+            "invocations": 1,
+            "list_size": 1,
+            "cost": 51.191
+          },
+          {
+            "resolver_id": "Person.filmography",
+            "invocations": 1,
+            "list_size": 20,
+            "cost": 0.0171
+          },
+          {
+            "resolver_id": "Credit.movie",
+            "invocations": 1,
+            "list_size": 1,
+            "cost": 0.27
+          }
+        ],
+        "sharing": [
+          {
+            "loader": "/movie/{id}",
+            "folds": [
+              "Credit.movie"
+            ],
+            "counted_once": true
+          },
+          {
+            "loader": "/person/{id}/movie_credits",
+            "folds": [
+              "Person.filmography"
+            ],
+            "counted_once": true
+          }
+        ]
+      },
+      "violations": []
+    },
+    {
+      "label": "cyclic (low-confidence): recs of recs",
+      "basis": "predicted",
+      "tier": "T1",
+      "query": "{ movie(id:\"27205\"){ recommendations{ recommendations{ title } } } }",
+      "result": {
+        "contract_version": "1.0",
+        "tier": "T1",
+        "basis": "predicted",
+        "currency": "wall_time_ms",
+        "price": 44.8753,
+        "typical_price": 39.9994,
+        "confidence": "low",
+        "schema_hash": "26c786209ec27586",
+        "caveats": [
+          "cyclic recursion re-enters a type through a list edge at 3 path(s) (movie.recommendations, movie.recommendations.recommendations, movie.recommendations.recommendations.title); the static fanout counts the worst case, but the real backend dedups overlapping entities by an amount that only running the query reveals. Price is a structural upper bound, confidence downgraded; run it for the exact T3 cost."
+        ]
+      },
+      "violations": []
+    },
+    {
+      "label": "cyclic (low-confidence): recs of recs",
+      "basis": "predicted",
+      "tier": "T2",
+      "query": "{ movie(id:\"27205\"){ recommendations{ recommendations{ title } } } }",
+      "result": {
+        "contract_version": "1.0",
+        "tier": "T2",
+        "basis": "predicted",
+        "currency": "work_ms",
+        "price": 43.8242,
+        "typical_price": 34.9782,
+        "confidence": "low",
+        "schema_hash": "26c786209ec27586",
+        "caveats": [
+          "cyclic recursion re-enters a type through a list edge at 3 path(s) (movie.recommendations, movie.recommendations.recommendations, movie.recommendations.recommendations.title); the static fanout counts the worst case, but the real backend dedups overlapping entities by an amount that only running the query reveals. Price is a structural upper bound, confidence downgraded; run it for the exact T3 cost."
+        ],
+        "breakdown": [
+          {
+            "resolver_id": "Query.movie",
+            "invocations": 1,
+            "list_size": 1,
+            "cost": 30.1528
+          }
+        ]
+      },
+      "violations": []
+    },
+    {
+      "label": "cyclic (low-confidence): recs of recs",
+      "basis": "predicted",
+      "tier": "T3",
+      "query": "{ movie(id:\"27205\"){ recommendations{ recommendations{ title } } } }",
+      "result": {
+        "contract_version": "1.0",
+        "tier": "T3",
+        "basis": "predicted",
+        "currency": "work_ms",
+        "price": 43.8242,
+        "typical_price": 34.9782,
+        "confidence": "low",
+        "schema_hash": "26c786209ec27586",
+        "caveats": [
+          "cyclic recursion re-enters a type through a list edge at 3 path(s) (movie.recommendations, movie.recommendations.recommendations, movie.recommendations.recommendations.title); the static fanout counts the worst case, but the real backend dedups overlapping entities by an amount that only running the query reveals. Price is a structural upper bound, confidence downgraded; run it for the exact T3 cost."
+        ],
+        "breakdown": [
+          {
+            "resolver_id": "Query.movie",
+            "invocations": 1,
+            "list_size": 1,
+            "cost": 30.1528
+          }
+        ],
+        "sharing": [
+          {
+            "loader": "/movie/{id}/recommendations",
+            "folds": [
+              "Movie.recommendations"
+            ],
+            "counted_once": true
+          }
+        ]
+      },
+      "violations": []
+    },
+    {
+      "label": "external/paid: movie aiSummary (predicted only \u2014 never runs)",
+      "basis": "predicted",
+      "tier": "T1",
+      "query": "{ movie(id:\"27205\"){ aiSummary } }",
+      "result": {
+        "contract_version": "1.0",
+        "tier": "T1",
+        "basis": "predicted",
+        "currency": "wall_time_ms",
+        "price": 44.3733,
+        "typical_price": 39.5519,
+        "confidence": "high",
+        "schema_hash": "26c786209ec27586",
+        "caveats": []
+      },
+      "violations": []
+    },
+    {
+      "label": "external/paid: movie aiSummary (predicted only \u2014 never runs)",
+      "basis": "predicted",
+      "tier": "T2",
+      "query": "{ movie(id:\"27205\"){ aiSummary } }",
+      "result": {
+        "contract_version": "1.0",
+        "tier": "T2",
+        "basis": "predicted",
+        "currency": "work_ms",
+        "price": 40.8013,
+        "typical_price": 32.5655,
+        "confidence": "high",
+        "schema_hash": "26c786209ec27586",
+        "caveats": [],
+        "breakdown": [
+          {
+            "resolver_id": "Query.movie",
+            "invocations": 1,
+            "list_size": 1,
+            "cost": 30.1528
+          }
+        ]
+      },
+      "violations": []
+    },
+    {
+      "label": "external/paid: movie aiSummary (predicted only \u2014 never runs)",
+      "basis": "predicted",
+      "tier": "T3",
+      "query": "{ movie(id:\"27205\"){ aiSummary } }",
+      "result": {
+        "contract_version": "1.0",
+        "tier": "T3",
+        "basis": "predicted",
+        "currency": "work_ms",
+        "price": 40.8013,
+        "typical_price": 32.5655,
+        "confidence": "high",
+        "schema_hash": "26c786209ec27586",
+        "caveats": [],
+        "breakdown": [
+          {
+            "resolver_id": "Query.movie",
+            "invocations": 1,
+            "list_size": 1,
+            "cost": 30.1528
+          }
+        ],
+        "external_costs": [
+          {
+            "resolver_id": "Movie.aiSummary",
+            "host": "api.anthropic.com",
+            "authored_fee": 0.0,
+            "measured_fee": false
+          }
+        ]
+      },
+      "violations": []
+    },
+    {
+      "label": "predictable: movie cast",
+      "basis": "measured",
+      "tier": "T3",
+      "query": "{ movie(id:\"27205\"){ cast(limit:8){ person{ name } } } }",
+      "result": {
+        "contract_version": "1.0",
+        "tier": "T3",
+        "basis": "measured",
+        "currency": "work_ms",
+        "price": 43.513,
+        "typical_price": 43.513,
+        "confidence": "exact",
+        "schema_hash": "26c786209ec27586",
+        "caveats": [],
+        "breakdown": [
+          {
+            "resolver_id": "Movie.cast",
+            "cost": 43.513,
+            "invocations": 1
+          },
+          {
+            "resolver_id": "Credit.person",
+            "cost": 0.0,
+            "invocations": 8
+          }
+        ],
+        "sharing": [
+          {
+            "loader": "/movie/{id}/credits",
+            "requested": 1,
+            "calls": 1,
+            "saved": 0,
+            "cache_hits": 0,
+            "external": false
+          },
+          {
+            "loader": "/person/{id}",
+            "requested": 8,
+            "calls": 0,
+            "saved": 8,
+            "cache_hits": 0,
+            "external": false
+          }
+        ]
+      },
+      "violations": []
+    },
+    {
+      "label": "predictable: movie cast",
+      "basis": "measured",
+      "tier": "T2",
+      "query": "{ movie(id:\"27205\"){ cast(limit:8){ person{ name } } } }",
+      "result": {
+        "contract_version": "1.0",
+        "tier": "T2",
+        "basis": "measured",
+        "currency": "work_ms",
+        "price": 43.513,
+        "typical_price": 43.513,
+        "confidence": "exact",
+        "schema_hash": "26c786209ec27586",
+        "caveats": [
+          "no per-resolver breakdown in trace -> T2 (request work total only); enable T3 tracing for the per-resolver split."
+        ]
+      },
+      "violations": []
+    },
+    {
+      "label": "predictable: movie cast",
+      "basis": "measured",
+      "tier": "T1",
+      "query": "{ movie(id:\"27205\"){ cast(limit:8){ person{ name } } } }",
+      "result": {
+        "contract_version": "1.0",
+        "tier": "T1",
+        "basis": "measured",
+        "currency": "wall_time_ms",
+        "price": 50.729,
+        "typical_price": 50.729,
+        "confidence": "exact",
+        "schema_hash": "26c786209ec27586",
+        "caveats": [
+          "no work-ms in trace -> T1 (wall-clock elapsed proxy); cost hidden by parallelism/batching is not decomposed."
+        ]
+      },
+      "violations": []
+    },
+    {
+      "label": "cyclic: genre hub",
+      "basis": "measured",
+      "tier": "T3",
+      "query": "{ movie(id:\"27205\"){ genres{ movies{ title } } } }",
+      "result": {
+        "contract_version": "1.0",
+        "tier": "T3",
+        "basis": "measured",
+        "currency": "work_ms",
+        "price": 140.2465,
+        "typical_price": 140.2465,
+        "confidence": "exact",
+        "schema_hash": "26c786209ec27586",
+        "caveats": [],
+        "breakdown": [
+          {
+            "resolver_id": "Genre.movies",
+            "cost": 108.472,
+            "invocations": 3
+          },
+          {
+            "resolver_id": "Movie.genres",
+            "cost": 31.7745,
+            "invocations": 4
+          }
+        ],
+        "sharing": [
+          {
+            "loader": "/discover/movie",
+            "requested": 3,
+            "calls": 3,
+            "saved": 0,
+            "cache_hits": 0,
+            "external": false
+          },
+          {
+            "loader": "/genre/movie/list",
+            "requested": 3,
+            "calls": 0,
+            "saved": 3,
+            "cache_hits": 0,
+            "external": false
+          },
+          {
+            "loader": "/movie/{id}",
+            "requested": 1,
+            "calls": 1,
+            "saved": 0,
+            "cache_hits": 0,
+            "external": false
+          }
+        ]
+      },
+      "violations": []
+    },
+    {
+      "label": "cyclic: genre hub",
+      "basis": "measured",
+      "tier": "T2",
+      "query": "{ movie(id:\"27205\"){ genres{ movies{ title } } } }",
+      "result": {
+        "contract_version": "1.0",
+        "tier": "T2",
+        "basis": "measured",
+        "currency": "work_ms",
+        "price": 140.2465,
+        "typical_price": 140.2465,
+        "confidence": "exact",
+        "schema_hash": "26c786209ec27586",
+        "caveats": [
+          "no per-resolver breakdown in trace -> T2 (request work total only); enable T3 tracing for the per-resolver split."
+        ]
+      },
+      "violations": []
+    },
+    {
+      "label": "cyclic: genre hub",
+      "basis": "measured",
+      "tier": "T1",
+      "query": "{ movie(id:\"27205\"){ genres{ movies{ title } } } }",
+      "result": {
+        "contract_version": "1.0",
+        "tier": "T1",
+        "basis": "measured",
+        "currency": "wall_time_ms",
+        "price": 76.88,
+        "typical_price": 76.88,
+        "confidence": "exact",
+        "schema_hash": "26c786209ec27586",
+        "caveats": [
+          "no work-ms in trace -> T1 (wall-clock elapsed proxy); cost hidden by parallelism/batching is not decomposed."
+        ]
+      },
+      "violations": []
+    }
+  ]
+}
