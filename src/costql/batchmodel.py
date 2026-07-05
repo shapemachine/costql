@@ -2,7 +2,7 @@
 
 The flat fold (Pricer.price) charged a shared/batched loader "once" regardless of
 how many distinct rows the batch pulled, so it under-priced big batched reads (a
-300-row batch priced like a 3-row one — measured in NORTHWIND_RESULT.md). This
+300-row batch priced like a 3-row one: measured in NORTHWIND_RESULT.md). This
 fits, per loader, a DATA-DRIVEN curve `work_ms = f(distinct_batch_keys)` from the
 real calibration traces, so the folded cost tracks the batch's actual size.
 
@@ -15,7 +15,7 @@ both come out of the same `_fit_shape` (const/linear/log by residual, DECISIONS 
 
 `SizeFn.eval` already clamps its input at `cap`, so setting `cap` = the loader's
 observed max distinct-key count makes an 8-row hub table cap the batch at 8 for
-free — the "bounded by the hub entity's observed cardinality" rule.
+free: the "bounded by the hub entity's observed cardinality" rule.
 """
 from __future__ import annotations
 
@@ -45,7 +45,7 @@ def fit_loader_curves(samples: dict[str, list[tuple]]) -> dict[str, SizeFn]:
 
     Samples are BINNED by distinct-key count and reduced to the median work per
     size, so (a) many duplicate size-1 measurements don't flood the fit and (b)
-    per-call jitter is cancelled — one clean representative point per observed size,
+    per-call jitter is cancelled: one clean representative point per observed size,
     which is what a size sweep is meant to give (DECISIONS #1). `cap` = max observed
     distinct-key count (the loader's observed cardinality bound); `safety` makes the
     ceiling >= every binned point."""

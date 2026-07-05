@@ -1,12 +1,12 @@
-"""Phase 2 — sharing annotations from T3 adapter traces.
+"""Phase 2: sharing annotations from T3 adapter traces.
 
 Consumes per-operation cost traces (DataLoader batch/cache stats + SQL) captured
 by the CostTraceExtension, and builds a resolver dependency graph annotated with:
-  * batch groups   — resolvers whose backend work is served by one batched
+  * batch groups  : resolvers whose backend work is served by one batched
                      loader call (counted once, not per invocation);
-  * cache groups   — repeated keys served from the loader cache;
-  * dead loaders   — declared loaders never invoked;
-  * un-batched work — repository calls (SQL IN(...)) with no DataLoader,
+  * cache groups  : repeated keys served from the loader cache;
+  * dead loaders  : declared loaders never invoked;
+  * un-batched work: repository calls (SQL IN(...)) with no DataLoader,
                      flagged as work disproportionate to a single field.
 """
 from __future__ import annotations

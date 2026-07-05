@@ -1,12 +1,12 @@
-"""costQL — price GraphQL queries before you run them.
+"""costQL: price GraphQL queries before you run them.
 
 Build side (seller, needs network + ``costql[build]``): point ``build_pack`` at a
 live GraphQL endpoint with a small adapter (an :class:`APIConfig`) and it
-calibrates a cost model and emits a **pricing pack** — one self-contained JSON
+calibrates a cost model and emits a **pricing pack**: one self-contained JSON
 file (schema + fitted per-resolver costs + authored fees).
 
 Quote side (app, fully offline): load the pack and price any query by pure local
-traversal — no server, no network, no measurement::
+traversal: no server, no network, no measurement::
 
     from costql import PricingPack
     pack = PricingPack.load("tmdb_t3.json")
@@ -15,7 +15,7 @@ traversal — no server, no network, no measurement::
 
 Every quote is a frozen contract v1.0 result (see :mod:`costql.contract`).
 
-Public surface (the semver compatibility contract) — exactly what this module
+Public surface (the semver compatibility contract): exactly what this module
 exports. Submodules remain importable but are internal and may change.
 """
 from ._version import __version__

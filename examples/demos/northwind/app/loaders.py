@@ -3,12 +3,12 @@
 Each loader coalesces every `.load(key)` requested within one event-loop tick into
 ONE real `SELECT ... WHERE <col> IN (?, ?, …)` against `northwind.db`, and caches
 results per request. So N logical loads of the same/overlapping keys → 1 SQL call
-+ (N − distinct) coalesced/cached hits — exactly the DataLoader win, and exactly
++ (N − distinct) coalesced/cached hits: exactly the DataLoader win, and exactly
 the T3 sharing signal costQL observes.
 
 Two shapes:
-  * identity loader — key = a primary id, value = one row (category/product/order/…).
-  * group loader    — key = a parent id, value = a LIST of child rows
+  * identity loader: key = a primary id, value = one row (category/product/order/…).
+  * group loader:    key = a parent id, value = a LIST of child rows
                       (Order→details, Category→products, Customer→orders, …).
 
 Both report to the RequestTracer: every `.load` is a `requested_key` (a cache hit
@@ -121,7 +121,7 @@ class LoaderRegistry:
                 return out
             return BatchLoader(tracer, loader_id, fetch, group=True)
 
-        # identity loaders (primary-key hubs — the shared entities)
+        # identity loaders (primary-key hubs, the shared entities)
         self.category = identity("categories", "Categories", "CategoryID", CATEGORY_COLS)
         self.product = identity("products", "Products", "ProductID", PRODUCT_COLS)
         self.order = identity("orders", "Orders", "OrderID", ORDER_COLS)

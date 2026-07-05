@@ -1,4 +1,4 @@
-"""Phase 4 — CI integration: rebuild-on-schema-change keyed to a schema hash,
+"""Phase 4: CI integration: rebuild-on-schema-change keyed to a schema hash,
 versioned model artifacts, and drift detection.
 
 The model is keyed to the schema hash (a pure function of the introspected
@@ -70,10 +70,10 @@ def is_stale(art: Artifact, live_tg: TypeGraph) -> bool:
 
 def price_offline(art: Artifact, tg: TypeGraph, root_selections, mode="ceiling"):
     """Runtime path: price a query using ONLY the artifact + introspection.
-    No harness, no backend, no measurement — pure static traversal."""
+    No harness, no backend, no measurement: pure static traversal."""
     from .pricer import Pricer
     if is_stale(art, tg):
         raise RuntimeError(f"stale artifact: schema_hash {art.schema_hash} != live "
-                           f"{tg.schema_hash()} — rebuild required")
+                           f"{tg.schema_hash()}: rebuild required")
     model = CostModel(**art.model)
     return Pricer(tg, model).price(root_selections, mode=mode)

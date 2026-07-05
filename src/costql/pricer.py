@@ -198,7 +198,7 @@ class Pricer:
 
         Ceiling (the safe billable upper bound) uses the worst-case observed
         size. Expectation (a fair typical quote) uses the AVERAGE observed size
-        — so a request that doesn't declare its size (`first: N`) is priced at
+       : so a request that doesn't declare its size (`first: N`) is priced at
         the typical result, not the largest ever seen. This is the fix for
         worst-case-size over-charging on un-paginated lists (pricing discussion
         Decision 2). Where the size IS declared, both modes honour the declared

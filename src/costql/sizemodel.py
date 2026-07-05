@@ -1,4 +1,4 @@
-"""Phase 3 — size functions per fanout resolver + operating-point sweep.
+"""Phase 3: size functions per fanout resolver + operating-point sweep.
 
 Fits cost(result_size) for size-bearing roots from a sweep that varies result
 size un-confounded from branch, chooses the shape (const/linear/log) by

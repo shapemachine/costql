@@ -13,7 +13,7 @@ Auth is resolved per-op from config: a field may require stricter auth than its
 root. We pick the op credential that satisfies the strictest *reachable* field,
 and drop any field the chosen credential cannot satisfy (recording it so union
 coverage can confirm it is fired by some other op). All auth and
-uncoverable-field knowledge comes from the APIConfig — nothing schema-specific
+uncoverable-field knowledge comes from the APIConfig: nothing schema-specific
 lives here.
 """
 from __future__ import annotations
@@ -111,8 +111,8 @@ class CoverageGenerator:
             op.dropped_fields.add(f.resolver_id)
             return None
         # Bounded fields (e.g. a paid external call) are kept OUT of the
-        # combinatorial panel — fanning them out multiplies real cost with no
-        # modelling gain — and sampled once in isolation (build_isolation).
+        # combinatorial panel: fanning them out multiplies real cost with no
+        # modelling gain: and sampled once in isolation (build_isolation).
         if f.resolver_id in self.config.bounded_fields:
             op.deferred_bounded.add(f.resolver_id)
             return None
@@ -152,7 +152,7 @@ class CoverageGenerator:
 
     def build_isolation(self) -> list[CoverageOp]:
         """One minimal op per bounded field, firing it exactly ONCE via a
-        single-entity root — so a paid/external resolver is sampled at its true
+        single-entity root: so a paid/external resolver is sampled at its true
         per-invocation cost without any fanout multiplication. Generic: for a
         bounded resolver ``Type.field`` we find a non-list root field whose base
         type is ``Type`` and select just that field under it."""

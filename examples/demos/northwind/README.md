@@ -1,9 +1,9 @@
-# Northwind Passthrough — costQL heavy-sharing calibration demo
+# Northwind Passthrough: costQL heavy-sharing calibration demo
 
 A thin Strawberry GraphQL passthrough over the **real** Northwind SQLite dataset
 (the jpwhite3/northwind-SQLite3 reference DB: 8 categories, 77 products, 16k
 orders, 609k order-details). Its only job is to be a second, **non-movie,
-DB-backed** schema costQL can measure — and one deliberately shaped for **heavy
+DB-backed** schema costQL can measure, and one deliberately shaped for **heavy
 entity sharing**, so one query re-requests the same few hub entities (only ~8
 categories) dozens–hundreds of times and the DataLoaders coalesce them.
 
@@ -12,9 +12,9 @@ Nothing here fabricates rows: every resolver runs a real `SELECT` against
 DataLoader that coalesces a tick's keys into ONE `SELECT … WHERE id IN (…)` and
 caches per request. `CostTraceExtension` publishes the per-request `cost_trace`
 (per-loader `requested_keys`/`batch_calls`/`cache_hits`, host `local-sqlite`, and
-summed SQL `work_ms`) into `response.extensions` — the seam costQL reads.
+summed SQL `work_ms`) into `response.extensions`, the seam costQL reads.
 
-## Get the data (gitignored — 24 MB reference DB)
+## Get the data (gitignored, 24 MB reference DB)
 
 ```
 curl -sSL -o northwind.db \

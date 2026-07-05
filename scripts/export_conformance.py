@@ -6,7 +6,7 @@ engine and write the full contract results to conformance/quotes.json.
 The Python golden tests (tests/test_quote_golden.py) assert EXACT equality
 against this file; the JS port's conformance suite asserts deep equality with
 the numeric tolerance policy (see conformance/README.md). Regenerate only when
-an intentional engine change shifts prices — the diff is the review artifact.
+an intentional engine change shifts prices. The diff is the review artifact.
 """
 from __future__ import annotations
 
@@ -38,7 +38,7 @@ def main() -> None:
             out.append({"pack": pack_path, "query": q, "expected": result})
 
     if violations:
-        sys.exit(f"! {violations} contract violations — not writing the oracle")
+        sys.exit(f"! {violations} contract violations; not writing the oracle")
     dest = os.path.join(ROOT, "conformance", "quotes.json")
     with open(dest, "w") as fh:
         json.dump({"tolerance": {"relative": 1e-9, "absolute": 1e-6,

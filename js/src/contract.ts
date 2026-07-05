@@ -1,4 +1,4 @@
-/** The FROZEN costQL price-result contract (v1.0) — port of costql/contract.py.
+/** The FROZEN costQL price-result contract (v1.0): port of costql/contract.py.
  * `price` is always present, in `currency` cost-units, safe to bill on. */
 import { pyRound } from "./round.js";
 

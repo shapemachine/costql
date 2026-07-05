@@ -1,4 +1,4 @@
-"""Live builds — opt in with `pytest --run-live`. Never run in PR CI.
+"""Live builds: opt in with `pytest --run-live`. Never run in PR CI.
 
 The Rick & Morty build needs only the public internet (no keys). The TMDB build
 needs the demo server up on :8000 with TMDB (and Anthropic) keys exported.

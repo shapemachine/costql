@@ -29,7 +29,7 @@ const index = [
   '# costQL',
   '',
   '> Price GraphQL queries before you run them: calibrate a live API into a static',
-  '> pricing pack, then quote any query offline — in Python or JavaScript. Cost-units',
+  '> pricing pack, then quote any query offline: in Python or JavaScript. Cost-units',
   '> only, never dollars. No hosted service; the pack is a plain local file.',
   '',
   'Install: `pip install costql` (build + quote) · `npm install costql` (quote only)',

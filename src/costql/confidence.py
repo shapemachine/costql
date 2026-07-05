@@ -7,12 +7,12 @@ pre-execution price is. The dominant unpredictability on a cyclic schema is
 (`recommendations`→`recommendations`, `filmography`→`movie`→`recommendations`)
 fans out combinatorially in the static count, but the real backend dedups the
 overlapping entities at runtime by an amount that depends on *which* rows
-overlap — unknowable before the query runs (principle #6: real cost only comes
+overlap: unknowable before the query runs (principle #6: real cost only comes
 from running). So we don't fabricate a dedup guess; we price the query
 structurally and **flag it**, downgrading confidence in proportion to how much
 of its predicted cost sits below a cyclic re-entry point.
 
-Pure static analysis over the query IR + schema — no measurement.
+Pure static analysis over the query IR + schema: no measurement.
 """
 from __future__ import annotations
 
@@ -41,7 +41,7 @@ def _band(score: float) -> str:
 
 def _data_dependent_paths(tg: TypeGraph, selection: Selection) -> set:
     """Field paths sitting at/below >=2 UN-DECLARED (un-paginated) list edges on a
-    single path — a compounding fanout whose size the query never pins, so how many
+    single path: a compounding fanout whose size the query never pins, so how many
     items (and how much they de-duplicate downstream) is data-dependent. ONE
     un-declared list is usually fine (bounded, low variance -> stays predictable);
     two or more multiply the uncertainty. This is the un-paginated-size soft spot,
@@ -75,7 +75,7 @@ def _data_dependent_paths(tg: TypeGraph, selection: Selection) -> set:
 def assess(tg: TypeGraph, records, selection: Selection | None = None) -> Confidence:
     """records: FanoutCounter InvocationRecords for the query. A record sits
     "below a cyclic re-entry" when its field path revisits a base type that
-    already appeared earlier on the path via a LIST edge — the signature of
+    already appeared earlier on the path via a LIST edge: the signature of
     unbounded combinatorial recursion whose real dedup we can't predict."""
     # Map each record's field_path -> base type + whether the edge is a list.
     total = 0.0
@@ -85,7 +85,7 @@ def assess(tg: TypeGraph, records, selection: Selection | None = None) -> Confid
         total += r.invocations
     # Reconstruct per-path type lineage from the schema by walking field paths.
     # A record is below a cycle when its path RE-ENTERS a base type it already
-    # visited, with at least one list edge on the multiplying path — the graph-
+    # visited, with at least one list edge on the multiplying path: the graph-
     # cycle signature (e.g. Movie→…→Movie via a list), whose runtime dedup of the
     # overlapping set is unknowable pre-execution. Nested lists of DISTINCT types
     # (movie→cast→person) don't re-enter and stay predictable → high confidence.

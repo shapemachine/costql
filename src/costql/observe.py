@@ -1,4 +1,4 @@
-"""Response observation — walk a coverage response alongside its selection and
+"""Response observation: walk a coverage response alongside its selection and
 the schema to record, per edge (resolver_id), the result sizes actually
 returned. Data-driven: tells us which fanout edges truly fired with >=1 item
 (vs. fired-but-empty due to missing data), and supplies observed result sizes.

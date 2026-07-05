@@ -1,7 +1,7 @@
-"""DataLoaders — the sharing signal (BUILD §5, spec "Field → endpoint → loader").
+"""DataLoaders: the sharing signal (BUILD §5, spec "Field → endpoint → loader").
 
 One loader per endpoint, keyed on `(endpoint, id)` (or `(id, page)` for paged). Each
-provides DataLoader semantics — request coalescing + per-request cache — plus the
+provides DataLoader semantics (request coalescing + per-request cache) plus the
 metadata the tracer needs (batch_group/key, cache_hit, per-call latency).
 
 TMDB has no multi-id batch endpoint, so "batching" here = coalescing + per-request
@@ -74,10 +74,10 @@ class CoalescingLoader:
 class NodeLoader:
     """Identity loader for core entities (movie/person). Two entry points:
 
-    - `prime(id, stub)` — register a node hydrated *for free* from a parent doc
+    - `prime(id, stub)`: register a node hydrated *for free* from a parent doc
       (partial-hydration rule). No upstream call; emits the dedup signal
-      (`cache_hit` on repeat ids — this is what makes Q3's re-entry observable).
-    - `ensure_core(id)` — fetch the node's core endpoint the first time an absent
+      (`cache_hit` on repeat ids; this is what makes Q3's re-entry observable).
+    - `ensure_core(id)`: fetch the node's core endpoint the first time an absent
       core-only field is requested (the N+1 detonation), deduped per request.
     """
 

@@ -1,5 +1,5 @@
 {
-  "_comment": "The conformance corpus inputs: for each committed pack, queries spanning simple, fanout, size-declared, sharing-heavy, external-cost, and cyclic (low-confidence) shapes. scripts/export_conformance.py runs each through the Python engine and freezes the full contract results into quotes.json — the oracle for the Python golden tests AND the JS port's conformance suite.",
+  "_comment": "The conformance corpus inputs: for each committed pack, queries spanning simple, fanout, size-declared, sharing-heavy, external-cost, and cyclic (low-confidence) shapes. scripts/export_conformance.py runs each through the Python engine and freezes the full contract results into quotes.json, the oracle for the Python golden tests AND the JS port's conformance suite.",
   "packs/tmdb_t3.json": [
     "{ movie(id:\"27205\"){ title } }",
     "{ movie(id:\"27205\"){ title genres{ name } } }",

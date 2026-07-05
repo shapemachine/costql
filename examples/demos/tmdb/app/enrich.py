@@ -1,10 +1,10 @@
 """The two coverage-extension fields (BUILD §7).
 
-`chemistryScore` — local O(limit²) compute over the already-loaded cast. 0 downstream
+`chemistryScore`: local O(limit²) compute over the already-loaded cast. 0 downstream
 calls; its whole cost is work-ms (DECISIONS #4). This is the resolver `downstream_calls`
 would price at 0 while it is genuinely expensive.
 
-`aiSummary` — a paid Anthropic call keyed/deduped per movie id. Its real cost is a
+`aiSummary`: a paid Anthropic call keyed/deduped per movie id. Its real cost is a
 per-call token fee (dollars) invisible to latency/count (DECISIONS #6). The fee itself
 never enters the trace; the trace only marks `downstream_host="api.anthropic.com"` so
 costQL auto-flags it external/paid.
@@ -26,7 +26,7 @@ def chemistry_score(cast: list[dict[str, Any]], limit: int = 20) -> tuple[float,
 
     The constant factor is kept deliberately high so limit=5 vs 20 vs 50 separate
     cleanly above measurement noise (BUILD §7 / DECISIONS #1 super-linear curve).
-    Pure local CPU — no I/O — for a low-noise signal.
+    Pure local CPU (no I/O) for a low-noise signal.
     """
     members = cast[:limit]
     n = len(members)
@@ -42,7 +42,7 @@ def chemistry_score(cast: list[dict[str, Any]], limit: int = 20) -> tuple[float,
             bj = _affinity(b)
             # a few flops per pair, repeated to lift the constant factor above noise
             # (high enough that the O(n²) pair term dominates fixed overhead, so the
-            # super-linear curve is unmistakable across limit=5/20/50 — BUILD §7 / #1)
+            # super-linear curve is unmistakable across limit=5/20/50; see BUILD §7 / #1)
             acc = 0.0
             for _ in range(120):
                 acc += math.sin(ai * 1.7 + bj * 0.3) * math.cos(ai - bj)

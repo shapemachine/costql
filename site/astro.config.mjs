@@ -10,7 +10,7 @@ export default defineConfig({
     starlight({
       title: 'costQL',
       description:
-        'Price GraphQL queries before you run them — build a static pricing pack once, quote any query offline in Python or JavaScript.',
+        'Price GraphQL queries before you run them. Build a static pricing pack once, quote any query offline in Python or JavaScript.',
       social: [
         { icon: 'github', label: 'GitHub', href: 'https://github.com/shapemachine/costql' },
       ],

@@ -1,4 +1,4 @@
-/** The pricing pack — port of costql/pack.py's consumer side. Load the same
+/** The pricing pack: port of costql/pack.py's consumer side. Load the same
  * JSON file the Python engine writes and quote queries by pure local
  * traversal: no server, no network, no measurement. */
 import { assess } from "./confidence.js";
@@ -65,7 +65,7 @@ export class PricingPack {
     if (version > PACK_VERSION) {
       throw new PackVersionError(
         `pack_version ${version} was written by a newer costql ` +
-        `(this one reads <= ${PACK_VERSION}) — upgrade costql`);
+        `(this one reads <= ${PACK_VERSION}); upgrade costql`);
     }
     const missing = REQUIRED_KEYS.filter((k) => !(k in obj));
     if (missing.length) {
@@ -109,7 +109,7 @@ export class PricingPack {
     return { ...this.model, unit_cost: unit, batch_groups: { ...(this.model.batch_groups ?? {}) } };
   }
 
-  /** Price a query from the pack alone — no server, no measurement. Returns a
+  /** Price a query from the pack alone: no server, no measurement. Returns a
    * frozen contract v1.0 result identical to the Python engine's. */
   quote(query: string): QuoteResult {
     const tg = this.typeGraph();

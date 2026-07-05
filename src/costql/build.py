@@ -1,20 +1,20 @@
-"""Build a pricing pack from a live GraphQL API — the calibrate → pack path.
+"""Build a pricing pack from a live GraphQL API: the calibrate → pack path.
 
 This is the seller-side entry point. Given an :class:`~costql.config.APIConfig`
 (the ~90-line adapter that says where the API is and how to fill in its
 arguments), it introspects the endpoint, measures a set of clean calibration
 queries, fits the cost model, learns sharing/batch curves when the server emits
 a cost trace (T2/T3), samples any declared bounded fields in isolation, and
-returns a :class:`~costql.pack.PricingPack` — ONE self-contained file a consumer
+returns a :class:`~costql.pack.PricingPack`; ONE self-contained file a consumer
 prices against locally, with no server and no network.
 
-Calibration deliberately uses predictable, isolating shapes — NOT deep cyclic
+Calibration deliberately uses predictable, isolating shapes: NOT deep cyclic
 coverage panels, whose data-dependent recursion corrupts a linear fit. Adapters
 should supply curated shapes via ``APIConfig.calibration_queries`` (all three
 reference adapters do); without them a conservative shallow coverage sweep is
 used as a fallback.
 
-Building measures the real API (that is inherent — you calibrate by measuring),
+Building measures the real API (that is inherent: you calibrate by measuring),
 so this module needs the ``requests`` extra:  pip install 'costql[build]'.
 Consuming the resulting pack does not.
 """
@@ -116,7 +116,7 @@ def build_pack(config: APIConfig, *, repeats: int = 5,
             seen.add(q)
             calib_ops.append((q, parse_query(q)[0]))
     if not calib_ops:
-        raise RuntimeError("no calibration queries could be generated — "
+        raise RuntimeError("no calibration queries could be generated: "
                            "supply APIConfig.calibration_queries")
 
     # --- bounded fields (e.g. paid external calls) sampled once in isolation ---
@@ -179,7 +179,7 @@ def build_pack(config: APIConfig, *, repeats: int = 5,
 
     tier = config.tier
     if not traced and tier != "T1":
-        say(f"  ! endpoint emitted no cost trace — pack honestly downgraded "
+        say(f"  ! endpoint emitted no cost trace: pack honestly downgraded "
             f"{tier} -> T1 (wall-clock)")
         tier = "T1"
 

@@ -1,4 +1,4 @@
-"""Schema Introspector — turns a GraphQL introspection result into a type graph.
+"""Schema Introspector: turns a GraphQL introspection result into a type graph.
 
 Schema-general: nothing here is specific to any one API. It reads the introspection
 document and exposes roots, fields, fanout edges (list-typed fields), and
@@ -135,7 +135,7 @@ class TypeGraph:
         return o is not None and o.kind in ("INTERFACE", "UNION")
 
     def fanout_edges(self) -> list[Field]:
-        """Every list-typed field — each is an edge that multiplies invocations.
+        """Every list-typed field: each is an edge that multiplies invocations.
 
         Includes both object-list edges (fire sub-resolvers) and scalar-list
         leaves. The caller distinguishes via ``is_leaf(edge.type.base)``.
@@ -148,7 +148,7 @@ class TypeGraph:
         return edges
 
     def object_fanout_edges(self) -> list[Field]:
-        """List fields returning an object/interface/union — true fanout."""
+        """List fields returning an object/interface/union: true fanout."""
         return [e for e in self.fanout_edges() if not self.is_leaf(e.type.base)]
 
     def fragment_branches(self) -> list[tuple[str, str]]:

@@ -1,36 +1,36 @@
 # Case study: pricing a stranger's API (Rick & Morty, T1)
 
-Does costQL work on an API it has never seen, that we don't own and can't change? This experiment pointed it at the public **Rick & Morty API** (`rickandmortyapi.com/graphql`) — no new server, no fake data, no special access, just the real, live, public endpoint anyone on the internet can hit. The result: a **93-line adapter**, **zero engine changes**, **~4% mean error** on held-out queries at T1, a ceiling that never under-charged, and one offline pack in the standard contract format.
+Does costQL work on an API it has never seen, that we don't own and can't change? This experiment pointed it at the public **Rick & Morty API** (`rickandmortyapi.com/graphql`): no new server, no fake data, no special access, just the real, live, public endpoint anyone on the internet can hit. The result: a **93-line adapter**, **zero engine changes**, **~4% mean error** on held-out queries at T1, a ceiling that never under-charged, and one offline pack in the standard contract format.
 
 ## What it took to onboard: one small file
 
-To teach costQL about a brand-new API, we wrote **one file** —
+To teach costQL about a brand-new API, we wrote **one file**:
 [`examples/adapters/rickmorty.py`](../../examples/adapters/rickmorty.py), **93
 lines** (and about half of that is just the list of real example IDs and the
 endpoint address; the only actual logic is a ~15-line function that says "this
 argument is an ID, this one is a page number").
 
-**Nothing else changed.** The engine itself — the part that does the introspecting,
-measuring, modelling and pricing — was not touched at all. That is the whole point:
+**Nothing else changed.** The engine itself (the part that does the introspecting,
+measuring, modelling and pricing) was not touched at all. That is the whole point:
 adopting a new API is a small, self-contained plug-in, not a rebuild. costQL read
 the Rick & Morty schema live, learned its shape (characters, episodes, locations and
-how they connect), and started pricing — with no schema file written by hand.
+how they connect), and started pricing, with no schema file written by hand.
 
 ## Did it actually price accurately? Yes.
 
 costQL measured a set of real queries against the live API to learn its costs, then
 **graded itself** on a *different, held-out* set of queries it had not calibrated on
-(different characters, episodes and locations — a genuine "unseen" test; see
+(different characters, episodes and locations: a genuine "unseen" test; see
 [the evaluation methodology](../evaluation.md)).
 
-- On the **predictable** queries — the ones a customer would actually want a price
-  for — costQL's quote was off by only **4% on average**, and its safe "you will
+- On the **predictable** queries (the ones a customer would actually want a price
+  for), costQL's quote was off by only **4% on average**, and its safe "you will
   never pay more than this" ceiling was **never once too low** (5 out of 5).
 - Every query got a price. costQL never refused, never crashed, never guessed at
   data it didn't have.
 
 (For context, the number here is small because a public API like this is dominated
-by a steady network round-trip — which is exactly the cost a black-box, outside
+by a steady network round-trip, which is exactly the cost a black-box, outside
 observer feels, and exactly what the T1 fidelity is meant to capture honestly. See
 [One currency, three fidelities](../tiers.md).)
 
@@ -42,16 +42,16 @@ the characters in each of those" balloons in a way that only *running* it reveal
 
 costQL **automatically flagged every one of these loop-shaped queries as
 low-confidence** (the headline character↔episode loop came back "low", flagged as
-100% inside the loop) — while still handing back a safe upper-bound price and a
+100% inside the loop), while still handing back a safe upper-bound price and a
 plain note: *"this is a worst-case estimate; run it for the exact cost."* It priced
 what it could stand behind and was honest about what it couldn't. It never made up a
 number to look confident.
 
-## Is it shippable? Yes — as one portable file.
+## Is it shippable? Yes, as one portable file.
 
 The output is a single self-contained **pricing pack** (a 66 KB file, committed at
 [`packs/rickmorty_t1.json`](../../packs/rickmorty_t1.json)) that an app can carry
-around and use to price queries **completely offline** — no server, no network
+around and use to price queries **completely offline**: no server, no network
 call, no dependency on costQL being "up." We confirmed a real app-side quote runs
 straight from that file with nothing else running. And every price it produces comes
 out in costQL's **frozen, stable format** (verified: zero contract violations
@@ -72,7 +72,7 @@ All with **zero paid calls** and **zero fabricated data**.
 
 ## Try it yourself
 
-This is the "try it right now" API — public, no keys, no demo server to run:
+This is the "try it right now" API (public, no keys, no demo server to run):
 
 ```bash
 # quote against the committed pack, fully offline

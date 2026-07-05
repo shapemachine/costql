@@ -1,17 +1,17 @@
-"""Reference adapter — the public Rick & Morty GraphQL API
+"""Reference adapter: the public Rick & Morty GraphQL API
 (https://rickandmortyapi.com/graphql).
 
 THE minimal template: an API costQL does not own and cannot change, onboarded
 with this one file and zero engine changes. The endpoint is a black box we
 cannot instrument (no cost_trace extension), so the highest fidelity it affords
-is **T1** — the whole-query wall-clock floor. Currency is therefore
+is **T1**: the whole-query wall-clock floor. Currency is therefore
 `wall_time_ms`. That is the designed starting point for any API you can send
 queries to.
 
 Everything specific to this deployment lives here:
-  * the endpoint (public, free, no key — auth is entirely empty);
+  * the endpoint (public, free, no key; auth is entirely empty);
   * the "mined" inputs: real, stable public ids (character 1-826, episode 1-51,
-    location 1-126) — never fabricated;
+    location 1-126), never fabricated;
   * argument resolution: `id` (by entity), `page` (page-paginated roots), and a
     `name` filter value;
   * the curated calibration shapes.
@@ -41,7 +41,7 @@ SIZE_ROOTS = {
 }
 
 # Real public ids. Disjoint whale / small / held-out picks. whale = id 1 (Rick /
-# Pilot / Earth C-137 — the most densely-connected entities).
+# Pilot / Earth C-137, the most densely-connected entities).
 CHARACTERS = {"whale": 1, "small": 100, "heldout": 200}     # ids 1-826
 EPISODES   = {"whale": 1, "small": 20,  "heldout": 40}      # ids 1-51
 LOCATIONS  = {"whale": 1, "small": 30,  "heldout": 60}      # ids 1-126
@@ -49,7 +49,7 @@ NAMES = {"whale": "rick", "small": "morty", "heldout": "summer"}
 
 
 class RickMortyInputSource:
-    """No dataset to mine — the API is a public remote endpoint. We supply a
+    """No dataset to mine: the API is a public remote endpoint. We supply a
     curated set of real, stable public ids as the 'mined' inputs."""
 
     def mine(self) -> MinedInputs:
@@ -73,7 +73,7 @@ class RickMortyArgResolver:
             return str(CHARACTERS.get(key, CHARACTERS["whale"]))
         if arg_name == "page":                # characters/episodes/locations paging
             return 1
-        if arg_name == "name":                # filter: { name: "..." } — a real name substring
+        if arg_name == "name":                # filter: { name: "..." } (a real name substring)
             return NAMES.get(key, NAMES["whale"])
         return UNSET                          # filter object, status, etc. -> defaults/dropped
 
@@ -81,7 +81,7 @@ class RickMortyArgResolver:
 # --- Curated calibration shapes ---------------------------------------------
 # Predictable, DISTINCT-type shapes a caller would actually price. Each list edge
 # crosses into a different type and does not re-enter. Cyclic shapes (e.g.
-# character{ episode{ characters } }) are deliberately absent — they are what
+# character{ episode{ characters } }) are deliberately absent: they are what
 # costQL FLAGS at quote time, not calibrates against.
 
 def _ent(which):

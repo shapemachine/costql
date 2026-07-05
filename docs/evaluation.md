@@ -1,6 +1,6 @@
 # How costQL measures its own accuracy
 
-Any accuracy number needs three pieces: a **model** whose prediction is on trial, a **baseline** (ground truth) to compare against, and a **dataset** the comparison runs over. This doc pins down exactly what each is in costQL, and — importantly — what each is *not*. It complements the [tier overview](tiers.md) and the step-by-step [pricing flow](architecture.md); the measured results themselves live in the [TMDB](results/tmdb.md), [Rick & Morty](results/rickmorty.md), and [Northwind](results/northwind.md) case studies.
+Any accuracy number needs three pieces: a **model** whose prediction is on trial, a **baseline** (ground truth) to compare against, and a **dataset** the comparison runs over. This doc pins down exactly what each is in costQL, and, importantly, what each is *not*. It complements the [tier overview](tiers.md) and the step-by-step [pricing flow](architecture.md); the measured results themselves live in the [TMDB](results/tmdb.md), [Rick & Morty](results/rickmorty.md), and [Northwind](results/northwind.md) case studies.
 
 ---
 
@@ -8,7 +8,7 @@ Any accuracy number needs three pieces: a **model** whose prediction is on trial
 
 | Piece | In costQL | Produced by |
 |---|---|---|
-| **Model (on trial)** | the pricing pack's **prediction** for a query — static analysis, the query is *not* run | `costql/pricer.py` (`Pricer.price`), served via `PricingPack.quote()` (`costql/pack.py`) |
+| **Model (on trial)** | the pricing pack's **prediction** for a query: static analysis, the query is *not* run | `costql/pricer.py` (`Pricer.price`), served via `PricingPack.quote()` (`costql/pack.py`) |
 | **Baseline (ground truth)** | the query's **actual measured cost** from really running it against the live API | `costql/harness.py` (`Measurement.cost_ms`) |
 | **Dataset** | real GraphQL queries against a real API | `costql/heldout.py` (calibration + held-out sets) |
 
@@ -28,11 +28,11 @@ than some other model."*
 |---|---|---|
 | Purpose | **fit** the model | **grade** the model |
 | Shapes | full-depth coverage ops, depths `[2, 5, 9, 12]`, whale (max) inputs | shallow/mid depths `[3, 7]`, small-vs-whale pagination, alternate inputs, adversarial fixtures |
-| Seen by the model? | yes — it is fit on these | **no** — a distribution the model never saw |
+| Seen by the model? | yes (it is fit on these) | **no** (a distribution the model never saw) |
 
 Fitting and grading on the same queries would flatter the model. The held-out set proves
 it generalizes to shapes it was **not** fit on. (Generalization is also shown across
-*APIs*: a brand-new API — [Rick & Morty](results/rickmorty.md) — is priced with only a
+*APIs*: a brand-new API ([Rick & Morty](results/rickmorty.md)) is priced with only a
 ~90-line adapter and zero core changes.)
 
 ---
@@ -51,8 +51,8 @@ At build time only (`costql build`, or `build_pack()` from Python):
 
 The regression is needed because it *separates* fixed per-request overhead from marginal
 per-call cost across many query shapes. An adapter can supply curated calibration shapes
-via the `APIConfig.calibration_queries` hook (a callable taking a size — `"whale"` or
-`"small"` — and returning query strings).
+via the `APIConfig.calibration_queries` hook (a callable taking a size, `"whale"` or
+`"small"`, and returning query strings).
 
 **What ships is the rate table, not the queries.** The pricing pack contains
 schema + `unit_cost` table + batch curves + observed sizes + authored fees. It does **not**
@@ -61,7 +61,7 @@ into the rate table; they do not survive as retrievable entries.
 
 ---
 
-## 4. How the baseline (ground truth) is measured — per tier
+## 4. How the baseline (ground truth) is measured, per tier
 
 To grade a held-out query, `Pricer` predicts it (no run) and the harness **runs it for
 real** and reads its total cost (`costql/harness.py`, `Measurement.cost_ms`). What "total
@@ -81,7 +81,7 @@ Key properties of the baseline, at T2/T3:
 - **It is measurement, not estimation.** There is no model inside the baseline. That is
   what makes it trustworthy as ground truth.
 - **It reflects real sharing.** Batched/deduped calls are counted the way the real loader
-  actually coalesced them — which is exactly the thing the T2 *prediction* only *infers*.
+  actually coalesced them, which is exactly the thing the T2 *prediction* only *infers*.
   That gap is what the held-out comparison is designed to expose.
 
 Repeated rounds + a trimmed mean cancel sub-ms measurement jitter.
@@ -91,15 +91,15 @@ Repeated rounds + a trimmed mean cancel sub-ms measurement jitter.
 ## 5. Why there is no "already priced this" lookup
 
 A recurring misconception: that a query already seen in calibration gets served its known
-measured price. **It does not — there is no query→price lookup anywhere.**
+measured price. **It does not. There is no query→price lookup anywhere.**
 
 - `PricingPack.quote()` has one path: parse → fanout → ceiling sum → **predict**. It never
   checks "did we measure this one before," because the pack stores no query prices.
 - A calibration query fed back through the pricer is re-derived as a *predicted ceiling*
-  from scratch — it does **not** get its stored measurement. (The predicted ceiling will
+  from scratch. It does **not** get its stored measurement. (The predicted ceiling will
   even differ from its calibration measurement: calibration is fit at the observed
   operating point, pricing evaluates worst-case.)
-- The only way to get a measured number for a specific query is to **run it** — that is
+- The only way to get a measured number for a specific query is to **run it**. That is
   execution, not a lookup. This is the opt-in exact path (`costql.exact`, which reads a
   real run's cost-trace receipt), reached only when a caller wants an exact figure on a
   low-confidence quote.
@@ -111,11 +111,11 @@ compression is the product; a lookup table can only remember what already happen
 
 ## 6. What "accurate" means here (and its honest scope)
 
-The held-out baseline is accurate **by construction** — it is the real summed work of the
+The held-out baseline is accurate **by construction**. It is the real summed work of the
 run. Two scoping caveats worth stating plainly:
 
 - **That run, that data.** The measured total is the true cost of *this* execution against
-  *today's* data. Against a larger table the true total changes — which is why the model
+  *today's* data. Against a larger table the true total changes, which is why the model
   predicts a worst-case **ceiling** (safe billable number) separately from a **typical**
   estimate (fair average), and why data-dependent-size queries are confidence-flagged
   (see [Honest limitations](limitations.md)).
@@ -144,6 +144,6 @@ for a query; the **baseline** is that query's real measured cost from actually r
 the **dataset** is a held-out set of real queries, deliberately disjoint from the
 calibration set the model was fit on. Ground truth at T2/T3 is the complete sum of every
 resolver's measured work-ms for the run (real sharing included), so it is trustworthy by
-construction — it contains no model. There is no query→price lookup: every query, seen or
+construction: it contains no model. There is no query→price lookup: every query, seen or
 unseen, is predicted from the rate table, and the only measured numbers come from actually
 executing a query.

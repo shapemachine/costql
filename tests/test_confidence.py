@@ -1,5 +1,5 @@
 """The confidence classifier: cyclic recursion and data-dependent sizes are
-flagged (priced as a ceiling, confidence downgraded) — never silently billed."""
+flagged (priced as a ceiling, confidence downgraded), never silently billed."""
 
 
 def test_cyclic_recursion_is_low_confidence(packs):

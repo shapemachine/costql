@@ -1,6 +1,6 @@
 import React from 'react';
 
-/** React twin of Receipt.astro — same classes, same markup. Used by the
+/** React twin of Receipt.astro: same classes, same markup. Used by the
  * playground to render live quotes. */
 
 export interface ReceiptItem {

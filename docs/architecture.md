@@ -1,10 +1,10 @@
 # How pricing flows: build → pack → quote
 
-This is costQL end to end: a new API arrives, the engine calibrates it into a static **pricing pack**, and from then on any app quotes queries against that pack locally — no server, no network, no re-measurement. The cost **unit** is always *work-ms* (summed real work; see [One currency, three fidelities](tiers.md)); the tiers differ only in how sharply the API lets costQL **see and factor** that work.
+This is costQL end to end: a new API arrives, the engine calibrates it into a static **pricing pack**, and from then on any app quotes queries against that pack locally: no server, no network, no re-measurement. The cost **unit** is always *work-ms* (summed real work; see [One currency, three fidelities](tiers.md)); the tiers differ only in how sharply the API lets costQL **see and factor** that work.
 
 **Nature of each step:** the engine is 100% **deterministic** code (no LLM in the pricing
 path). The only non-engine touches are (a) a human-authored adapter + fee at onboarding,
-and (b) an external LLM that lives *inside the API being priced*, measured as a cost —
+and (b) an external LLM that lives *inside the API being priced*, measured as a cost,
 never a costQL step.
 
 ```mermaid
@@ -88,10 +88,10 @@ flowchart TD
 
 ## The same flow, as commands
 
-- **Build** (seller side, once per schema — steps 1–8 above):
+- **Build** (seller side, once per schema: steps 1–8 above):
   `costql build --adapter examples/adapters/rickmorty.py:rickmorty_config --out pack.json`
 - **Quote** (app side, local, the query is not run):
-  `costql quote --pack pack.json '<query>'` — or in Python,
+  `costql quote --pack pack.json '<query>'`, or in Python,
   `from costql import PricingPack; PricingPack.load("pack.json").quote(query)`.
   Quote-side is also available in JavaScript via the `costql` npm package.
 - **Validate** (any result against the frozen contract):

@@ -1,11 +1,11 @@
-"""Query IR — a small selection tree that both the generator emits and the
+"""Query IR: a small selection tree that both the generator emits and the
 Pricer consumes, plus a serializer to a GraphQL string and a minimal parser
 so the Pricer can also accept an arbitrary GraphQL query string.
 
 This is deliberately a subset: named/anonymous query operations, fields with
 scalar arguments (int, float, string, bool, enum, null), and nested selection
 sets. Sufficient for pre-execution static analysis, which is all the Pricer
-needs — it never executes the query.
+needs: it never executes the query.
 """
 from __future__ import annotations
 

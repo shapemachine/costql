@@ -1,4 +1,4 @@
-/** Per-loader size->cost curves — port of the eval/deserialize slice of
+/** Per-loader size->cost curves: port of the eval/deserialize slice of
  * costql/sizemodel.py + costql/batchmodel.py that the quote path uses. */
 
 export interface SizeFnData {

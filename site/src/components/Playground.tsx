@@ -56,7 +56,7 @@ function receiptFromQuote(q: QuoteResult): {
     });
   }
   if (!lines.length) {
-    items.push({ label: `${q.tier} pack — total only`, value: q.currency, muted: true });
+    items.push({ label: `${q.tier} pack; total only`, value: q.currency, muted: true });
   }
   for (const s of (q.sharing ?? []).slice(0, 3)) {
     items.push({
@@ -82,12 +82,12 @@ function receiptFromQuote(q: QuoteResult): {
   return {
     items,
     total: (q.price as number).toFixed(1),
-    totalLabel: low ? 'ceiling — flagged' : 'price ceiling',
+    totalLabel: low ? 'ceiling · flagged' : 'price ceiling',
     totalFlagged: low,
     footer: (
       <span>
         confidence: <strong className={low ? 'low' : 'ok'}>{q.confidence}</strong>
-        {low ? ' — structural upper bound; run it for the exact cost' : ` · ${q.currency}, never dollars`}
+        {low ? ': structural upper bound; run it for the exact cost' : ` · ${q.currency}, never dollars`}
       </span>
     ),
   };
@@ -120,7 +120,7 @@ export default function Playground() {
         setError(e instanceof Error ? e.message : String(e));
       }
       setRunning(false);
-    }, 380); // a beat of "measuring" — the quote itself is instant
+    }, 380); // a beat of "measuring"; the quote itself is instant
   };
 
   useEffect(() => {
@@ -175,7 +175,7 @@ export default function Playground() {
           <span className="cql-dot" />
           <span className="cql-dot" />
         </div>
-        <div className="cql-window__title">playground — costql.quote()</div>
+        <div className="cql-window__title">playground: costql.quote()</div>
         <div className="cql-window__tools">
           <span className="cql-badge cql-badge--aqua">offline</span>
         </div>
@@ -206,7 +206,7 @@ export default function Playground() {
             </div>
             {error && (
               <div className="cql-play__error">
-                can't parse this query — {error}. v0.1: no fragments, aliases unresolved.
+                can't parse this query: {error}. v0.1: no fragments, aliases unresolved.
               </div>
             )}
           </div>

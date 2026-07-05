@@ -1,4 +1,4 @@
-"""Strawberry schema — types + resolvers, mirroring the spec SDL.
+"""Strawberry schema: types + resolvers, mirroring the spec SDL.
 
 Every resolver hydrates through the DataLoaders and emits a `ResolverTrace`. The
 partial-hydration rule (spec) is enforced here: a field present in a node's stub is
@@ -6,8 +6,8 @@ free (no trace-with-call); an absent core field triggers `ensure_core` (the N+1)
 Re-entering an already-seen node id shows up as `cache_hit` (the T3 sharing signal).
 
 Node objects carry:
-  raw    — accumulated known fields (stub → merged core)
-  origin — the resolver_id that produced this node (its children's parent edge)
+  raw:    accumulated known fields (stub → merged core)
+  origin: the resolver_id that produced this node (its children's parent edge)
 """
 from __future__ import annotations
 
@@ -163,7 +163,7 @@ class Person:
     async def filmography(self, info: strawberry.Info, limit: int = 20) -> list["Credit"]:
         ctx = _ctx(info)
         data, meta = await ctx.loaders.person_credits.load(int(self.id))
-        # combined cast + crew — a person can appear in both for one movie, which is
+        # combined cast + crew: a person can appear in both for one movie, which is
         # exactly the repeat-id that Q6 dedups.
         entries = (data.get("cast", []) or []) + (data.get("crew", []) or [])
         entries = entries[:limit]
@@ -280,7 +280,7 @@ class Movie:
     async def genres(self, info: strawberry.Info) -> list[Genre]:
         ctx = _ctx(info)
         gids = _genre_ids(self.raw)
-        if gids is None:                    # core not yet loaded — pay for it
+        if gids is None:                    # core not yet loaded; pay for it
             data, meta = await ctx.loaders.movie.ensure_core(int(self.id))
             emit(ctx, "Movie.genres", self.origin, "Movie", meta,
                  result_size=None)
@@ -345,9 +345,9 @@ class Movie:
     @strawberry.field
     async def chemistry_score(self, info: strawberry.Info, limit: int = 20) -> Optional[float]:
         ctx = _ctx(info)
-        # reuse creditsLoader (shared with Movie.cast — no new upstream call). The
+        # reuse creditsLoader (shared with Movie.cast; no new upstream call). The
         # credits fetch is attributed to Movie.cast; this resolver's own trace is
-        # pure local compute (downstream_calls=0) — #4.
+        # pure local compute (downstream_calls=0); see #4.
         data, cmeta = await ctx.loaders.credits.load(int(self.id))
         emit(ctx, "Movie.cast", self.origin, "Movie", cmeta,
              result_size=min(limit, len(data.get("cast", []) or [])))
@@ -468,7 +468,7 @@ class TracerLifecycle(SchemaExtension):
 class CostTraceExtension(SchemaExtension):
     """Publish the request's T3 `cost_trace` into `response.extensions` so an
     external costQL adapter (costql/harness.py) can read the sharing signal
-    over HTTP — the seam that makes this server a T3-capable calibration target."""
+    over HTTP, the seam that makes this server a T3-capable calibration target."""
 
     def get_results(self) -> dict:
         ctx = self.execution_context.context

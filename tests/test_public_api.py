@@ -1,5 +1,5 @@
 """The frozen public surface, and the dependency posture: the quote path needs
-numpy only — `requests` is a build-time extra and must never be required (or
+numpy only: `requests` is a build-time extra and must never be required (or
 even imported) to load a pack and quote."""
 import subprocess
 import sys

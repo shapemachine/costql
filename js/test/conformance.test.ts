@@ -1,5 +1,5 @@
 /** The conformance suite: the TS port must reproduce the Python engine's
- * frozen oracle — every corpus quote, deep-equal, numbers within the oracle's
+ * frozen oracle: every corpus quote, deep-equal, numbers within the oracle's
  * tolerance policy (max(absolute, relative*|expected|)). */
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";

@@ -1,6 +1,6 @@
 """Exact post-execution price (HANDOFF principle #6).
 
-When a query has actually **run**, costQL does not predict its cost — it reports
+When a query has actually **run**, costQL does not predict its cost: it reports
 the *exact* work-ms the run caused, read straight from the request's measured
 `cost_trace`, decomposed per resolver, with sharing **observed** (not inferred).
 This is the T3 truth against which the predictive model (exact.py's sibling,
@@ -47,7 +47,7 @@ class LoaderShare:
 class ExactPrice:
     currency: str               # "work_ms" | "wall_time_ms"
     tier: str                   # "T3" | "T2" | "T1"
-    confidence: str             # always exact — the query ran
+    confidence: str             # always exact: the query ran
     total: float                # cost in `currency`
     resolvers: list[ResolverCost] = field(default_factory=list)
     loaders: list[LoaderShare] = field(default_factory=list)

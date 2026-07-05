@@ -1,1 +1,1 @@
-"""TMDB Passthrough API — costQL tier-fidelity calibration demo."""
+"""TMDB Passthrough API: costQL tier-fidelity calibration demo."""

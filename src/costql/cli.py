@@ -6,7 +6,7 @@
     costql version
 
 ``build`` calibrates a live API through an adapter (see the adapter guide) and
-writes the pricing pack. ``quote`` and ``validate`` are fully offline — they
+writes the pricing pack. ``quote`` and ``validate`` are fully offline: they
 never touch the network.
 """
 from __future__ import annotations
@@ -87,13 +87,13 @@ def _cmd_build(args: argparse.Namespace) -> int:
             with open(args.adjustments) as fh:
                 adjustments = json.load(fh)
         else:
-            print(f"  adjustments file {args.adjustments} not found — a no-op "
+            print(f"  adjustments file {args.adjustments} not found; a no-op "
                   f"template will be attached", flush=True)
     pack = build_pack(config, repeats=args.repeats, adjustments=adjustments)
     out = args.out or f"pricing_pack_{config.name}.json"
     pack.save(out)
     size_kb = os.path.getsize(out) / 1024
-    print(f"wrote {out} ({size_kb:.0f} KB) — self-contained static reference; "
+    print(f"wrote {out} ({size_kb:.0f} KB): self-contained static reference; "
           f"consume it with:  costql quote --pack {out} '<query>'")
     return 0
 
@@ -134,7 +134,7 @@ def _cmd_validate(args: argparse.Namespace) -> int:
         for p in problems:
             print(f"! {p}")
         return 1
-    print("OK — readable, complete, quotable")
+    print("OK: readable, complete, quotable")
     return 0
 
 
@@ -160,7 +160,7 @@ def build_parser() -> argparse.ArgumentParser:
     p_build.set_defaults(fn=_cmd_build)
 
     p_quote = sub.add_parser(
-        "quote", help="price a query from a pack — offline, no server, no network")
+        "quote", help="price a query from a pack: offline, no server, no network")
     p_quote.add_argument("--pack", required=True, help="pricing pack JSON path")
     p_quote.add_argument("--json", action="store_true",
                          help="print the raw contract result as JSON")

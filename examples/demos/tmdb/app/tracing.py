@@ -1,21 +1,21 @@
 """Tracing & tier emission.
 
 One `ResolverTrace` per loader invocation; one `AdapterManifest` per request.
-`COSTQL_TIER` selects how much of each trace is emitted — *same code path*, fields
+`COSTQL_TIER` selects how much of each trace is emitted: *same code path*, fields
 dropped per tier (BUILD §6). That single lever is the whole downgrade-the-signal
 calibration experiment (DECISIONS #2).
 
 Tier gating (BUILD §6 table):
 
   field group                                   | T3 | T2 | T1
-  resolver_id/parent/invocation_count/result_sz | ✓ | ✓ | —
-  downstream_calls                              | ✓ | ✓ | —
-  downstream_latency_ms                         | ✓ per-call | ✓ (aggregate) | —
-  local_compute_ms                              | ✓ | ✓ | —
-  batch_group/batch_key/cache_hit/cache_key     | ✓ | — | —
+  resolver_id/parent/invocation_count/result_sz | ✓ | ✓ | ✗
+  downstream_calls                              | ✓ | ✓ | ✗
+  downstream_latency_ms                         | ✓ per-call | ✓ (aggregate) | ✗
+  local_compute_ms                              | ✓ | ✓ | ✗
+  batch_group/batch_key/cache_hit/cache_key     | ✓ | ✗ | ✗
   total request wall time                       | ✓ | ✓ | ✓
 
-At T1 no per-resolver traces are emitted at all — only the request wall time.
+At T1 no per-resolver traces are emitted at all: only the request wall time.
 """
 from __future__ import annotations
 
@@ -144,10 +144,10 @@ class RequestTracer:
     def cost_trace(self) -> dict[str, Any]:
         """Aggregate this request's (full-T3) traces into the adapter `cost_trace`
         shape costQL's engine consumes (costql): per-loader batch/coalesce stats
-        keyed on endpoint, per-resolver invocation counts, and — the currency
-        (DECISIONS #4) — the request's real **work-ms**: summed downstream-call
+        keyed on endpoint, per-resolver invocation counts, and, the currency
+        (DECISIONS #4), the request's real **work-ms**: summed downstream-call
         durations + local compute. TMDB has no SQL, so `sql` is empty. Always built
-        from the full T3 `raw` view — it is the adapter's T3 observation regardless
+        from the full T3 `raw` view. It is the adapter's T3 observation regardless
         of emit tier.
 
         Work-ms already reflects sharing exactly: a deduped (cache-hit) load has

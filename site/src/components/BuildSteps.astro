@@ -1,13 +1,13 @@
 ---
-// "Build once. Quote anywhere, forever." — the three-step story + code sample.
+// "Build once. Quote anywhere, forever.": the three-step story + code sample.
 const py = `from costql import PricingPack
 
 pack = PricingPack.load("tmdb_t3.json")          # one static file
 quote = pack.quote('{ movie(id:"27205"){ cast(limit:8){ person{ name } } } }')
 
-quote["price"]         # 50.5  — safe billable ceiling (work-ms, never dollars)
-quote["typical_price"] # 36.4  — fair average estimate
-quote["confidence"]    # "high" — cyclic queries come back "low", flagged not billed`;
+quote["price"]         # 50.5   safe billable ceiling (work-ms, never dollars)
+quote["typical_price"] # 36.4   fair average estimate
+quote["confidence"]    # "high"  cyclic queries come back "low", flagged not billed`;
 ---
 
 <section id="build" class="cql-container cql-section">
@@ -47,7 +47,7 @@ quote["confidence"]    # "high" — cyclic queries come back "low", flagged not 
         <h3>Quote</h3>
       </div>
       <p>
-        Load the pack in Python or JavaScript and price queries locally — the JS port is
+        Load the pack in Python or JavaScript and price queries locally: the JS port is
         conformance-tested to reproduce the Python engine exactly.
       </p>
       <a href="/docs/js/">How that's guaranteed →</a>

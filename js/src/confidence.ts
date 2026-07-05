@@ -1,4 +1,4 @@
-/** Per-query confidence assessment — port of costql/confidence.py, including
+/** Per-query confidence assessment: port of costql/confidence.py, including
  * the exact caveat wording (the strings are part of the conformance surface). */
 import { InvocationRecord } from "./fanout.js";
 import { TypeGraph, isList } from "./introspect.js";

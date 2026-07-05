@@ -1,7 +1,7 @@
-"""ASGI app — Strawberry schema mounted with GraphiQL.
+"""ASGI app: Strawberry schema mounted with GraphiQL.
 
 Fresh `RequestTracer` + `LoaderRegistry` per request (per-request caches reset each
-request; the genre singleton persists — reset via `loaders.reset_caches()`). One
+request; the genre singleton persists, reset via `loaders.reset_caches()`). One
 shared `TMDBClient` and `AnthropicSummarizer` across requests.
 
 Run: `uvicorn app.server:app`  (env: COSTQL_TIER, COSTQL_TRACE_SINK, TMDB_*, ANTHROPIC_API_KEY)
@@ -17,7 +17,7 @@ from .tmdb import TMDBClient
 from .tracing import RequestTracer
 
 # Real TMDB + Anthropic. This server owns no data and never fabricates upstream
-# responses — the whole point of building it is to measure costQL against a real API.
+# responses. The whole point of building it is to measure costQL against a real API.
 _client = TMDBClient()
 _summarizer = AnthropicSummarizer()
 

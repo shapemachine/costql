@@ -1,7 +1,7 @@
 # Quickstart
 
-costQL turns a live GraphQL API into a **pricing pack** — one self-contained
-JSON file — and then quotes any query against that pack fully offline. Build
+costQL turns a live GraphQL API into a **pricing pack** (one self-contained
+JSON file) and then quotes any query against that pack fully offline. Build
 once in Python; quote forever in Python or JavaScript. This page gets you from
 zero to your first quote in about a minute, and to your first *own* pack in
 about fifteen.
@@ -26,7 +26,7 @@ pricing pack: schema 26c786209ec27586 · tier T3 · currency work_ms · offline
 ```
 
 No server is running. Nothing touched the network. The pack file carries the
-schema, the fitted per-resolver costs, and the authored fees — everything a
+schema, the fitted per-resolver costs, and the authored fees: everything a
 quote needs. The same works from Python:
 
 ```python
@@ -34,7 +34,7 @@ from costql import PricingPack
 
 pack = PricingPack.load("packs/tmdb_t3.json")
 quote = pack.quote('{ movie(id:"27205"){ cast(limit:8){ person{ name } } } }')
-quote["price"]         # 50.5384 — safe billable ceiling, in cost-units
+quote["price"]         # 50.5384 (safe billable ceiling, in cost-units)
 ```
 
 …and from JavaScript (`npm install costql`):
@@ -46,7 +46,7 @@ pack.quote('{ movie(id:"27205"){ title } }').price;
 ```
 
 The JS package is conformance-tested against the Python engine on every CI
-run — same pack, same query, same result. See [the JS package](js.md).
+run: same pack, same query, same result. See [the JS package](js.md).
 
 ## 2. Build your first pack against a real API
 
@@ -59,20 +59,20 @@ costql quote --pack rickmorty.json '{ character(id:"1"){ name episode{ name } } 
 ```
 
 `costql build` introspects the endpoint, measures a set of clean calibration
-queries against it (this takes a couple of minutes — you calibrate by
+queries against it (this takes a couple of minutes: you calibrate by
 measuring), fits the cost model, and writes the pack. From then on, quoting is
 offline.
 
 Because the Rick & Morty API is a black box we can't instrument, the pack is
 **T1**: wall-clock currency, total-only quotes. That is the designed starting
-point for any API you can send queries to — measured at ~4% mean error on
+point for any API you can send queries to, measured at ~4% mean error on
 held-out queries ([case study](results/rickmorty.md)). Richer tiers need
 server-side instrumentation; see [tier fidelity](tiers.md).
 
 ## 3. Point it at your own API
 
-Write a ~90-line adapter — where the API is, what real IDs to query with, and
-a set of curated calibration queries:
+Write a ~90-line adapter (where the API is, what real IDs to query with, and
+a set of curated calibration queries):
 
 ```bash
 cp examples/adapters/rickmorty.py my_api.py   # the minimal T1 template
@@ -88,9 +88,9 @@ result with `costql validate --pack my_api.json` and a few spot quotes.
 The pack is a plain file. Vendor it into the app that needs to budget queries;
 load it with either language's `PricingPack`; call `quote()` before running a
 query. Every result follows the [frozen output contract](contract.md): `price`
-is always present, always a number, always a safe ceiling — cost-units only,
+is always present, always a number, always a safe ceiling; cost-units only,
 never dollars (converting to money is your app's business).
 
 Cyclic queries (a type re-entering itself through a list edge) are priced as a
-structural ceiling and flagged `confidence: low` — never silently billed. See
+structural ceiling and flagged `confidence: low`, never silently billed. See
 [limitations](limitations.md) for the full honest list.

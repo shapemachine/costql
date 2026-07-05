@@ -1,4 +1,4 @@
-/** The introspected schema, indexed for cost analysis — a direct port of the
+/** The introspected schema, indexed for cost analysis: a direct port of the
  * Python engine's TypeGraph (costql/introspect.py). Consumes the raw GraphQL
  * introspection JSON embedded in every pricing pack; no graphql-js needed. */
 

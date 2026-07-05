@@ -3,7 +3,7 @@
 The core knows how to fill *pagination* and generic *scalar* arguments; every
 identity/domain argument (which arg names map to which mined entity, how a
 "whale" size is chosen from the data) is delegated to the API's ArgResolver.
-Nothing here is specific to any one API — the mining itself lives behind
+Nothing here is specific to any one API: the mining itself lives behind
 config.InputSource (see apis/tmdb.py).
 """
 from __future__ import annotations

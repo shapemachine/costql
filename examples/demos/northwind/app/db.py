@@ -1,6 +1,6 @@
 """Thin SQLite access over the REAL Northwind database.
 
-No ORM, no cache of our own — every read is a real `SELECT` against the on-disk
+No ORM, no cache of our own: every read is a real `SELECT` against the on-disk
 `northwind.db` (the jpwhite3/northwind-SQLite3 reference dataset: 8 categories,
 77 products, 16k orders, 609k order-details). The point of this demo is to measure
 costQL against genuine DB query work, so nothing here fabricates rows.

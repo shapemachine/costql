@@ -1,8 +1,8 @@
-"""ASGI app — the Northwind Strawberry passthrough, mounted with GraphiQL.
+"""ASGI app: the Northwind Strawberry passthrough, mounted with GraphiQL.
 
 Fresh `RequestTracer` + `LoaderRegistry` (and a fresh read-only SQLite connection)
 per request, so every request's coalescing/cache stats start clean. The server owns
-no data of its own and never fabricates rows — it reads the real northwind.db.
+no data of its own and never fabricates rows: it reads the real northwind.db.
 
 Run: `uvicorn app.server:app --port 8010`  (env: NORTHWIND_DB to point elsewhere)
 """
@@ -17,7 +17,7 @@ from .tracing import RequestTracer
 
 # One persistent, warm, read-only connection shared across requests (how a real
 # server runs). Opening a fresh connection per request would make the first SQL of
-# each request pay connection/page-cache cold-start — noise unrelated to the query's
+# each request pay connection/page-cache cold-start, noise unrelated to the query's
 # own cost. A warm shared connection measures the query work itself. Per-request
 # coalescing/cache state still lives in a fresh LoaderRegistry + RequestTracer.
 _conn = connect()

@@ -1,4 +1,4 @@
-/** Fanout-based invocation counter — port of costql/fanout.py. Walks the
+/** Fanout-based invocation counter: port of costql/fanout.py. Walks the
  * selection tree alongside the schema and multiplies pagination bounds down
  * the tree. Pure query-visible computation, identical record order to Python
  * (pre-order, children in query order) so float summation order matches. */

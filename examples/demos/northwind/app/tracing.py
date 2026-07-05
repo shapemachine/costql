@@ -15,8 +15,8 @@ reads it from `response.extensions.cost_trace`):
 The sharing signal (DECISIONS #2/#3) lives in the per-loader gap between
 `requested_keys` (every logical `.load`) and `batch_calls`/`batched_keys` (the
 real `SELECT ... WHERE id IN (...)` calls after coalescing + per-request cache).
-Under heavy sharing — e.g. hundreds of order-lines whose products all point at
-the same ~8 categories — `requested_keys >> batch_calls`.
+Under heavy sharing (e.g. hundreds of order-lines whose products all point at
+the same ~8 categories), `requested_keys >> batch_calls`.
 
 `work_ms` already reflects sharing exactly: a coalesced/cached load triggers no
 SELECT, so it adds 0 ms. That makes `work_ms` the T3 (observed-sharing) request
@@ -52,7 +52,7 @@ class RequestTracer:
 
     # -- called by loaders --------------------------------------------------
     def record_request(self, table: str, resolver_id: str, cache_hit: bool) -> None:
-        """One logical `.load(key)` — a requested key. `cache_hit` when the key
+        """One logical `.load(key)`: a requested key. `cache_hit` when the key
         was already materialized this request (coalesced/cached, no SELECT)."""
         st = self._stats(table)
         st["requested_keys"] += 1
@@ -62,7 +62,7 @@ class RequestTracer:
         r[resolver_id] = r.get(resolver_id, 0) + 1
 
     def record_batch(self, table: str, n_keys: int, dt_ms: float) -> None:
-        """One real `SELECT ... WHERE id IN (n_keys)` — the coalesced upstream call."""
+        """One real `SELECT ... WHERE id IN (n_keys)`: the coalesced upstream call."""
         st = self._stats(table)
         st["batch_calls"] += 1
         st["batched_keys"] += n_keys

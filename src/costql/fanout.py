@@ -2,7 +2,7 @@
 
 Static analysis of a query IR: walks the selection tree alongside the schema
 and multiplies pagination bounds down the tree to get each resolver's
-invocation count. Pure query-visible computation — no measurement.
+invocation count. Pure query-visible computation: no measurement.
 """
 from __future__ import annotations
 

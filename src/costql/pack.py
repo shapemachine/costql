@@ -1,14 +1,14 @@
-"""The pricing pack — a self-contained, static, per-schema pricing reference.
+"""The pricing pack: a self-contained, static, per-schema pricing reference.
 
 This is the artifact that crosses the build -> use boundary. Everything needed to
 price a query lives inside ONE file: the introspected schema, the fitted cost
 model (unit costs, sizes, sharing groups, safety), and the hand-authored fee
 adjustments. Loading it needs no server, no network, no measurement, and no
-re-introspection — a consumer prices queries by pure local traversal.
+re-introspection: a consumer prices queries by pure local traversal.
 
 Design intent (decided with the user): the whole point of a static per-schema
 reference is that it is consumed WITHOUT a service. No sidecar, no pricing
-endpoint, no extra API call — those would defeat the reason to build a static
+endpoint, no extra API call: those would defeat the reason to build a static
 reference. A pack is a plain file you can vendor into an app, or even embed in
 the docs of whatever tool is pricing the API, and price against locally.
 
@@ -56,7 +56,7 @@ class PricingPack:
             "tier": self.tier,
             "note": ("Self-contained static pricing reference. Prices queries "
                      "locally with no server/network/measurement. Cost-units only "
-                     "(never dollars) — the consuming app converts to money."),
+                     "(never dollars); the consuming app converts to money."),
             "introspection": self.introspection,
             "model": json.loads(self.model.to_json()),
             "adjustments": self.adjustments,
@@ -85,7 +85,7 @@ class PricingPack:
         if version > PACK_VERSION:
             raise PackVersionError(
                 f"pack_version {version} was written by a newer costql "
-                f"(this one reads <= {PACK_VERSION}) — upgrade costql")
+                f"(this one reads <= {PACK_VERSION}); upgrade costql")
         missing = [k for k in _REQUIRED_KEYS if k not in d]
         if missing:
             raise PackVersionError(
@@ -119,11 +119,11 @@ class PricingPack:
         return eff
 
     def quote(self, query: str) -> dict:
-        """Price a query from the pack alone — no server, no measurement.
+        """Price a query from the pack alone: no server, no measurement.
 
         Returns a FROZEN contract result (see contract.py): the safe billable
-        **ceiling** `price` plus a fair `typical_price`, `confidence`, and — gated
-        by the pack's tier — a per-resolver `breakdown`, observed `sharing`, and
+        **ceiling** `price` plus a fair `typical_price`, `confidence`, and: gated
+        by the pack's tier: a per-resolver `breakdown`, observed `sharing`, and
         named `external_costs`. Confidence is diagnostic (a "run it for the exact
         cost" hint on cyclic queries); the billable number is the ceiling, which
         never under-prices. `query` is echoed for convenience (not part of the

@@ -1,7 +1,7 @@
 {
   "name": "costql",
   "version": "0.1.0",
-  "description": "Quote GraphQL query costs offline from a costQL pricing pack — the JS/TS consumer of packs built with the Python costql package.",
+  "description": "Quote GraphQL query costs offline from a costQL pricing pack; the JS/TS consumer of packs built with the Python costql package.",
   "keywords": [
     "graphql",
     "cost",

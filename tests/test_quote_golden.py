@@ -1,5 +1,5 @@
 """The regression backbone: every corpus quote must equal the frozen oracle
-EXACTLY (same engine, same platform — quoting is deterministic float math on a
+EXACTLY (same engine, same platform; quoting is deterministic float math on a
 static pack). conformance/quotes.json doubles as the JS port's conformance
 oracle (the JS side compares within the file's tolerance policy)."""
 import json

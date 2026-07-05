@@ -66,7 +66,7 @@ class APIConfig:
     uncoverable_fields: dict[str, str] = field(default_factory=dict)  # resolver_id -> reason
     bounded_fields: dict[str, str] = field(default_factory=dict)   # resolver_id -> reason: coverable
     # but kept OUT of the combinatorial fanout panel and sampled in ISOLATION instead
-    # (e.g. a paid external call whose per-invocation cost is a constant — a few samples
+    # (e.g. a paid external call whose per-invocation cost is a constant: a few samples
     # suffice; fanning it out would multiply cost with no modelling gain). The fee itself
     # is authored via the #6 adjustments file, not measured.
     known_loaders: list[str] = field(default_factory=list)        # declared loaders (dead-loader detection)
@@ -77,7 +77,7 @@ class APIConfig:
     cost_currency: str = "wall_time_ms"
     tier: str = "T1"
     # Optional curated calibration shapes: a callable (size: "whale" | "small") ->
-    # list[GraphQL query strings]. RECOMMENDED — fitted unit costs are only as
+    # list[GraphQL query strings]. RECOMMENDED: fitted unit costs are only as
     # trustworthy as the clean, predictable, isolating shapes they are fit on
     # (deep cyclic shapes corrupt a linear fit; they are what costQL FLAGS, not
     # calibrates against). When absent, build_pack falls back to a conservative

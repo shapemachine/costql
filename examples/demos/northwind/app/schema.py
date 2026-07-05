@@ -1,9 +1,9 @@
-"""Strawberry schema — a thin GraphQL passthrough over the real Northwind SQLite DB.
+"""Strawberry schema: a thin GraphQL passthrough over the real Northwind SQLite DB.
 
 Every resolver does a real SQL read through a batching DataLoader (loaders.py) and
 records its invocation into the RequestTracer. The edges are deliberately shaped for
-HEAVY sharing: the graph funnels many requests onto a tiny set of hub entities —
-only 8 categories and 77 products — so one query re-requests the same few rows
+HEAVY sharing: the graph funnels many requests onto a tiny set of hub entities
+(only 8 categories and 77 products), so one query re-requests the same few rows
 dozens–hundreds of times and the loaders coalesce them:
 
     Order → details → Product → Category            (line-items → 77 products → 8 categories)
@@ -11,7 +11,7 @@ dozens–hundreds of times and the loaders coalesce them:
     Product → orders (via order-details) → …         (product ↔ order many-to-many)
 
 `CostTraceExtension` publishes the request's `cost_trace` into `response.extensions`
-so costQL's engine reads the sharing signal over HTTP — the seam that makes this a
+so costQL's engine reads the sharing signal over HTTP, the seam that makes this a
 T3-capable calibration target (identical role to tmdb-demo's extension).
 """
 from __future__ import annotations

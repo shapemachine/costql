@@ -1,8 +1,8 @@
 """Held-Out Oracle.
 
 Two DISJOINT query sets:
-  * calibration — full-depth, whale-input coverage ops (used to fit the model).
-  * held-out    — a different distribution the model never saw: shallow and
+  * calibration: full-depth, whale-input coverage ops (used to fit the model).
+  * held-out   : a different distribution the model never saw: shallow and
                   mid-depth shapes and small vs. whale pagination, at
                   alternate inputs (variant="heldout"), plus any API-specific
                   adversarial fixtures the config supplies.

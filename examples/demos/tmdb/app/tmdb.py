@@ -24,11 +24,11 @@ class RateLimitError(Exception):
 
 class AdaptiveThrottle:
     """Concurrency governor. Starts gentle, ramps while healthy, backs off on
-    rising latency or throttle responses. Purely reactive — no configuration.
+    rising latency or throttle responses. Purely reactive: no configuration.
 
     Concurrency is gated by an `asyncio.Condition` against a mutable `limit` (no
     Semaphore, so `limit` can shrink/grow freely and it's created lazily in the
-    running loop — safe across the per-test event loops)."""
+    running loop, safe across the per-test event loops)."""
 
     def __init__(self, start: int = 4, floor: int = 1, ceiling: int = 16):
         self.floor = floor

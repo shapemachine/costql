@@ -16,7 +16,7 @@ def test_coalesced_loader_is_grouped():
 
 
 def test_uncorrelated_resolver_is_not_grouped():
-    # A.x tracks the loader's requested_keys across ops; B.y does not — only
+    # A.x tracks the loader's requested_keys across ops; B.y does not, so only
     # the correlated resolver is attributed to the loader.
     obs = [
         {"op": "q1", "trace": {"loaders": {"cat": {"requested_keys": 10, "batch_calls": 1}},

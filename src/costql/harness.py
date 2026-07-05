@@ -1,7 +1,7 @@
 """Instrumentation Harness (black-box HTTP adapter).
 
 Runs a query against a GraphQL endpoint and measures its cost as client-observed
-request latency (wall_time_ms) — the signal an external T1 consumer sees, and
+request latency (wall_time_ms): the signal an external T1 consumer sees, and
 finer than an integer-ms server histogram. Sample-level round-robin measurement
 (measure_batch) makes host/GC drift common-mode across queries.
 
@@ -23,7 +23,7 @@ def _requests():
         import requests
     except ImportError as e:                                  # pragma: no cover
         raise ImportError(
-            "the calibration/measurement path needs the 'requests' package — "
+            "the calibration/measurement path needs the 'requests' package; "
             "install it with:  pip install 'costql[build]'") from e
     return requests
 
@@ -55,7 +55,7 @@ class Measurement:
 
     def representative_trace(self) -> dict:
         """The single coherent run whose total work-ms is the median across rounds
-        — the exact post-execution price of a *typical* execution (total + per-
+       : the exact post-execution price of a *typical* execution (total + per-
         resolver + loaders all come from ONE run, never mixed). Falls back to the
         last-round cost_trace when per-round traces weren't captured."""
         traces = [t for t in self.cost_traces if isinstance(t, dict)]
@@ -69,21 +69,21 @@ class Measurement:
     def work_ms(self) -> float | None:
         """The currency (DECISIONS #4): trimmed-mean summed work-ms across rounds,
         from the server's cost_trace. None when the API emits no work-ms (a T1-only
-        backend) — the engine then falls back to wall-clock as the low-fidelity proxy."""
+        backend): the engine then falls back to wall-clock as the low-fidelity proxy."""
         if self.work_samples:
             return _trimmed_mean(self.work_samples)
         return None
 
     @property
     def resolver_work_ms(self) -> dict:
-        """Per-resolver observed work-ms from the last round's cost_trace — the
+        """Per-resolver observed work-ms from the last round's cost_trace: the
         exact post-execution T3 decomposition (no model)."""
         return dict(self.cost_trace.get("resolver_work_ms") or {})
 
     @property
     def cost_ms(self) -> float:
         """Ground-truth cost in the one currency: work-ms when observed (T2/T3),
-        else the wall-clock proxy (T1). Never refuses — always returns a price."""
+        else the wall-clock proxy (T1). Never refuses: always returns a price."""
         w = self.work_ms
         return w if w is not None else self.measured_ms
 

@@ -3,22 +3,22 @@
 This is the stable, versioned shape an application budgets against. It is the
 same at every fidelity tier in one respect that matters most: **`price` is always
 present, in `currency` cost-units, as a safe number to bill on.** What a higher
-tier adds is *explanatory detail*, not a different billable field — so an app can
+tier adds is *explanatory detail*, not a different billable field: so an app can
 integrate once against the core and simply gain richer breakdowns as the API's
 instrumentation improves.
 
 Two `basis` values, one shape:
-  * "predicted" — a pre-execution QUOTE from the static pricing pack (a model).
-  * "measured"  — a post-execution EXACT receipt from a query that actually ran.
+  * "predicted": a pre-execution QUOTE from the static pricing pack (a model).
+  * "measured" : a post-execution EXACT receipt from a query that actually ran.
 
 Three `tier` values = how sharply cost could be resolved (per DECISIONS #4/#6):
-  * T1 — a single total only (wall-clock proxy when that is all the API affords).
+  * T1: a single total only (wall-clock proxy when that is all the API affords).
          No per-resolver breakdown, no sharing.
-  * T2 — per-resolver work; sharing INFERRED, so not reported as observed.
-  * T3 — per-resolver work + OBSERVED sharing (dedup/cache) + named external hosts.
+  * T2: per-resolver work; sharing INFERRED, so not reported as observed.
+  * T3: per-resolver work + OBSERVED sharing (dedup/cache) + named external hosts.
 
 The contract is enforced by `validate()` (dependency-free). Anything that fails
-validation is a contract violation, by definition — that is what "frozen" means.
+validation is a contract violation, by definition: that is what "frozen" means.
 """
 from __future__ import annotations
 
@@ -42,7 +42,7 @@ _CORE_REQUIRED = {
     "tier": str,
     "basis": str,
     "currency": str,
-    "price": (int, float),        # the billable number — a safe ceiling (predicted) / exact total (measured)
+    "price": (int, float),        # the billable number: a safe ceiling (predicted) / exact total (measured)
     "confidence": str,
     "schema_hash": str,
     "caveats": list,
@@ -53,7 +53,7 @@ def validate(result: dict) -> list[str]:
     """Return a list of contract violations (empty list == valid).
 
     Checks the mandatory core, enum values, types of the optional tier-gated
-    sections, and — crucially — that no section appears at a tier not allowed to
+    sections, and: crucially; that no section appears at a tier not allowed to
     carry it (e.g. observed `sharing` at T1/T2)."""
     problems: list[str] = []
     if not isinstance(result, dict):
@@ -140,7 +140,7 @@ def measured_result(exact, schema_hash: str) -> dict:
     """Shape a post-execution EXACT receipt (ExactPrice) into the contract.
 
     The tier is whatever the run's trace afforded (exact.py's ladder). Confidence
-    is always "exact" — the query ran."""
+    is always "exact": the query ran."""
     breakdown = [{"resolver_id": r.resolver_id, "cost": round(r.work_ms, 4),
                   "invocations": r.invocations} for r in exact.resolvers]
     sharing = [{"loader": lo.endpoint, "requested": lo.requested_keys,

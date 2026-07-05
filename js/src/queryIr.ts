@@ -1,8 +1,8 @@
-/** Query IR — a direct port of the Python engine's parser (costql/query_ir.py),
+/** Query IR: a direct port of the Python engine's parser (costql/query_ir.py),
  * byte-for-byte in behavior so JS and Python quotes agree exactly. Deliberately
  * a subset of GraphQL (the same subset): named/anonymous query operations,
  * fields with scalar arguments, nested selection sets. Fragments raise; aliases
- * are not resolved (the alias becomes the selection name) — frozen v0.1
+ * are not resolved (the alias becomes the selection name): frozen v0.1
  * limitations shared by both engines. */
 
 export type ArgValue = string | number | boolean | null | EnumValue;

@@ -1,15 +1,15 @@
-"""Reference adapter — the Northwind SQLite Passthrough (../demos/northwind).
+"""Reference adapter: the Northwind SQLite Passthrough (../demos/northwind).
 
 A DB-backed schema shaped for HEAVY entity sharing (a hub query asks for a
 category 107 times; the DB reads it once). The demo emits
 `response.extensions.cost_trace` with real per-loader coalescing stats and
-summed SQL work-ms, so the highest fidelity it affords is **T3** — observed
+summed SQL work-ms, so the highest fidelity it affords is **T3**: observed
 sharing. Currency is `work_ms`.
 
 Everything specific to this deployment lives here: the endpoint, the real
 Northwind ids (categories 1-8, products 1-77, orders 10248-26529, the 5-char
 customer codes, suppliers 1-29), argument resolution, and the calibration
-shapes — including a deliberate batch-width sweep so each shared loader's
+shapes, including a deliberate batch-width sweep so each shared loader's
 size→cost curve is fit from >=3 distinct widths. There is no auth (local DB)
 and nothing paid/bounded to sample in isolation.
 
@@ -50,7 +50,7 @@ CUSTOMERS  = {"whale": "ALFKI", "small": "BERGS", "heldout": "VINET"}   # 5-char
 
 
 class NorthwindInputSource:
-    """No mining needed — a local reference DB with known, stable ids."""
+    """No mining needed: a local reference DB with known, stable ids."""
 
     def mine(self) -> MinedInputs:
         return MinedInputs(
@@ -111,7 +111,7 @@ def calib_shapes(cat, prod, order, cust, sup):
 
 def calib_sweep_shapes(cat, prod, order, cust, sup):
     """Deliberately sweep each BATCHED loader across >=3 distinct batch widths
-    so a curve — not just a point — can be fit for it, and so the loader's
+    so a curve (not just a point) can be fit for it, and so the loader's
     observed cardinality (e.g. the 8-row categories table) is learned."""
     return [
         # categories loader: narrow -> saturating (<=8 distinct)

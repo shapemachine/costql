@@ -1,6 +1,6 @@
 ---
 name: costql-adapter
-description: Write a costQL adapter for a new GraphQL API — the ~90-line file that lets `costql build` calibrate the API into a pricing pack. Use when the user wants to onboard an API to costQL, price a new GraphQL endpoint, or asks how to write an APIConfig/adapter.
+description: Write a costQL adapter for a new GraphQL API: the ~90-line file that lets `costql build` calibrate the API into a pricing pack. Use when the user wants to onboard an API to costQL, price a new GraphQL endpoint, or asks how to write an APIConfig/adapter.
 ---
 
 # Write a costQL adapter
@@ -9,7 +9,7 @@ You are onboarding a GraphQL API to costQL. The deliverable is ONE Python file
 exporting a factory that returns an `APIConfig`. The engine never changes.
 The canonical reference is the docs page `docs/adapters.md`
 (https://costql.com/docs/adapters/); the worked examples are
-`examples/adapters/rickmorty.py` (minimal, T1 — start from this one),
+`examples/adapters/rickmorty.py` (minimal, T1; start from this one),
 `tmdb.py` (paid bounded field, loaders), and `northwind.py` (batch-width
 sweeps). For flags, trust `costql build --help` over any prose.
 
@@ -19,8 +19,8 @@ sweeps). For flags, trust `costql build --help` over any prose.
    the endpoint) and note: the root fields, which list fields take a
    pagination arg (`first`/`limit`/`page`), the server's page size, and
    whether auth headers are needed.
-2. **Collect real IDs — never fabricate.** For each major entity pick three
-   DISJOINT rows: `whale` (the most densely-connected you can find — worst
+2. **Collect real IDs, never fabricate.** For each major entity pick three
+   DISJOINT rows: `whale` (the most densely-connected you can find, worst
    case fanout), `small` (a light one), `heldout` (reserved, never used in
    calibration). Put them in dicts at module top like the examples.
 3. **Copy the template.** `cp examples/adapters/rickmorty.py <api>.py`, then
@@ -31,14 +31,14 @@ sweeps). For flags, trust `costql build --help` over any prose.
    handle. Honor `size` ("whale"/"small") and `variant` ("calib"/"heldout").
 5. **Write `calibration_queries(size)`.** 8–15 clean, PREDICTABLE shapes:
    every list edge crosses into a DIFFERENT type and never re-enters (no
-   `a{ b{ a } }` cycles — those corrupt the fit; costQL flags them at quote
+   `a{ b{ a } }` cycles: those corrupt the fit; costQL flags them at quote
    time instead). Cover every resolver you want priced. If the server batches
    (T2/T3), sweep each batched edge across >=3 declared widths
    (`first:3/15/40`) so its size->cost curve can be fit.
 6. **Set fidelity honestly.** An API you can't instrument is
    `tier="T1"`, `cost_currency="wall_time_ms"`, `known_loaders=[]`. Claim
    T2/T3 only if the server emits the cost-trace extension
-   (https://costql.com/docs/instrumentation/) — `costql build` downgrades to
+   (https://costql.com/docs/instrumentation/). `costql build` downgrades to
    T1 anyway if it observes no trace, so over-claiming just wastes a build.
 7. **Declare paid/external fields** in `bounded_fields` so they are sampled
    once in isolation instead of fanned out (e.g. an LLM-backed field). Their
@@ -57,9 +57,9 @@ sweeps). For flags, trust `costql build --help` over any prose.
 
 ## Failure modes to catch
 
-- Calibration queries erroring (bad IDs, missing auth) — the build prints
+- Calibration queries erroring (bad IDs, missing auth): the build prints
   each skipped query; fix inputs rather than accepting a thin fit.
-- All shapes hitting one resolver — other resolvers get no signal.
+- All shapes hitting one resolver: other resolvers get no signal.
 - IDs from a test fixture that the live API 404s on.
-- Forgetting `heldout` disjointness — you lose the ability to evaluate
+- Forgetting `heldout` disjointness: you lose the ability to evaluate
   honestly later.

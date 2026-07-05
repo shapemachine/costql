@@ -1,10 +1,10 @@
-"""Reference adapter — TMDB Passthrough (the costQL demo API in ../demos/tmdb).
+"""Reference adapter: TMDB Passthrough (the costQL demo API in ../demos/tmdb).
 
 Everything specific to this deployment lives here: the endpoint, the mined inputs
 (real TMDB movie/person/genre ids), argument resolution (which arg names map to
 which id), and the curated calibration shapes. The TMDB API is fully public, so
 there is no auth: root_auth, field_auth, tokens and uncoverable_fields are all
-empty — the coverage generator then drops nothing for permissions. Onboarding
+empty. The coverage generator then drops nothing for permissions. Onboarding
 this API needed no change inside `costql`; only this file.
 
 Sharing (T3) is read from `response.extensions.cost_trace`, which the demo server
@@ -55,7 +55,7 @@ LIMITS = {"whale": 5, "small": 2}       # kept low: the schema is deeply cyclic,
 
 
 class TMDBInputSource:
-    """No dataset to mine — TMDB is a public remote API. We supply a curated set
+    """No dataset to mine: TMDB is a public remote API. We supply a curated set
     of real, stable ids as the 'mined' inputs. No tokens (public), nothing
     uncovered."""
 
@@ -92,7 +92,7 @@ class TMDBArgResolver:
 # --- Curated calibration shapes ---------------------------------------------
 # Predictable, distinct-type-fanout queries a caller would actually price. Some
 # declare their size (`limit:N`), some don't. Deep cyclic shapes are deliberately
-# absent — their data-dependent recursion corrupts a linear fit; they are what
+# absent: their data-dependent recursion corrupts a linear fit; they are what
 # costQL FLAGS, not calibrates against.
 
 def _entity(which):
@@ -115,7 +115,7 @@ def high_shapes(m, p, g, s):
 
 
 def calib_extra(m, p, g, s):
-    """Single-page (depth-1) recommendation/similar queries — isolating measures
+    """Single-page (depth-1) recommendation/similar queries, isolating measures
     so those resolvers get a clean unit cost for the fit."""
     return [
         f'{{ movie(id:"{m}"){{ recommendations{{ title }} }} }}',

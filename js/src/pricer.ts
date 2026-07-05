@@ -1,4 +1,4 @@
-/** The quote-side pricer — port of Pricer.price from costql/pricer.py.
+/** The quote-side pricer: port of Pricer.price from costql/pricer.py.
  * Static-only: pure traversal of the pre-built model. The BUILD side (NNLS
  * fit, calibration, measurement) intentionally stays Python-only. */
 import { FanoutCounter, InvocationRecord } from "./fanout.js";
