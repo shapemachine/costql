@@ -1,0 +1,52 @@
+---
+// "One currency, three fidelities" — tier cards + the Straight-talk callout.
+---
+
+<section id="tiers" class="cql-tiers">
+  <div class="cql-container cql-section">
+    <h2 class="cql-h2">One currency, three fidelities</h2>
+    <p class="cql-lead">
+      costQL prices in <strong>work-ms</strong> — the summed real work a query causes. The
+      tiers aren't different products; they're how sharply your API's instrumentation lets
+      the same engine see.
+    </p>
+
+    <div class="cql-tiers__grid">
+      <div class="cql-tier">
+        <span class="cql-tier__tab">T1</span>
+        <h3 class="cql-tier__heading">Any API. Today.</h3>
+        <div class="cql-tier__body">
+          Black-box wall-clock. Works against any GraphQL endpoint you can send queries to —
+          zero server changes. This is where every API starts, at ~4% measured error.
+        </div>
+      </div>
+      <div class="cql-tier">
+        <span class="cql-tier__tab">T2</span>
+        <h3 class="cql-tier__heading">Per-resolver work</h3>
+        <div class="cql-tier__body">
+          Your server emits per-resolver timings; parallel work stops hiding inside elapsed
+          time. Under light sharing, T2 already matched T3 (11% vs 11%).
+        </div>
+      </div>
+      <div class="cql-tier cql-tier--active">
+        <span class="cql-tier__tab">T3</span>
+        <h3 class="cql-tier__heading">Sharing, observed</h3>
+        <div class="cql-tier__body">
+          Loader keys and cache status: dedup counted exactly, batch curves learned, paid
+          hosts named. Where schemas share heavily, this is the difference between 315% and
+          12% error.
+        </div>
+      </div>
+    </div>
+
+    <div class="cql-callout">
+      <span class="cql-callout__label">Straight talk:</span>
+      <span>
+        the demo packs are T3 because we instrumented the demo servers. Your first pack will
+        be T1 — that's the designed starting point, and it already gives you a safe ceiling.
+        T2/T3 need your server to emit <a href="/docs/instrumentation/">one trace extension</a>.
+        <a href="/docs/tiers/">The full tier story →</a>
+      </span>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,21 @@
+---
+import Playground from './Playground.tsx';
+---
+
+<section id="playground" class="cql-container cql-section">
+  <div class="cql-play__titlerow">
+    <h2 class="cql-h2" style="margin: 0">Kick the tires in 60 seconds</h2>
+    <span class="cql-badge cql-badge--ink">runs in your browser</span>
+  </div>
+  <p class="cql-lead" style="margin-bottom: 28px">
+    The playground runs the real engine against three committed packs — including a
+    deliberately cyclic query so you can watch the low-confidence flag do its job.
+  </p>
+
+  <Playground client:only="react" />
+
+  <div class="cql-play__ctas">
+    <a href="/docs/quickstart/" class="cql-btn cql-btn--primary cql-btn--lg">Quickstart →</a>
+    <a href="https://github.com/shapemachine/costql" class="cql-btn cql-btn--ink cql-btn--lg">Star on GitHub</a>
+  </div>
+</section>

@@ -1,0 +1,65 @@
+---
+import Receipt from './Receipt.astro';
+---
+
+<section id="top" class="cql-container cql-hero">
+  <div>
+    <span class="cql-badge cql-badge--accent">GraphQL cost, quoted offline</span>
+    <h1>Price GraphQL queries <span class="cql-mark"><em>before</em></span> you run them.</h1>
+    <p>
+      costQL calibrates a live GraphQL API into a <strong>pricing pack</strong> — one
+      self-contained file — then quotes any query against it fully offline. No pricing
+      service, no per-request round-trip, no dollars: a safe billable ceiling in
+      cost-units, from a static file your app vendors like an asset.
+    </p>
+    <div class="cql-hero__pills">
+      <button class="cql-pill" data-copy="pip install costql">
+        <span class="cql-pill__prompt">$</span>
+        <span>pip install costql</span>
+        <span class="cql-pill__state">copy</span>
+      </button>
+      <button class="cql-pill" data-copy="npm install costql">
+        <span class="cql-pill__prompt">$</span>
+        <span>npm install costql</span>
+        <span class="cql-pill__state">copy</span>
+      </button>
+    </div>
+    <div class="cql-hero__ctas">
+      <a href="#playground" class="cql-btn cql-btn--primary cql-btn--lg">Try the playground</a>
+      <a href="/docs/quickstart/" class="cql-btn cql-btn--secondary cql-btn--lg">Quickstart →</a>
+    </div>
+  </div>
+
+  <div class="cql-hero__aside">
+    <Receipt
+      title="costql quote"
+      meta="tmdb_t3.json · fully offline"
+      items={[
+        { label: 'movie(id)', value: '4.0' },
+        { label: 'cast(limit:8)', value: '12.5' },
+        { label: 'person.name ×8', value: '34.0', indent: true },
+        { label: 'typical estimate', value: '36.4', muted: true },
+        { label: 'confidence', value: 'high', muted: true },
+      ]}
+      total="50.5"
+      totalLabel="price ceiling"
+      footer="work-ms · never dollars"
+      width={320}
+    />
+  </div>
+</section>
+
+<script is:inline>
+  document.querySelectorAll('.cql-pill').forEach((pill) => {
+    pill.addEventListener('click', async () => {
+      const state = pill.querySelector('.cql-pill__state');
+      try { await navigator.clipboard.writeText(pill.dataset.copy || ''); } catch {}
+      state.textContent = 'copied';
+      state.classList.add('cql-pill__state--copied');
+      setTimeout(() => {
+        state.textContent = 'copy';
+        state.classList.remove('cql-pill__state--copied');
+      }, 1200);
+    });
+  });
+</script>

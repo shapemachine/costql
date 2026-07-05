@@ -1,0 +1,70 @@
+---
+// "Build once. Quote anywhere, forever." — the three-step story + code sample.
+const py = `from costql import PricingPack
+
+pack = PricingPack.load("tmdb_t3.json")          # one static file
+quote = pack.quote('{ movie(id:"27205"){ cast(limit:8){ person{ name } } } }')
+
+quote["price"]         # 50.5  — safe billable ceiling (work-ms, never dollars)
+quote["typical_price"] # 36.4  — fair average estimate
+quote["confidence"]    # "high" — cyclic queries come back "low", flagged not billed`;
+---
+
+<section id="build" class="cql-container cql-section">
+  <h2 class="cql-h2">Build once. Quote anywhere, forever.</h2>
+  <p class="cql-lead">
+    Three steps from a live endpoint to a static pricing pack your app vendors like an asset.
+  </p>
+
+  <div class="cql-steps__grid">
+    <div class="cql-card cql-step">
+      <div class="cql-step__head">
+        <span class="cql-stepnum">1</span>
+        <h3>Adapt</h3>
+      </div>
+      <p>
+        Write a ~90-line adapter: where the API is, real IDs to query with, and clean
+        calibration shapes. Three worked examples ship in the repo.
+      </p>
+      <a href="/docs/adapters/">The adapter guide →</a>
+    </div>
+
+    <div class="cql-card cql-step">
+      <div class="cql-step__head">
+        <span class="cql-stepnum">2</span>
+        <h3>Build</h3>
+      </div>
+      <p>
+        <code>costql build</code> introspects the endpoint, measures calibration queries,
+        fits per-resolver costs, and writes the pack.
+      </p>
+      <span class="cql-badge">schema + rates + fees → one JSON</span>
+    </div>
+
+    <div class="cql-card cql-step">
+      <div class="cql-step__head">
+        <span class="cql-stepnum">3</span>
+        <h3>Quote</h3>
+      </div>
+      <p>
+        Load the pack in Python or JavaScript and price queries locally — the JS port is
+        conformance-tested to reproduce the Python engine exactly.
+      </p>
+      <a href="/docs/js/">How that's guaranteed →</a>
+    </div>
+  </div>
+
+  <div style="margin-top: 24px">
+    <div class="cql-code">
+      <div class="cql-code__head">
+        <div class="cql-dots">
+          <span class="cql-dot cql-dot--aqua"></span>
+          <span class="cql-dot"></span>
+          <span class="cql-dot"></span>
+        </div>
+        <span class="cql-code__title">python</span>
+      </div>
+      <pre>{py}</pre>
+    </div>
+  </div>
+</section>

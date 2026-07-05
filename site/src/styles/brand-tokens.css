@@ -1,0 +1,214 @@
+/* costQL design tokens — vendored from the costQL Design System project
+   (claude.ai/design d85aa72a). Vintage-computer + paper-receipt palette:
+   warm avocado primary + cool aqua secondary on off-white paper, warm ink,
+   all monospace, hard offset shadows, never all-caps.
+   The [data-theme='dark'] block is DERIVED (the source system is light-only)
+   by remapping the semantic aliases; raw scales are shared. */
+
+/* Fonts — self-hosted (@fontsource) instead of the source's Google CDN. */
+@import '@fontsource/space-mono/400.css';
+@import '@fontsource/space-mono/700.css';
+@import '@fontsource/space-mono/400-italic.css';
+@import '@fontsource/space-mono/700-italic.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/500.css';
+@import '@fontsource/ibm-plex-mono/600.css';
+@import '@fontsource/ibm-plex-mono/700.css';
+@import '@fontsource/ibm-plex-mono/400-italic.css';
+
+:root {
+  /* ---- Primary accent: avocado / olive ---- */
+  --avocado-100: #eef0d8;
+  --avocado-200: #dbe0ad;
+  --avocado-300: #c6cf82;
+  --avocado-400: #a8b352;
+  --avocado-500: #93a03e;
+  --avocado-600: #64711f;
+  --avocado-700: #4b5618;
+
+  /* ---- Secondary accent: aqua / seafoam ---- */
+  --aqua-100: #d6f2ea;
+  --aqua-200: #a6e5d5;
+  --aqua-300: #6fd6bd;
+  --aqua-400: #45c6a6;
+  --aqua-500: #2fb092;
+  --aqua-600: #197a66;
+  --aqua-700: #12604f;
+
+  /* Warm off-white paper neutrals */
+  --paper-000: #fdfcf6;
+  --paper-100: #f7f4e9;
+  --paper-200: #efeadb;
+  --paper-300: #e4ddc9;
+  --paper-400: #d3cbb2;
+
+  /* Warm ink — never pure black */
+  --ink-900: #16150f;
+  --ink-800: #201f16;
+  --ink-700: #37352a;
+  --ink-600: #55523f;
+  --ink-500: #767161;
+  --ink-400: #9a9583;
+
+  /* Semantic status hues */
+  --signal-ok: #1f8a72;
+  --signal-warn: #c98a12;
+  --signal-low: #b8461f;
+  --signal-info: #197a66;
+
+  /* ---- Semantic aliases (theme-switchable) ---- */
+  --bg-page: var(--paper-100);
+  --bg-sunken: var(--paper-200);
+  --surface-card: var(--paper-000);
+  --surface-receipt: var(--paper-200);
+  --surface-invert: var(--ink-800);
+
+  --text-strong: var(--ink-900);
+  --text-body: var(--ink-800);
+  --text-secondary: var(--ink-700);
+  --text-muted: var(--ink-500);
+  --text-faint: var(--ink-400);
+  --text-invert: var(--paper-000);
+  --text-on-accent: var(--ink-900);
+  --text-link: var(--avocado-600);
+
+  --accent: var(--avocado-400);
+  --accent-hover: var(--avocado-300);
+  --accent-press: var(--avocado-500);
+  --accent-text: var(--avocado-600);
+  --accent-soft: var(--avocado-200);
+  --accent-softer: var(--avocado-100);
+
+  --accent-2: var(--aqua-400);
+  --accent-2-hover: var(--aqua-300);
+  --accent-2-press: var(--aqua-500);
+  --accent-2-text: var(--aqua-600);
+  --accent-2-soft: var(--aqua-200);
+
+  --border-ink: var(--ink-800);
+  --border-strong: var(--ink-900);
+  --border-hairline: var(--paper-400);
+  --shadow-ink: var(--ink-800);
+  --focus-ring: var(--ink-900);
+
+  /* Terminal/editor panel (dark in BOTH themes, per the mock) */
+  --terminal-bg: var(--ink-900);
+  --terminal-head: var(--ink-800);
+  --terminal-fg: var(--paper-100);
+  --terminal-muted: var(--ink-400);
+
+  /* Typography */
+  --font-display: 'Space Mono', 'IBM Plex Mono', ui-monospace, monospace;
+  --font-body: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  --fs-2xs: 0.6875rem;
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-md: 1rem;
+  --fs-lg: 1.25rem;
+  --fs-xl: 1.625rem;
+  --fs-2xl: 2.25rem;
+  --fs-3xl: 3rem;
+  --fs-4xl: 4.25rem;
+
+  --lh-tight: 1.05;
+  --lh-snug: 1.2;
+  --lh-normal: 1.5;
+  --lh-loose: 1.7;
+
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.04em;
+  --tracking-receipt: 0.02em;
+
+  /* Spacing — 4px grid */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --container-max: 1120px;
+  --container-narrow: 760px;
+
+  /* Borders / radii / hard shadows */
+  --border-hair: 1px;
+  --border-1: 2px;
+  --border-2: 3px;
+  --radius-0: 0px;
+  --radius-1: 2px;
+  --radius-2: 4px;
+  --radius-pill: 999px;
+  --shadow-1: 2px 2px 0 0 var(--shadow-ink);
+  --shadow-2: 4px 4px 0 0 var(--shadow-ink);
+  --shadow-3: 6px 6px 0 0 var(--shadow-ink);
+  --shadow-avocado: 4px 4px 0 0 var(--avocado-400);
+  --press-shift: 2px;
+  --ease-snap: cubic-bezier(0.2, 0, 0, 1);
+  --dur-fast: 90ms;
+  --dur-med: 160ms;
+}
+
+/* ---- DERIVED dark theme (not in the source system — pending approval).
+   The inversion rule: the ink sections of the light design become the page;
+   paper tones become the ink. Accents unchanged; borders shift to near-black
+   with lighter surfaces carrying the separation; shadows stay hard. ---- */
+:root[data-theme='dark'] {
+  --bg-page: #16150f;
+  --bg-sunken: #11100b;
+  --surface-card: #232217;
+  --surface-receipt: #282619;
+  --surface-invert: #efeadb;
+
+  --text-strong: #fdfcf6;
+  --text-body: #efeadb;
+  --text-secondary: #d3cbb2;
+  --text-muted: #9a9583;
+  --text-faint: #767161;
+  --text-invert: #201f16;
+  --text-on-accent: #16150f;
+  --text-link: var(--avocado-300);
+
+  --accent-text: var(--avocado-300);
+  --accent-soft: #3c3f20;
+  --accent-softer: #2c2e1a;
+  --accent-2-text: var(--aqua-300);
+  --accent-2-soft: #1c3a32;
+
+  --border-ink: #0b0a07;
+  --border-strong: #0b0a07;
+  --border-hairline: #37352a;
+  --shadow-ink: #0b0a07;
+  --focus-ring: var(--avocado-400);
+
+  --terminal-bg: #0f0e0a;
+  --terminal-head: #1a1912;
+  --terminal-fg: #efeadb;
+  --terminal-muted: #767161;
+}
+
+/* ---- Base ---- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+::selection {
+  background: var(--avocado-400);
+  color: var(--ink-900);
+}
+
+:focus-visible {
+  outline: var(--border-1) solid var(--focus-ring);
+  outline-offset: 2px;
+}

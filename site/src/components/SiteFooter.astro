@@ -1,0 +1,60 @@
+---
+// Footer, styled as a printed receipt tail.
+const year = new Date().getFullYear();
+const cols = [
+  {
+    h: 'product',
+    links: [
+      { label: 'playground', href: '#playground' },
+      { label: 'quickstart', href: '/docs/quickstart/' },
+      { label: 'tiers', href: '/docs/tiers/' },
+      { label: 'results', href: '/docs/evaluation/' },
+    ],
+  },
+  {
+    h: 'docs',
+    links: [
+      { label: 'adapters', href: '/docs/adapters/' },
+      { label: 'instrumentation', href: '/docs/instrumentation/' },
+      { label: 'the js port', href: '/docs/js/' },
+      { label: 'the output contract', href: '/docs/contract/' },
+    ],
+  },
+  {
+    h: 'project',
+    links: [
+      { label: 'github', href: 'https://github.com/shapemachine/costql' },
+      { label: 'changelog', href: 'https://github.com/shapemachine/costql/blob/main/CHANGELOG.md' },
+      { label: 'license (apache-2.0)', href: 'https://github.com/shapemachine/costql/blob/main/LICENSE' },
+      { label: 'llms.txt', href: '/llms.txt' },
+    ],
+  },
+];
+---
+
+<footer class="cql-footer">
+  <div class="cql-container">
+    <div class="cql-footer__grid">
+      <div>
+        <div class="cql-footer__brand">cost<span>QL</span></div>
+        <p class="cql-footer__tag">
+          a safe billable ceiling in work-ms, from a static file your app vendors like an asset.
+        </p>
+      </div>
+      {cols.map((c) => (
+        <div>
+          <div class="cql-footer__h">{c.h}</div>
+          <ul>
+            {c.links.map((l) => (
+              <li><a href={l.href}>{l.label}</a></li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+    <div class="cql-footer__tail">
+      <span>* * * end of receipt * * *</span>
+      <span>© {year} shape machine · work-ms, never dollars</span>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,55 @@
+---
+// costQL Receipt — paper receipt with perforated edges, dotted leaders, and a
+// bold total bar. Static twin of the React Receipt used by the playground.
+interface Item {
+  label: string;
+  value: string;
+  muted?: boolean;
+  indent?: boolean;
+}
+interface Props {
+  title?: string;
+  meta?: string;
+  items: Item[];
+  total?: string;
+  totalLabel?: string;
+  footer?: string;
+  width?: number;
+}
+const {
+  title = 'costql quote',
+  meta,
+  items,
+  total,
+  totalLabel = 'price ceiling',
+  footer,
+  width = 320,
+} = Astro.props;
+---
+
+<div class="cql-receipt" style={`width:${width}px`}>
+  <div class="cql-receipt__zig cql-receipt__zig--top"></div>
+  <div class="cql-receipt__paper">
+    <div class="cql-receipt__title">{title}</div>
+    {meta && <div class="cql-receipt__meta">{meta}</div>}
+    <div class="cql-receipt__rule"></div>
+    {items.map((it) => (
+      <div class={`cql-receipt__row${it.muted ? ' cql-receipt__row--muted' : ''}${it.indent ? ' cql-receipt__row--indent' : ''}`}>
+        <span class="cql-receipt__label">{it.label}</span>
+        <span class="cql-receipt__leader"></span>
+        <span class="cql-receipt__value">{it.value}</span>
+      </div>
+    ))}
+    {total != null && (
+      <>
+        <div class="cql-receipt__rule"></div>
+        <div class="cql-receipt__total">
+          <span>{totalLabel}</span>
+          <span class="cql-receipt__total-value">{total}</span>
+        </div>
+      </>
+    )}
+    {footer && <div class="cql-receipt__footer">{footer}</div>}
+  </div>
+  <div class="cql-receipt__zig cql-receipt__zig--bottom"></div>
+</div>

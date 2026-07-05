@@ -1,38 +1,112 @@
-/* costQL palette — carried over from the project's cost-report design system.
-   Accent teal + semantic safe/flag/external colors, light & dark. */
+/* Starlight docs, restyled with the costQL design-system tokens: paper +
+   warm ink + avocado/aqua, all monospace, hard shadows. The dark scheme is
+   the same DERIVED remap as the landing (source system is light-only). */
+@import './brand-tokens.css';
 
+/* ---- Light (default) ---- */
 :root {
-  --costql-accent: #0c7c8c;
-  --costql-safe: #2e7d52;
-  --costql-safe-soft: rgba(46, 125, 82, 0.12);
-  --costql-flag: #a8710e;
-  --costql-flag-soft: rgba(168, 113, 14, 0.13);
-  --costql-ext: #6b47c4;
-  --costql-ext-soft: rgba(107, 71, 196, 0.12);
+  --sl-font: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  --sl-font-mono: 'IBM Plex Mono', ui-monospace, monospace;
 
-  /* Starlight light theme */
-  --sl-color-accent-low: rgba(12, 124, 140, 0.12);
-  --sl-color-accent: #0c7c8c;
-  --sl-color-accent-high: #085a66;
+  --sl-color-accent-low: var(--avocado-100);
+  --sl-color-accent: var(--avocado-600);
+  --sl-color-accent-high: var(--avocado-700);
+
+  --sl-color-white: var(--ink-900);
+  --sl-color-gray-1: var(--ink-800);
+  --sl-color-gray-2: var(--ink-700);
+  --sl-color-gray-3: var(--ink-500);
+  --sl-color-gray-4: var(--paper-400);
+  --sl-color-gray-5: var(--paper-300);
+  --sl-color-gray-6: var(--paper-200);
+  --sl-color-gray-7: var(--paper-100);
+  --sl-color-black: var(--paper-000);
+
+  --sl-color-bg: var(--paper-100);
+  --sl-color-bg-nav: var(--paper-100);
+  --sl-color-bg-sidebar: var(--paper-100);
+  --sl-color-bg-inline-code: var(--paper-200);
+  --sl-color-hairline: var(--paper-400);
+  --sl-color-hairline-light: var(--paper-300);
+  --sl-color-hairline-shade: var(--paper-400);
+  --sl-color-text: var(--ink-800);
+  --sl-color-text-accent: var(--avocado-600);
+  --sl-color-text-invert: var(--paper-000);
 }
 
-:root[data-theme='light'] {
-  --sl-color-bg: #f6f6f2;
-  --sl-color-bg-nav: #ffffff;
-  --sl-color-bg-sidebar: #f6f6f2;
-  --sl-color-hairline: #e4e4de;
-  --sl-color-text: #17191f;
-}
-
+/* ---- Dark (derived) ---- */
 :root[data-theme='dark'] {
-  --sl-color-accent-low: rgba(61, 178, 194, 0.15);
-  --sl-color-accent: #3db2c2;
-  --sl-color-accent-high: #7fd4df;
-  --sl-color-bg: #0e1015;
-  --sl-color-bg-nav: #15181e;
-  --sl-color-bg-sidebar: #0e1015;
-  --sl-color-hairline: #262a33;
-  --costql-safe: #4caf7d;
-  --costql-flag: #d79b32;
-  --costql-ext: #9a7ce0;
+  --sl-color-accent-low: #2c2e1a;
+  --sl-color-accent: var(--avocado-300);
+  --sl-color-accent-high: var(--avocado-200);
+
+  --sl-color-white: #fdfcf6;
+  --sl-color-gray-1: #efeadb;
+  --sl-color-gray-2: #d3cbb2;
+  --sl-color-gray-3: #9a9583;
+  --sl-color-gray-4: #55523f;
+  --sl-color-gray-5: #37352a;
+  --sl-color-gray-6: #232217;
+  --sl-color-gray-7: #1a1912;
+  --sl-color-black: #16150f;
+
+  --sl-color-bg: #16150f;
+  --sl-color-bg-nav: #16150f;
+  --sl-color-bg-sidebar: #16150f;
+  --sl-color-bg-inline-code: #232217;
+  --sl-color-hairline: #37352a;
+  --sl-color-hairline-light: #2b291d;
+  --sl-color-hairline-shade: #37352a;
+  --sl-color-text: #efeadb;
+  --sl-color-text-accent: var(--avocado-300);
+  --sl-color-text-invert: #16150f;
+}
+
+/* ---- Brand character on docs chrome ---- */
+.site-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.sl-markdown-content h1,
+.sl-markdown-content h2,
+.sl-markdown-content h3,
+.sl-markdown-content h4,
+h1[data-page-title] {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+/* code blocks get the terminal treatment */
+.sl-markdown-content pre {
+  border: 2px solid var(--border-ink);
+  border-radius: var(--radius-2);
+  box-shadow: var(--shadow-1);
+}
+
+/* tables: ink rules on paper */
+.sl-markdown-content table {
+  border: 2px solid var(--border-ink);
+}
+.sl-markdown-content th {
+  background: var(--bg-sunken);
+}
+
+/* asides/notes lean on the callout look */
+.sl-markdown-content .starlight-aside {
+  border: 2px solid var(--border-ink);
+  border-left-width: 8px;
+  border-radius: var(--radius-1);
+  box-shadow: var(--shadow-1);
+}
+
+/* header/nav borders: thick ink, like the landing */
+header.header {
+  border-bottom: 3px solid var(--border-ink);
+}
+
+::selection {
+  background: var(--avocado-400);
+  color: var(--ink-900);
 }

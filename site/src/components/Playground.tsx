@@ -1,197 +1,232 @@
 import { autocompletion } from '@codemirror/autocomplete';
 import { defaultKeymap, history, historyKeymap } from '@codemirror/commands';
 import { EditorState } from '@codemirror/state';
-import { EditorView, keymap, lineNumbers } from '@codemirror/view';
+import { EditorView, keymap } from '@codemirror/view';
 import { graphql, updateSchema } from 'cm6-graphql';
 import { PricingPack, type QuoteResult } from 'costql';
 import { buildClientSchema, type GraphQLSchema } from 'graphql';
 import React, { useEffect, useRef, useState } from 'react';
-import { CostPanel } from './CostPanel.js';
-import { SchemaTree } from './SchemaTree.js';
+import { ReceiptView, type ReceiptItem } from './ReceiptView.js';
 
-interface PackInfo {
-  id: string;
-  label: string;
-  file: string;
-  tierNote: string;
-  examples: Array<{ label: string; query: string }>;
-}
+/** The playground: the design system's Window + Receipt, wired to the REAL
+ * costql engine (the npm package) against the committed packs. */
 
-const PACKS: PackInfo[] = [
+const PACKS = [
   {
     id: 'tmdb',
-    label: 'TMDB (movies)',
-    file: '/packs/tmdb_t3.json',
-    tierNote: 'T3 · work_ms — instrumented demo: observed sharing, one paid field',
-    examples: [
-      { label: 'simple lookup', query: '{ movie(id:"27205"){ title genres{ name } } }' },
-      { label: 'cast fanout (declared size)', query: '{ movie(id:"27205"){ cast(limit:8){ person{ name } } } }' },
-      { label: 'filmography', query: '{ person(id:"6193"){ name filmography{ movie{ title } } } }' },
-      { label: 'paid external field', query: '{ movie(id:"27205"){ title aiSummary } }' },
-      { label: 'cyclic — watch the flag', query: '{ movie(id:"27205"){ recommendations{ recommendations{ title } } } }' },
-    ],
-  },
-  {
-    id: 'rickmorty',
-    label: 'Rick & Morty (public API)',
-    file: '/packs/rickmorty_t1.json',
-    tierNote: 'T1 · wall_time_ms — a black-box public API costQL does not own',
-    examples: [
-      { label: 'character', query: '{ character(id:"1"){ name status species gender } }' },
-      { label: 'with episodes', query: '{ character(id:"1"){ name episode{ name air_date } } }' },
-      { label: 'episode cast', query: '{ episode(id:"40"){ name characters{ name } } }' },
-      { label: 'cyclic — watch the flag', query: '{ character(id:"1"){ episode{ characters{ name } } } }' },
-    ],
+    file: 'tmdb_t3.json',
+    sample: '{ movie(id:"27205"){ title cast(limit:8){ person{ name } } } }',
   },
   {
     id: 'northwind',
-    label: 'Northwind (SQL, heavy sharing)',
-    file: '/packs/northwind_t3.json',
-    tierNote: 'T3 · work_ms — batch-heavy database: rising loader curves',
-    examples: [
-      { label: 'product + category', query: '{ product(id:"1"){ name unitPrice category{ name } } }' },
-      { label: 'order details', query: '{ order(id:"15000"){ orderDate details(first:15){ quantity product{ name } } } }' },
-      { label: 'hub query — sharing folds', query: '{ orders(first:20){ details(first:15){ product{ category{ name } } } } }' },
-      { label: 'wider page — price scales', query: '{ orders(first:40){ details(first:15){ product{ name } } } }' },
-    ],
+    file: 'northwind_t3.json',
+    sample: '{ orders(first:20){ details(first:15){ product{ category{ name } } } } }',
+  },
+  {
+    id: 'rickmorty',
+    file: 'rickmorty_t1.json',
+    sample: '{ character(id:"1"){ episode{ characters{ name } } } }',
   },
 ];
 
+function shortResolver(rid: string): string {
+  return rid.startsWith('Query.') ? rid.slice(6) : rid;
+}
+
+function receiptFromQuote(q: QuoteResult): {
+  items: ReceiptItem[];
+  total: string;
+  totalLabel: string;
+  totalFlagged: boolean;
+  footer: React.ReactNode;
+} {
+  const items: ReceiptItem[] = [];
+  const low = q.confidence === 'low';
+
+  const lines = [...(q.breakdown ?? [])]
+    .sort((a, b) => (b.cost as number) - (a.cost as number))
+    .slice(0, 6);
+  for (const b of lines) {
+    const rid = b.resolver_id as string;
+    const inv = Number(b.invocations);
+    items.push({
+      label: `${shortResolver(rid)}${inv > 1 ? ` ×${inv}` : ''}`,
+      value: (b.cost as number).toFixed(1),
+      indent: !rid.startsWith('Query.'),
+    });
+  }
+  if (!lines.length) {
+    items.push({ label: `${q.tier} pack — total only`, value: q.currency, muted: true });
+  }
+  for (const s of (q.sharing ?? []).slice(0, 3)) {
+    items.push({
+      label: `${(s as any).folds.map(shortResolver).join(', ')} → ${(s as any).loader}`,
+      value: 'once',
+      muted: true,
+    });
+  }
+  for (const e of q.external_costs ?? []) {
+    items.push({
+      label: `${shortResolver((e as any).resolver_id)} → ${(e as any).host}`,
+      value: String((e as any).authored_fee),
+      muted: true,
+    });
+  }
+  if (q.typical_price != null) {
+    items.push({ label: 'typical estimate', value: (q.typical_price as number).toFixed(1), muted: true });
+  }
+  if (low) {
+    items.push({ label: 'cycle detected', value: '↺', muted: true });
+  }
+
+  return {
+    items,
+    total: (q.price as number).toFixed(1),
+    totalLabel: low ? 'ceiling — flagged' : 'price ceiling',
+    totalFlagged: low,
+    footer: (
+      <span>
+        confidence: <strong className={low ? 'low' : 'ok'}>{q.confidence}</strong>
+        {low ? ' — structural upper bound; run it for the exact cost' : ` · ${q.currency}, never dollars`}
+      </span>
+    ),
+  };
+}
+
 export default function Playground() {
-  const [packId, setPackId] = useState('tmdb');
-  const info = PACKS.find((p) => p.id === packId)!;
-  const [schema, setSchema] = useState<GraphQLSchema | null>(null);
+  const [idx, setIdx] = useState(0);
   const [quote, setQuote] = useState<QuoteResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [running, setRunning] = useState(true);
   const editorHost = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
   const packRef = useRef<PricingPack | null>(null);
-  const debounce = useRef<ReturnType<typeof setTimeout>>();
-  const packCache = useRef(new Map<string, { pack: PricingPack; schema: GraphQLSchema }>());
+  const cache = useRef(new Map<string, { pack: PricingPack; schema: GraphQLSchema }>());
 
-  const requote = (q: string) => {
-    clearTimeout(debounce.current);
-    debounce.current = setTimeout(() => {
-      const p = packRef.current;
-      if (!p) return;
+  const run = () => {
+    const view = viewRef.current;
+    const pack = packRef.current;
+    if (!view || !pack) return;
+    setRunning(true);
+    setTimeout(() => {
       try {
-        const trimmed = q.trim();
-        if (!trimmed) { setQuote(null); setError(null); return; }
-        setQuote(p.quote(trimmed));
-        setError(null);
+        const q = view.state.doc.toString().trim();
+        if (q) {
+          setQuote(pack.quote(q));
+          setError(null);
+        }
       } catch (e) {
+        setQuote(null);
         setError(e instanceof Error ? e.message : String(e));
       }
-    }, 250);
+      setRunning(false);
+    }, 380); // a beat of "measuring" — the quote itself is instant
   };
 
-  // create the editor once
   useEffect(() => {
     if (!editorHost.current || viewRef.current) return;
-    const view = new EditorView({
+    viewRef.current = new EditorView({
       parent: editorHost.current,
       state: EditorState.create({
         doc: '',
         extensions: [
-          lineNumbers(),
           history(),
           keymap.of([...defaultKeymap, ...historyKeymap]),
           autocompletion(),
           graphql(),
-          EditorView.updateListener.of((u) => {
-            if (u.docChanged) requote(u.state.doc.toString());
-          }),
-          EditorView.theme({ '&': { fontSize: '14px', height: '100%' } }),
         ],
       }),
     });
-    viewRef.current = view;
-    return () => { view.destroy(); viewRef.current = null; };
+    return () => { viewRef.current?.destroy(); viewRef.current = null; };
   }, []);
 
-  // load pack + schema on switch
   useEffect(() => {
     let cancelled = false;
+    const info = PACKS[idx];
     (async () => {
-      let entry = packCache.current.get(info.file);
+      let entry = cache.current.get(info.file);
       if (!entry) {
-        const data = await (await fetch(info.file)).json();
-        const p = PricingPack.fromObject(data);
-        const s = buildClientSchema((data.introspection as any).data);
-        entry = { pack: p, schema: s };
-        packCache.current.set(info.file, entry);
+        const data = await (await fetch(`/packs/${info.file}`)).json();
+        entry = {
+          pack: PricingPack.fromObject(data),
+          schema: buildClientSchema((data.introspection as any).data),
+        };
+        cache.current.set(info.file, entry);
       }
       if (cancelled) return;
       packRef.current = entry.pack;
-      setSchema(entry.schema);
       const view = viewRef.current;
       if (view) {
         updateSchema(view, entry.schema);
-        const q = info.examples[0].query;
-        view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: q } });
+        view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: info.sample } });
       }
-    })().catch((e) => setError(String(e)));
+      run();
+    })().catch((e) => { setError(String(e)); setRunning(false); });
     return () => { cancelled = true; };
-  }, [packId]);
+  }, [idx]);
 
-  const setQuery = (q: string) => {
-    const view = viewRef.current;
-    if (!view) return;
-    view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: q } });
-    view.focus();
-  };
-
-  const insertAtCursor = (snippet: string, _composite: boolean) => {
-    const view = viewRef.current;
-    if (!view) return;
-    const empty = !view.state.doc.toString().trim();
-    const from = empty ? 0 : view.state.selection.main.head;
-    const to = empty ? view.state.doc.length : from;
-    const insert = empty ? `{ ${snippet} }` : ` ${snippet}`;
-    view.dispatch({ changes: { from, to, insert } });
-    // place the cursor inside `{  }` when the snippet opened a selection set
-    const inner = insert.indexOf('{  }', empty ? 1 : 0);
-    const anchor = inner >= 0 ? from + inner + 2 : from + insert.length;
-    view.dispatch({ selection: { anchor } });
-    view.focus();
-  };
+  const r = quote ? receiptFromQuote(quote) : null;
 
   return (
-    <div className="cq-playground">
-      <div className="cq-toolbar">
-        <div className="cq-pack-switch" role="tablist">
-          {PACKS.map((p) => (
-            <button
-              key={p.id}
-              role="tab"
-              aria-selected={p.id === packId}
-              className={p.id === packId ? 'cq-tab cq-tab-active' : 'cq-tab'}
-              onClick={() => setPackId(p.id)}
-            >
-              {p.label}
-            </button>
-          ))}
+    <div className="cql-window">
+      <div className="cql-window__bar">
+        <div className="cql-dots">
+          <span className="cql-dot cql-dot--filled" />
+          <span className="cql-dot" />
+          <span className="cql-dot" />
         </div>
-        <div className="cq-tier-note">{info.tierNote}</div>
-        <div className="cq-examples">
-          {info.examples.map((ex) => (
-            <button key={ex.label} className="cq-example" onClick={() => setQuery(ex.query)}>
-              {ex.label}
-            </button>
-          ))}
+        <div className="cql-window__title">playground — costql.quote()</div>
+        <div className="cql-window__tools">
+          <span className="cql-badge cql-badge--aqua">offline</span>
         </div>
       </div>
-      <div className="cq-columns">
-        <div className="cq-left">
-          {schema && <SchemaTree schema={schema} onInsert={insertAtCursor} />}
-          <div className="cq-editor" ref={editorHost} />
-        </div>
-        <div className="cq-right">
-          <CostPanel quote={quote} error={error} />
-          <div className="cq-foot">
-            Priced entirely in your browser by the <code>costql</code> npm package against a
-            static pack — no server involved. Identical to the Python engine by{' '}
-            <a href="/docs/js/">conformance test</a>.
+      <div className="cql-window__body--sunken">
+        <div className="cql-play__grid">
+          <div className="cql-play__left">
+            <div className="cql-play__tabs" role="tablist">
+              {PACKS.map((p, i) => (
+                <button
+                  key={p.id}
+                  role="tab"
+                  aria-selected={i === idx}
+                  className={`cql-play__tab${i === idx ? ' cql-play__tab--active' : ''}`}
+                  onClick={() => setIdx(i)}
+                >
+                  {p.file}
+                </button>
+              ))}
+            </div>
+            <label className="cql-play__label">query</label>
+            <div className="cql-play__editor" ref={editorHost} />
+            <div className="cql-play__run">
+              <button className="cql-btn cql-btn--primary" onClick={run} disabled={running}>
+                {running ? 'quoting…' : 'quote →'}
+              </button>
+              <span className="cql-play__pack">pack: {PACKS[idx].file}</span>
+            </div>
+            {error && (
+              <div className="cql-play__error">
+                can't parse this query — {error}. v0.1: no fragments, aliases unresolved.
+              </div>
+            )}
+          </div>
+          <div className="cql-play__right">
+            {running || !r ? (
+              <div className="cql-play__waiting">
+                measuring work-ms<span className="cql-play__caret">▍</span>
+              </div>
+            ) : (
+              <ReceiptView
+                title="costql quote"
+                meta={`${PACKS[idx].file} · offline`}
+                items={r.items}
+                total={r.total}
+                totalLabel={r.totalLabel}
+                totalFlagged={r.totalFlagged}
+                footer={r.footer}
+                width={300}
+              />
+            )}
           </div>
         </div>
       </div>

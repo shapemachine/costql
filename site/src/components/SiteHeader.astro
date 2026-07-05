@@ -1,0 +1,41 @@
+---
+// Sticky nav in a vintage window title-bar: traffic lights, wordmark, links,
+// theme toggle (synced with Starlight's localStorage key).
+const links = [
+  { label: 'docs', href: '/docs/quickstart/' },
+  { label: 'playground', href: '#playground' },
+  { label: 'tiers', href: '#tiers' },
+  { label: 'results', href: '/docs/evaluation/' },
+];
+---
+
+<header class="cql-header">
+  <div class="cql-container cql-header__inner">
+    <div class="cql-dots">
+      <span class="cql-dot cql-dot--filled"></span>
+      <span class="cql-dot"></span>
+      <span class="cql-dot"></span>
+    </div>
+    <a href="/" class="cql-wordmark">cost<span>QL</span></a>
+    <nav class="cql-header__nav">
+      {links.map((l) => <a href={l.href}>{l.label}</a>)}
+    </nav>
+    <div class="cql-header__right">
+      <span class="cql-badge cql-badge--outline cql-badge--pill">offline-first</span>
+      <button class="cql-theme-toggle" id="cql-theme-toggle" title="toggle light/dark" aria-label="toggle color theme">◐</button>
+      <a href="#playground" class="cql-btn cql-btn--primary cql-btn--sm">Try the playground</a>
+    </div>
+  </div>
+</header>
+
+<script is:inline>
+  (function () {
+    const btn = document.getElementById('cql-theme-toggle');
+    btn?.addEventListener('click', () => {
+      const cur = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
+      const next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.dataset.theme = next;
+      try { localStorage.setItem('starlight-theme', next); } catch {}
+    });
+  })();
+</script>

@@ -1,20 +1,36 @@
 ---
-import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
-import Playground from '../components/Playground.tsx';
-import '../styles/playground.css';
+import PlaygroundSection from '../components/PlaygroundSection.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import '../styles/brand-tokens.css';
+import '../styles/brand.css';
 ---
 
-<StarlightPage
-  frontmatter={{
-    title: 'Playground',
-    tableOfContents: false,
-    pagefind: false,
-  }}
->
-  <p>
-    Build a query on the left — click schema fields or type with autocomplete — and watch its
-    price on the right. Three real pricing packs to switch between; everything runs in your
-    browser against static files.
-  </p>
-  <Playground client:only="react" />
-</StarlightPage>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>playground — costQL</title>
+    <meta
+      name="description"
+      content="Price real GraphQL queries against three committed pricing packs — in your browser, offline, with the real costQL engine."
+    />
+    <link rel="icon" href="/favicon.svg" />
+    <script is:inline>
+      try {
+        const t = localStorage.getItem('starlight-theme');
+        if (t === 'dark' || t === 'light') document.documentElement.dataset.theme = t;
+        else if (window.matchMedia('(prefers-color-scheme: dark)').matches)
+          document.documentElement.dataset.theme = 'dark';
+      } catch {}
+    </script>
+  </head>
+  <body class="cql">
+    <SiteHeader />
+    <main>
+      <PlaygroundSection />
+    </main>
+    <SiteFooter />
+  </body>
+</html>
