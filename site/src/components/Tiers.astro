@@ -1,51 +1,50 @@
 ---
-// "One currency, three fidelities": tier cards + the Straight-talk callout.
+// "One currency, three fidelities": tier cards + the where-you-start callout.
 ---
 
 <section id="tiers" class="cql-tiers">
   <div class="cql-container cql-section">
     <h2 class="cql-h2">One currency, three fidelities</h2>
     <p class="cql-lead">
-      costQL prices in <strong>work-ms</strong>: the summed real work a query causes. The
-      tiers aren't different products; they're how sharply your API's instrumentation lets
-      the same engine see.
+      Every price is in <strong>work-ms</strong>: how much real work a query causes on your
+      server. The more your server can tell costQL, the sharper the prices get. That's all
+      the tiers are.
     </p>
 
     <div class="cql-tiers__grid">
       <div class="cql-tier">
         <span class="cql-tier__tab">T1</span>
-        <h3 class="cql-tier__heading">Any API. Today.</h3>
+        <h3 class="cql-tier__heading">Works with any API</h3>
         <div class="cql-tier__body">
-          Black-box wall-clock. Works against any GraphQL endpoint you can send queries to,
-          with zero server changes. This is where every API starts, at ~4% measured error.
+          costQL times whole queries from the outside. No server changes at all. Every API
+          starts here, and in our tests it was already accurate to about 4%.
         </div>
       </div>
       <div class="cql-tier">
         <span class="cql-tier__tab">T2</span>
-        <h3 class="cql-tier__heading">Per-resolver work</h3>
+        <h3 class="cql-tier__heading">Sees each field</h3>
         <div class="cql-tier__body">
-          Your server emits per-resolver timings; parallel work stops hiding inside elapsed
-          time. Under light sharing, T2 already matched T3 (11% vs 11%).
+          Your server reports how long each field takes to resolve. costQL stops guessing
+          about work that happens in parallel, so prices track the real work more closely.
         </div>
       </div>
       <div class="cql-tier">
         <span class="cql-tier__tab">T3</span>
-        <h3 class="cql-tier__heading">Sharing, observed</h3>
+        <h3 class="cql-tier__heading">Sees shared work</h3>
         <div class="cql-tier__body">
-          Loader keys and cache status: dedup counted exactly, batch curves learned, paid
-          hosts named. Where schemas share heavily, this is the difference between 315% and
-          12% error.
+          Your server reports when it batches or reuses work. costQL prices that work once
+          instead of many times. On our most share-heavy test, this cut error from 315% to 12%.
         </div>
       </div>
     </div>
 
     <div class="cql-callout">
-      <span class="cql-callout__label">Straight talk:</span>
+      <span class="cql-callout__label">Where you'll start:</span>
       <span>
-        the demo packs are T3 because we instrumented the demo servers. Your first pack will
-        be T1. That's the designed starting point, and it already gives you a safe ceiling.
-        T2/T3 need your server to emit <a href="/docs/instrumentation/">one trace extension</a>.
-        <a href="/docs/tiers/">The full tier story →</a>
+        your first pack will be T1. It works today, with no server changes, and it already
+        gives you a safe ceiling. The packs in the playground are T3 only because we run
+        those demo servers ourselves. When you want sharper prices, <a href="/docs/tiers/"
+        >the tiers guide</a> shows the one change to make.
       </span>
     </div>
   </div>

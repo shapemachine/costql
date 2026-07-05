@@ -25,7 +25,7 @@ const PACKS = [
   {
     id: 'rickmorty',
     file: 'rickmorty_t1.json',
-    sample: '{ character(id:"1"){ episode{ characters{ name } } } }',
+    sample: '{ character(id:"1"){ name status species origin{ name } } }',
   },
 ];
 
@@ -56,7 +56,7 @@ function receiptFromQuote(q: QuoteResult): {
     });
   }
   if (!lines.length) {
-    items.push({ label: `${q.tier} pack; total only`, value: q.currency, muted: true });
+    items.push({ label: `${q.tier} pack: whole-query price only`, value: q.currency, muted: true });
   }
   for (const s of (q.sharing ?? []).slice(0, 3)) {
     items.push({
@@ -87,7 +87,7 @@ function receiptFromQuote(q: QuoteResult): {
     footer: (
       <span>
         confidence: <strong className={low ? 'low' : 'ok'}>{q.confidence}</strong>
-        {low ? ': structural upper bound; run it for the exact cost' : ` · ${q.currency}, never dollars`}
+        {low ? ': this query can loop, so the price is a cautious ceiling' : ` · priced in ${q.currency}`}
       </span>
     ),
   };
@@ -102,23 +102,34 @@ export default function Playground() {
   const viewRef = useRef<EditorView | null>(null);
   const packRef = useRef<PricingPack | null>(null);
   const cache = useRef(new Map<string, { pack: PricingPack; schema: GraphQLSchema }>());
+  const debounceRef = useRef<number | undefined>(undefined);
+  const suppressRef = useRef(false);
+
+  // quote whatever is in the editor right now, no theater; used for live
+  // re-quoting while the user composes
+  const quoteNow = () => {
+    const view = viewRef.current;
+    const pack = packRef.current;
+    if (!view || !pack) return;
+    const q = view.state.doc.toString().trim();
+    if (!q) return;
+    try {
+      setQuote(pack.quote(q));
+      setError(null);
+    } catch (e) {
+      setQuote(null);
+      setError(e instanceof Error ? e.message : String(e));
+    }
+  };
 
   const run = () => {
     const view = viewRef.current;
     const pack = packRef.current;
     if (!view || !pack) return;
+    window.clearTimeout(debounceRef.current);
     setRunning(true);
     setTimeout(() => {
-      try {
-        const q = view.state.doc.toString().trim();
-        if (q) {
-          setQuote(pack.quote(q));
-          setError(null);
-        }
-      } catch (e) {
-        setQuote(null);
-        setError(e instanceof Error ? e.message : String(e));
-      }
+      quoteNow();
       setRunning(false);
     }, 380); // a beat of "measuring"; the quote itself is instant
   };
@@ -134,6 +145,12 @@ export default function Playground() {
           keymap.of([...defaultKeymap, ...historyKeymap]),
           autocompletion(),
           graphql(),
+          // live composer: re-quote shortly after the user stops typing
+          EditorView.updateListener.of((u) => {
+            if (!u.docChanged || suppressRef.current) return;
+            window.clearTimeout(debounceRef.current);
+            debounceRef.current = window.setTimeout(quoteNow, 300);
+          }),
         ],
       }),
     });
@@ -158,7 +175,9 @@ export default function Playground() {
       const view = viewRef.current;
       if (view) {
         updateSchema(view, entry.schema);
+        suppressRef.current = true;
         view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: info.sample } });
+        suppressRef.current = false;
       }
       run();
     })().catch((e) => { setError(String(e)); setRunning(false); });
@@ -170,11 +189,7 @@ export default function Playground() {
   return (
     <div className="cql-window">
       <div className="cql-window__bar">
-        <div className="cql-dots">
-          <span className="cql-dot cql-dot--filled" />
-          <span className="cql-dot" />
-          <span className="cql-dot" />
-        </div>
+        <div className="cql-window__spacer" aria-hidden="true" />
         <div className="cql-window__title">playground: costql.quote()</div>
         <div className="cql-window__tools">
           <span className="cql-badge cql-badge--aqua">offline</span>
@@ -196,7 +211,10 @@ export default function Playground() {
                 </button>
               ))}
             </div>
-            <label className="cql-play__label">query</label>
+            <div className="cql-play__labelrow">
+              <label className="cql-play__label">query</label>
+              <span className="cql-play__hint">ctrl-space suggests fields · the price updates as you type</span>
+            </div>
             <div className="cql-play__editor" ref={editorHost} />
             <div className="cql-play__run">
               <button className="cql-btn cql-btn--primary" onClick={run} disabled={running}>
@@ -206,7 +224,7 @@ export default function Playground() {
             </div>
             {error && (
               <div className="cql-play__error">
-                can't parse this query: {error}. v0.1: no fragments, aliases unresolved.
+                can't price this yet: {error}
               </div>
             )}
           </div>

@@ -7,10 +7,8 @@ import Receipt from './Receipt.astro';
     <span class="cql-badge cql-badge--accent">GraphQL cost, quoted offline</span>
     <h1>Price GraphQL queries <span class="cql-mark"><em>before</em></span> you run them.</h1>
     <p>
-      costQL calibrates a live GraphQL API into a <strong>pricing pack</strong>, one
-      self-contained file, then quotes any query against it fully offline. No pricing
-      service, no per-request round-trip, no dollars: a safe billable ceiling in
-      cost-units, from a static file your app vendors like an asset.
+      Point costQL at your API once. It writes a <strong>pricing pack</strong>: one small
+      file your app can use to price any query, instantly, with no calls to a server.
     </p>
     <div class="cql-hero__pills">
       <button class="cql-pill" data-copy="pip install costql">
@@ -43,7 +41,7 @@ import Receipt from './Receipt.astro';
       ]}
       total="50.5"
       totalLabel="price ceiling"
-      footer="work-ms · never dollars"
+      footer="thank you for your query"
       width={320}
     />
   </div>

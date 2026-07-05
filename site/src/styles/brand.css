@@ -149,40 +149,29 @@ body {
   color: var(--text-strong);
 }
 .cql-window__tools { display: flex; gap: 8px; min-width: 47px; justify-content: flex-end; }
+/* mirrors __tools so the centered title stays optically centered */
+.cql-window__spacer { min-width: 47px; }
 .cql-window__body--sunken { background: var(--bg-sunken); }
 
-.cql-dots { display: flex; gap: 7px; }
-.cql-dot {
-  width: 13px;
-  height: 13px;
-  border-radius: 50%;
-  border: 2px solid var(--border-strong);
-  background: var(--surface-card);
-  display: inline-block;
-}
-.cql-dot--filled { background: var(--text-strong); }
-
 /* ---- Receipt ---- */
-/* soft low-alpha shadow: a full-ink hard offset re-traces the perforated
-   edge and reads as jagged noise */
+/* borderless paper: the lightly contrasting background + a soft shadow carry
+   the edge; no ink outlines on the body */
 .cql-receipt { filter: drop-shadow(2px 3px 0 rgba(22, 21, 15, 0.18)); }
 .cql-receipt__zig {
-  height: 8px;
+  height: 10px;
   background: var(--surface-receipt);
 }
-/* scallops get a 1px feathered stop; hard 95% stops alias badly */
+/* torn zigzag edges, cut with conic-gradient masks (45° teeth) */
 .cql-receipt__zig--top {
-  -webkit-mask: radial-gradient(circle 5px at 50% 100%, transparent 4px, #000 5px) 50% 0 / 12px 100% repeat-x;
-  mask: radial-gradient(circle 5px at 50% 100%, transparent 4px, #000 5px) 50% 0 / 12px 100% repeat-x;
+  -webkit-mask: conic-gradient(from 135deg at 50% 0, #0000, #000 1deg 89deg, #0000 90deg) 50% 0 / 14px 100%;
+  mask: conic-gradient(from 135deg at 50% 0, #0000, #000 1deg 89deg, #0000 90deg) 50% 0 / 14px 100%;
 }
 .cql-receipt__zig--bottom {
-  -webkit-mask: radial-gradient(circle 5px at 50% 0%, transparent 4px, #000 5px) 50% 100% / 12px 100% repeat-x;
-  mask: radial-gradient(circle 5px at 50% 0%, transparent 4px, #000 5px) 50% 100% / 12px 100% repeat-x;
+  -webkit-mask: conic-gradient(from -45deg at 50% 100%, #0000, #000 1deg 89deg, #0000 90deg) 50% 100% / 14px 100%;
+  mask: conic-gradient(from -45deg at 50% 100%, #0000, #000 1deg 89deg, #0000 90deg) 50% 100% / 14px 100%;
 }
 .cql-receipt__paper {
   background: var(--surface-receipt);
-  border-left: var(--border-1) solid var(--border-ink);
-  border-right: var(--border-1) solid var(--border-ink);
   padding: 14px 18px;
   font-family: var(--font-mono);
   font-size: var(--fs-sm);
@@ -222,6 +211,7 @@ body {
 .cql-receipt__row--muted { font-size: var(--fs-xs); }
 .cql-receipt__row--muted .cql-receipt__label,
 .cql-receipt__row--muted .cql-receipt__value { color: var(--text-muted); font-weight: var(--fw-regular); }
+/* the total is a plain band of accent across the paper: no ink outlines */
 .cql-receipt__total {
   display: flex;
   align-items: baseline;
@@ -230,8 +220,6 @@ body {
   color: var(--ink-900);
   margin: 0 -18px;
   padding: 8px 18px;
-  border-top: var(--border-1) solid var(--border-ink);
-  border-bottom: var(--border-1) solid var(--border-ink);
   font-weight: var(--fw-bold);
 }
 .cql-receipt__total--flagged { background: var(--signal-low); color: var(--paper-000); }
@@ -336,8 +324,6 @@ body {
   background: var(--terminal-head);
   border-bottom: var(--border-1) solid var(--border-ink);
 }
-.cql-code__head .cql-dot { width: 10px; height: 10px; border-color: var(--terminal-fg); background: transparent; }
-.cql-code__head .cql-dot--aqua { background: var(--aqua-400); }
 .cql-code__title {
   font-size: var(--fs-2xs);
   font-weight: var(--fw-bold);
@@ -455,25 +441,33 @@ body {
   padding-bottom: 40px;
 }
 
-/* ---- Steps ---- */
-.cql-steps__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-5); }
-.cql-stepnum {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  flex: none;
-  background: var(--accent);
-  border: var(--border-1) solid var(--border-ink);
-  border-radius: var(--radius-1);
-  box-shadow: var(--shadow-1);
+/* ---- Steps: a left-to-right flow, cards joined by arrows ---- */
+.cql-steps__flow {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  gap: var(--space-3);
+  align-items: stretch;
+}
+.cql-steps__arrow {
+  align-self: center;
   font-family: var(--font-display);
   font-weight: var(--fw-bold);
-  font-size: 18px;
-  color: var(--ink-900);
+  font-size: 26px;
+  color: var(--accent-text);
+  padding: 0 2px;
 }
-.cql-step__head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.cql-step__num {
+  display: inline-block;
+  background: var(--accent);
+  color: var(--ink-900);
+  border-radius: var(--radius-1);
+  padding: 3px 9px;
+  font-family: var(--font-mono);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--tracking-wide);
+}
+.cql-step__head { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; margin-bottom: 14px; }
 .cql-step__head h3 { font-family: var(--font-display); font-size: 20px; margin: 0; color: var(--text-strong); }
 .cql-step p { font-size: var(--fs-sm); line-height: 1.55; color: var(--text-secondary); margin: 0 0 12px; }
 .cql-step code { background: var(--bg-sunken); padding: 1px 5px; border-radius: var(--radius-1); }
@@ -517,12 +511,24 @@ body {
   box-shadow: none;
 }
 .cql-play__tab--active { background: var(--accent); color: var(--ink-900); box-shadow: var(--shadow-1); }
+.cql-play__labelrow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
 .cql-play__label {
   font-family: var(--font-mono);
   font-size: var(--fs-2xs);
   font-weight: var(--fw-bold);
   color: var(--text-muted);
   letter-spacing: var(--tracking-wide);
+}
+.cql-play__hint {
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  color: var(--text-muted);
 }
 .cql-play__editor {
   margin-top: 6px;
@@ -601,8 +607,9 @@ body {
 @media (max-width: 900px) {
   .cql-hero { grid-template-columns: 1fr; padding-top: 48px; }
   .cql-stats__grid,
-  .cql-steps__grid,
   .cql-tiers__grid { grid-template-columns: 1fr; }
+  .cql-steps__flow { grid-template-columns: 1fr; }
+  .cql-steps__arrow { justify-self: center; transform: rotate(90deg); padding: 2px 0; }
   .cql-play__grid { grid-template-columns: 1fr; }
   .cql-play__left { border-right: none; border-bottom: var(--border-1) solid var(--border-ink); }
   .cql-footer__grid { grid-template-columns: 1fr 1fr; }
