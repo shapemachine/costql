@@ -87,7 +87,7 @@ body {
   cursor: default;
 }
 .cql-btn--primary { background: var(--accent-deep); color: var(--paper-000); }
-.cql-btn--primary:hover { background: var(--aqua-600); color: var(--paper-000); }
+.cql-btn--primary:hover { background: var(--green-600); color: var(--paper-000); }
 .cql-btn--secondary { background: var(--surface-card); color: var(--text-strong); }
 .cql-btn--secondary:hover { background: var(--bg-sunken); color: var(--text-strong); }
 .cql-btn--ink { background: var(--surface-invert); color: var(--text-invert); }
@@ -112,7 +112,6 @@ body {
 }
 .cql-badge--pill { border-radius: var(--radius-pill); padding: 4px 9px; }
 .cql-badge--accent { background: var(--accent); color: var(--ink-900); }
-.cql-badge--aqua { background: var(--accent); color: var(--ink-900); }
 .cql-badge--ink { background: var(--surface-invert); color: var(--text-invert); }
 .cql-badge--outline { background: transparent; }
 
@@ -293,7 +292,7 @@ body {
   background: var(--surface-card);
   color: var(--text-strong);
 }
-.cql-stat--aqua { background: var(--accent); color: var(--ink-900); }
+.cql-stat--accent { background: var(--accent); color: var(--ink-900); }
 .cql-stat__value {
   font-size: var(--fs-3xl);
   font-weight: var(--fw-bold);
@@ -306,7 +305,7 @@ body {
   font-size: var(--fs-sm);
   color: var(--text-secondary);
 }
-.cql-stat--aqua .cql-stat__caption { color: var(--ink-700); }
+.cql-stat--accent .cql-stat__caption { color: var(--ink-700); }
 
 /* ---- CodeBlock (terminal panel) ---- */
 .cql-code {
@@ -356,8 +355,8 @@ body {
   padding: 9px 14px;
   cursor: pointer;
 }
-.cql-pill__prompt { color: var(--aqua-300); }
-.cql-pill__state { color: var(--aqua-200); font-size: var(--fs-2xs); }
+.cql-pill__prompt { color: var(--green-300); }
+.cql-pill__state { color: var(--green-200); font-size: var(--fs-2xs); }
 .cql-pill__state--copied { color: var(--paper-000); }
 
 /* ---- Site header ---- */
@@ -544,7 +543,7 @@ body {
   min-height: 128px;
 }
 .cql-play__editor .cm-editor.cm-focused { outline: none; }
-.cql-play__editor .cm-content { caret-color: var(--aqua-400); font-family: var(--font-mono); }
+.cql-play__editor .cm-content { caret-color: var(--green-400); font-family: var(--font-mono); }
 .cql-play__editor .cm-gutters { background: var(--terminal-head); color: var(--terminal-muted); border-right: 1px solid var(--terminal-head); }
 .cql-play__editor .cm-activeLine { background: rgba(255, 255, 255, 0.03); }
 .cql-play__editor .cm-tooltip {
@@ -553,7 +552,7 @@ body {
   border: 2px solid var(--border-ink);
   font-family: var(--font-mono);
 }
-.cql-play__editor .cm-tooltip-autocomplete ul li[aria-selected] { background: var(--aqua-600); color: var(--paper-000); }
+.cql-play__editor .cm-tooltip-autocomplete ul li[aria-selected] { background: var(--green-600); color: var(--paper-000); }
 .cql-play__run { display: flex; gap: 10px; margin-top: 14px; align-items: center; }
 .cql-play__pack { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); }
 .cql-play__waiting { font-family: var(--font-mono); font-size: 13px; color: var(--text-muted); padding-top: 40px; }

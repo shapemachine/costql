@@ -192,7 +192,7 @@ export default function Playground() {
         <div className="cql-window__spacer" aria-hidden="true" />
         <div className="cql-window__title">playground: costql.quote()</div>
         <div className="cql-window__tools">
-          <span className="cql-badge cql-badge--aqua">offline</span>
+          <span className="cql-badge cql-badge--accent">offline</span>
         </div>
       </div>
       <div className="cql-window__body--sunken">

@@ -1,7 +1,8 @@
 /* costQL design tokens: vendored from the costQL Design System project
-   (claude.ai/design d85aa72a), revised 2026-07: single aqua accent (the
-   avocado primary was retired), off-white paper, warm ink, all monospace,
-   hard offset shadows, never all-caps. Light-only: the site ships one theme. */
+   (claude.ai/design d85aa72a), revised 2026-07: single leaf-green accent
+   (#74b07c; the aqua and avocado accents were retired), off-white paper,
+   warm ink, all monospace, hard offset shadows, never all-caps. Light-only:
+   the site ships one theme. */
 
 /* Fonts: self-hosted (@fontsource) instead of the source's Google CDN. */
 @import '@fontsource/space-mono/400.css';
@@ -15,14 +16,14 @@
 @import '@fontsource/ibm-plex-mono/400-italic.css';
 
 :root {
-  /* ---- The accent: aqua / seafoam ---- */
-  --aqua-100: #d6f2ea;
-  --aqua-200: #a6e5d5;
-  --aqua-300: #6fd6bd;
-  --aqua-400: #45c6a6;
-  --aqua-500: #2fb092;
-  --aqua-600: #197a66;
-  --aqua-700: #12604f;
+  /* ---- The accent: leaf green, a tint/shade ladder around #74b07c ---- */
+  --green-100: #e1efe3;
+  --green-200: #c0ddc4;
+  --green-300: #97c49d;
+  --green-400: #74b07c;
+  --green-500: #54965d;
+  --green-600: #3e7446;
+  --green-700: #2f5b35;
 
   /* Warm off-white paper neutrals */
   --paper-000: #fdfcf6;
@@ -39,11 +40,12 @@
   --ink-500: #767161;
   --ink-400: #9a9583;
 
-  /* Semantic status hues */
-  --signal-ok: #1f8a72;
+  /* Semantic status hues: ok/info ride the accent ladder (600 — the 400/500
+     tints fall under 4.5:1 for small text on the receipt paper) */
+  --signal-ok: var(--green-600);
   --signal-warn: #c98a12;
   --signal-low: #b8461f;
-  --signal-info: #197a66;
+  --signal-info: var(--green-600);
 
   /* ---- Semantic aliases (theme-switchable) ---- */
   --bg-page: var(--paper-100);
@@ -59,15 +61,15 @@
   --text-faint: var(--ink-400);
   --text-invert: var(--paper-000);
   --text-on-accent: var(--ink-900);
-  --text-link: var(--aqua-600);
+  --text-link: var(--green-600);
 
-  --accent: var(--aqua-400);
-  --accent-hover: var(--aqua-300);
-  --accent-press: var(--aqua-500);
-  --accent-text: var(--aqua-600);
-  --accent-deep: var(--aqua-700);
-  --accent-soft: var(--aqua-200);
-  --accent-softer: var(--aqua-100);
+  --accent: var(--green-400);
+  --accent-hover: var(--green-300);
+  --accent-press: var(--green-500);
+  --accent-text: var(--green-600);
+  --accent-deep: var(--green-700);
+  --accent-soft: var(--green-200);
+  --accent-softer: var(--green-100);
 
   --border-ink: var(--ink-800);
   --border-strong: var(--ink-900);
@@ -149,7 +151,7 @@
 }
 
 ::selection {
-  background: var(--aqua-300);
+  background: var(--green-300);
   color: var(--ink-900);
 }
 

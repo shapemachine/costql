@@ -1,5 +1,5 @@
 /* Starlight docs, restyled with the costQL design-system tokens: paper +
-   warm ink + a single aqua accent, all monospace, hard shadows. Light-only:
+   warm ink + a single army-green accent, all monospace, hard shadows. Light-only:
    the ThemeProvider override pins data-theme='light'. */
 @import './brand-tokens.css';
 
@@ -7,9 +7,9 @@
   --sl-font: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
   --sl-font-mono: 'IBM Plex Mono', ui-monospace, monospace;
 
-  --sl-color-accent-low: var(--aqua-100);
-  --sl-color-accent: var(--aqua-600);
-  --sl-color-accent-high: var(--aqua-700);
+  --sl-color-accent-low: var(--green-100);
+  --sl-color-accent: var(--green-600);
+  --sl-color-accent-high: var(--green-700);
 
   --sl-color-white: var(--ink-900);
   --sl-color-gray-1: var(--ink-800);
@@ -29,7 +29,7 @@
   --sl-color-hairline-light: var(--paper-300);
   --sl-color-hairline-shade: var(--paper-400);
   --sl-color-text: var(--ink-800);
-  --sl-color-text-accent: var(--aqua-600);
+  --sl-color-text-accent: var(--green-600);
   --sl-color-text-invert: var(--paper-000);
 }
 
@@ -78,6 +78,6 @@ header.header {
 }
 
 ::selection {
-  background: var(--aqua-300);
+  background: var(--green-300);
   color: var(--ink-900);
 }
