@@ -17,14 +17,6 @@ import '../styles/brand.css';
       content="Price real GraphQL queries against three committed pricing packs: in your browser, offline, with the real costQL engine."
     />
     <link rel="icon" href="/favicon.svg" />
-    <script is:inline>
-      try {
-        const t = localStorage.getItem('starlight-theme');
-        if (t === 'dark' || t === 'light') document.documentElement.dataset.theme = t;
-        else if (window.matchMedia('(prefers-color-scheme: dark)').matches)
-          document.documentElement.dataset.theme = 'dark';
-      } catch {}
-    </script>
   </head>
   <body class="cql">
     <SiteHeader />

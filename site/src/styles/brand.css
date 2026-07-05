@@ -14,12 +14,14 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-.cql a {
+/* prose links only: anchor-buttons (.cql-btn) carry their own colors, and
+   this rule's element+class specificity would beat their single class */
+.cql a:not(.cql-btn) {
   color: var(--text-link);
   text-underline-offset: 3px;
   text-decoration-thickness: 2px;
 }
-.cql a:hover {
+.cql a:not(.cql-btn):hover {
   color: var(--text-strong);
   background: var(--accent-soft);
 }
@@ -49,10 +51,11 @@ body {
   margin: 0 0 var(--space-6);
   max-width: 72ch;
 }
+/* highlighter stroke: a band behind the lower ~60% of the glyphs, not the
+   full line box, so tight display line-heights don't produce a tall slab */
 .cql-mark {
-  background: var(--accent);
-  color: var(--ink-900);
   padding: 0 6px;
+  background: linear-gradient(var(--accent) 0 0) no-repeat 0 68% / 100% 58%;
 }
 
 /* ---- Button: brutalist paper key, travels into its shadow on press ---- */
@@ -83,8 +86,8 @@ body {
   opacity: 0.55;
   cursor: default;
 }
-.cql-btn--primary { background: var(--accent); color: var(--ink-900); }
-.cql-btn--primary:hover { background: var(--accent-hover); color: var(--ink-900); }
+.cql-btn--primary { background: var(--accent-deep); color: var(--paper-000); }
+.cql-btn--primary:hover { background: var(--aqua-600); color: var(--paper-000); }
 .cql-btn--secondary { background: var(--surface-card); color: var(--text-strong); }
 .cql-btn--secondary:hover { background: var(--bg-sunken); color: var(--text-strong); }
 .cql-btn--ink { background: var(--surface-invert); color: var(--text-invert); }
@@ -109,7 +112,7 @@ body {
 }
 .cql-badge--pill { border-radius: var(--radius-pill); padding: 4px 9px; }
 .cql-badge--accent { background: var(--accent); color: var(--ink-900); }
-.cql-badge--aqua { background: var(--accent-2); color: var(--ink-900); }
+.cql-badge--aqua { background: var(--accent); color: var(--ink-900); }
 .cql-badge--ink { background: var(--surface-invert); color: var(--text-invert); }
 .cql-badge--outline { background: transparent; }
 
@@ -160,18 +163,21 @@ body {
 .cql-dot--filled { background: var(--text-strong); }
 
 /* ---- Receipt ---- */
-.cql-receipt { filter: drop-shadow(3px 3px 0 var(--shadow-ink)); }
+/* soft low-alpha shadow: a full-ink hard offset re-traces the perforated
+   edge and reads as jagged noise */
+.cql-receipt { filter: drop-shadow(2px 3px 0 rgba(22, 21, 15, 0.18)); }
 .cql-receipt__zig {
   height: 8px;
   background: var(--surface-receipt);
 }
+/* scallops get a 1px feathered stop; hard 95% stops alias badly */
 .cql-receipt__zig--top {
-  -webkit-mask: radial-gradient(6px at 50% 100%, transparent 95%, #000) 50% 0 / 12px 100% repeat-x;
-  mask: radial-gradient(6px at 50% 100%, transparent 95%, #000) 50% / 12px 100% repeat-x;
+  -webkit-mask: radial-gradient(circle 5px at 50% 100%, transparent 4px, #000 5px) 50% 0 / 12px 100% repeat-x;
+  mask: radial-gradient(circle 5px at 50% 100%, transparent 4px, #000 5px) 50% 0 / 12px 100% repeat-x;
 }
 .cql-receipt__zig--bottom {
-  -webkit-mask: radial-gradient(6px at 50% 0%, transparent 95%, #000) 50% 100% / 12px 100% repeat-x;
-  mask: radial-gradient(6px at 50% 0%, transparent 95%, #000) 50% / 12px 100% repeat-x;
+  -webkit-mask: radial-gradient(circle 5px at 50% 0%, transparent 4px, #000 5px) 50% 100% / 12px 100% repeat-x;
+  mask: radial-gradient(circle 5px at 50% 0%, transparent 4px, #000 5px) 50% 100% / 12px 100% repeat-x;
 }
 .cql-receipt__paper {
   background: var(--surface-receipt);
@@ -204,13 +210,16 @@ body {
   padding: 3px 0;
 }
 .cql-receipt__row--indent { padding-left: 16px; }
-.cql-receipt__label { white-space: nowrap; }
+/* long labels (loader paths, host names) wrap like real receipt lines
+   instead of pushing the value off the paper */
+.cql-receipt__label { min-width: 0; overflow-wrap: anywhere; }
 .cql-receipt__leader {
   flex: 1;
   border-bottom: 1px dotted var(--text-faint);
   transform: translateY(-3px);
 }
 .cql-receipt__value { font-weight: var(--fw-bold); color: var(--text-strong); white-space: nowrap; }
+.cql-receipt__row--muted { font-size: var(--fs-xs); }
 .cql-receipt__row--muted .cql-receipt__label,
 .cql-receipt__row--muted .cql-receipt__value { color: var(--text-muted); font-weight: var(--fw-regular); }
 .cql-receipt__total {
@@ -244,9 +253,9 @@ body {
   box-shadow: var(--shadow-2);
   background: var(--surface-card);
   padding: var(--space-5);
-  padding-top: var(--space-6);
+  /* clear the overlapping tab: the heading needs real air below it */
+  padding-top: var(--space-7);
 }
-.cql-tier--active { box-shadow: var(--shadow-avocado); background: var(--accent-softer); }
 .cql-tier__tab {
   position: absolute;
   top: -2px;
@@ -261,7 +270,6 @@ body {
   font-weight: var(--fw-bold);
   font-size: var(--fs-md);
 }
-.cql-tier--active .cql-tier__tab { background: var(--accent); color: var(--ink-900); }
 .cql-tier__heading {
   margin: 0 0 var(--space-2);
   font-family: var(--font-display);
@@ -297,7 +305,7 @@ body {
   background: var(--surface-card);
   color: var(--text-strong);
 }
-.cql-stat--aqua { background: var(--accent-2); color: var(--ink-900); }
+.cql-stat--aqua { background: var(--accent); color: var(--ink-900); }
 .cql-stat__value {
   font-size: var(--fs-3xl);
   font-weight: var(--fw-bold);
@@ -346,13 +354,13 @@ body {
   overflow-x: auto;
 }
 
-/* ---- Copy pill (install commands) ---- */
+/* ---- Copy pill (install commands): deep teal, not terminal ink ---- */
 .cql-pill {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  background: var(--terminal-bg);
-  color: var(--terminal-fg);
+  background: var(--accent-deep);
+  color: var(--paper-000);
   border: var(--border-1) solid var(--border-ink);
   border-radius: var(--radius-1);
   box-shadow: var(--shadow-1);
@@ -362,9 +370,9 @@ body {
   padding: 9px 14px;
   cursor: pointer;
 }
-.cql-pill__prompt { color: var(--aqua-400); }
-.cql-pill__state { color: var(--terminal-muted); font-size: var(--fs-2xs); }
-.cql-pill__state--copied { color: var(--aqua-400); }
+.cql-pill__prompt { color: var(--aqua-300); }
+.cql-pill__state { color: var(--aqua-200); font-size: var(--fs-2xs); }
+.cql-pill__state--copied { color: var(--paper-000); }
 
 /* ---- Site header ---- */
 .cql-header {
@@ -390,7 +398,7 @@ body {
   text-decoration: none;
   background: none !important;
 }
-.cql-wordmark span { background: var(--accent); color: var(--ink-900); padding: 0 3px; }
+.cql-wordmark span { color: var(--accent-text); }
 .cql-header__nav { display: flex; gap: 4px; margin-left: 8px; }
 .cql-header__nav a {
   font-size: 13px;
@@ -403,23 +411,6 @@ body {
 }
 .cql-header__nav a:hover { background: var(--accent-soft); color: var(--ink-900); }
 .cql-header__right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
-
-/* theme toggle: a window dot you can press */
-.cql-theme-toggle {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  border: 2px solid var(--border-strong);
-  background: var(--surface-card);
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  color: var(--text-strong);
-  box-shadow: var(--shadow-1);
-}
-.cql-theme-toggle:active { transform: translate(1px, 1px); box-shadow: none; }
 
 /* ---- Hero ---- */
 .cql-hero {
@@ -450,11 +441,11 @@ body {
 .cql-hero__ctas { display: flex; gap: 12px; flex-wrap: wrap; }
 .cql-hero__aside { display: flex; justify-content: center; }
 
-/* ---- Stats band ---- */
+/* ---- Stats band: sunken paper, no more dark slab mid-page ---- */
 .cql-stats {
-  background: var(--ink-800);
-  border-top: var(--border-2) solid var(--border-strong);
-  border-bottom: var(--border-2) solid var(--border-strong);
+  background: var(--bg-sunken);
+  border-top: var(--border-2) solid var(--border-ink);
+  border-bottom: var(--border-2) solid var(--border-ink);
 }
 .cql-stats__grid {
   display: grid;
@@ -463,8 +454,6 @@ body {
   padding-top: 40px;
   padding-bottom: 40px;
 }
-/* stat cards sit on ink in both themes; keep paper cards readable there */
-.cql-stats .cql-stat { --shadow-ink: #0b0a07; border-color: #0b0a07; }
 
 /* ---- Steps ---- */
 .cql-steps__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-5); }
@@ -558,11 +547,11 @@ body {
   border: 2px solid var(--border-ink);
   font-family: var(--font-mono);
 }
-.cql-play__editor .cm-tooltip-autocomplete ul li[aria-selected] { background: var(--avocado-600); color: var(--paper-000); }
+.cql-play__editor .cm-tooltip-autocomplete ul li[aria-selected] { background: var(--aqua-600); color: var(--paper-000); }
 .cql-play__run { display: flex; gap: 10px; margin-top: 14px; align-items: center; }
 .cql-play__pack { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); }
 .cql-play__waiting { font-family: var(--font-mono); font-size: 13px; color: var(--text-muted); padding-top: 40px; }
-.cql-play__caret { color: var(--accent-2-text); }
+.cql-play__caret { color: var(--accent-text); }
 .cql-play__ctas { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
 .cql-play__error {
   font-family: var(--font-mono);
@@ -572,30 +561,30 @@ body {
   max-width: 46ch;
 }
 
-/* ---- Footer: receipt tail ---- */
-.cql-footer { background: var(--ink-900); color: var(--paper-200); border-top: var(--border-2) solid var(--border-ink); }
+/* ---- Footer: receipt tail on paper (the page stays light end-to-end) ---- */
+.cql-footer { background: var(--bg-sunken); color: var(--text-body); border-top: var(--border-2) solid var(--border-ink); }
 .cql-footer__grid {
   display: grid;
   grid-template-columns: 1.4fr repeat(3, 1fr);
   gap: var(--space-6);
   padding-top: 48px;
 }
-.cql-footer__brand { font-family: var(--font-display); font-weight: var(--fw-bold); font-size: 24px; color: var(--paper-000); }
-.cql-footer__brand span { background: var(--avocado-400); color: var(--ink-900); padding: 0 3px; }
-.cql-footer__tag { font-family: var(--font-mono); font-size: 12px; line-height: 1.6; color: var(--ink-400); margin-top: 12px; max-width: 34ch; }
+.cql-footer__brand { font-family: var(--font-display); font-weight: var(--fw-bold); font-size: 24px; color: var(--text-strong); }
+.cql-footer__brand span { color: var(--accent-text); }
+.cql-footer__tag { font-family: var(--font-mono); font-size: 12px; line-height: 1.6; color: var(--text-muted); margin-top: 12px; max-width: 34ch; }
 .cql-footer__h {
   font-family: var(--font-mono);
   font-size: var(--fs-2xs);
   font-weight: var(--fw-bold);
   letter-spacing: var(--tracking-wide);
-  color: var(--avocado-400);
+  color: var(--accent-text);
   margin-bottom: 12px;
 }
 .cql-footer ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
-.cql-footer ul a { font-size: 13px; color: var(--paper-200); text-decoration: none; background: none; }
-.cql-footer ul a:hover { color: var(--avocado-300); }
+.cql-footer ul a { font-size: 13px; color: var(--text-secondary); text-decoration: none; background: none; }
+.cql-footer ul a:hover { color: var(--accent-text); background: none; }
 .cql-footer__tail {
-  border-top: 2px dashed var(--ink-600);
+  border-top: 2px dashed var(--paper-400);
   margin-top: 36px;
   padding-top: 16px;
   padding-bottom: 32px;
@@ -605,7 +594,7 @@ body {
   gap: 8px;
   font-family: var(--font-mono);
   font-size: var(--fs-2xs);
-  color: var(--ink-400);
+  color: var(--text-muted);
 }
 
 /* ---- Responsive ---- */

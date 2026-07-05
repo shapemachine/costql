@@ -1,0 +1,9 @@
+---
+// Starlight override: costQL is light-only, so pin the theme instead of
+// reading localStorage / prefers-color-scheme. ThemeSelect is overridden to
+// nothing, so no picker code depends on StarlightThemeProvider.
+---
+
+<script is:inline>
+  document.documentElement.dataset.theme = 'light';
+</script>

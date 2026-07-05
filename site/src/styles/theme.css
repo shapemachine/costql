@@ -1,16 +1,15 @@
 /* Starlight docs, restyled with the costQL design-system tokens: paper +
-   warm ink + avocado/aqua, all monospace, hard shadows. The dark scheme is
-   the same DERIVED remap as the landing (source system is light-only). */
+   warm ink + a single aqua accent, all monospace, hard shadows. Light-only:
+   the ThemeProvider override pins data-theme='light'. */
 @import './brand-tokens.css';
 
-/* ---- Light (default) ---- */
 :root {
   --sl-font: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
   --sl-font-mono: 'IBM Plex Mono', ui-monospace, monospace;
 
-  --sl-color-accent-low: var(--avocado-100);
-  --sl-color-accent: var(--avocado-600);
-  --sl-color-accent-high: var(--avocado-700);
+  --sl-color-accent-low: var(--aqua-100);
+  --sl-color-accent: var(--aqua-600);
+  --sl-color-accent-high: var(--aqua-700);
 
   --sl-color-white: var(--ink-900);
   --sl-color-gray-1: var(--ink-800);
@@ -30,36 +29,8 @@
   --sl-color-hairline-light: var(--paper-300);
   --sl-color-hairline-shade: var(--paper-400);
   --sl-color-text: var(--ink-800);
-  --sl-color-text-accent: var(--avocado-600);
+  --sl-color-text-accent: var(--aqua-600);
   --sl-color-text-invert: var(--paper-000);
-}
-
-/* ---- Dark (derived) ---- */
-:root[data-theme='dark'] {
-  --sl-color-accent-low: #2c2e1a;
-  --sl-color-accent: var(--avocado-300);
-  --sl-color-accent-high: var(--avocado-200);
-
-  --sl-color-white: #fdfcf6;
-  --sl-color-gray-1: #efeadb;
-  --sl-color-gray-2: #d3cbb2;
-  --sl-color-gray-3: #9a9583;
-  --sl-color-gray-4: #55523f;
-  --sl-color-gray-5: #37352a;
-  --sl-color-gray-6: #232217;
-  --sl-color-gray-7: #1a1912;
-  --sl-color-black: #16150f;
-
-  --sl-color-bg: #16150f;
-  --sl-color-bg-nav: #16150f;
-  --sl-color-bg-sidebar: #16150f;
-  --sl-color-bg-inline-code: #232217;
-  --sl-color-hairline: #37352a;
-  --sl-color-hairline-light: #2b291d;
-  --sl-color-hairline-shade: #37352a;
-  --sl-color-text: #efeadb;
-  --sl-color-text-accent: var(--avocado-300);
-  --sl-color-text-invert: #16150f;
 }
 
 /* ---- Brand character on docs chrome ---- */
@@ -107,6 +78,6 @@ header.header {
 }
 
 ::selection {
-  background: var(--avocado-400);
+  background: var(--aqua-300);
   color: var(--ink-900);
 }

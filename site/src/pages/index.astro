@@ -23,15 +23,6 @@ import '../styles/brand.css';
       content="Calibrate a live GraphQL API into a static pricing pack, then quote any query offline: in Python or JavaScript. A safe billable ceiling in work-ms, never dollars."
     />
     <link rel="icon" href="/favicon.svg" />
-    <script is:inline>
-      // apply the saved theme before paint; shared with the docs (Starlight)
-      try {
-        const t = localStorage.getItem('starlight-theme');
-        if (t === 'dark' || t === 'light') document.documentElement.dataset.theme = t;
-        else if (window.matchMedia('(prefers-color-scheme: dark)').matches)
-          document.documentElement.dataset.theme = 'dark';
-      } catch {}
-    </script>
   </head>
   <body class="cql">
     <SiteHeader />

@@ -1,9 +1,7 @@
 /* costQL design tokens: vendored from the costQL Design System project
-   (claude.ai/design d85aa72a). Vintage-computer + paper-receipt palette:
-   warm avocado primary + cool aqua secondary on off-white paper, warm ink,
-   all monospace, hard offset shadows, never all-caps.
-   The [data-theme='dark'] block is DERIVED (the source system is light-only)
-   by remapping the semantic aliases; raw scales are shared. */
+   (claude.ai/design d85aa72a), revised 2026-07: single aqua accent (the
+   avocado primary was retired), off-white paper, warm ink, all monospace,
+   hard offset shadows, never all-caps. Light-only: the site ships one theme. */
 
 /* Fonts: self-hosted (@fontsource) instead of the source's Google CDN. */
 @import '@fontsource/space-mono/400.css';
@@ -17,16 +15,7 @@
 @import '@fontsource/ibm-plex-mono/400-italic.css';
 
 :root {
-  /* ---- Primary accent: avocado / olive ---- */
-  --avocado-100: #eef0d8;
-  --avocado-200: #dbe0ad;
-  --avocado-300: #c6cf82;
-  --avocado-400: #a8b352;
-  --avocado-500: #93a03e;
-  --avocado-600: #64711f;
-  --avocado-700: #4b5618;
-
-  /* ---- Secondary accent: aqua / seafoam ---- */
+  /* ---- The accent: aqua / seafoam ---- */
   --aqua-100: #d6f2ea;
   --aqua-200: #a6e5d5;
   --aqua-300: #6fd6bd;
@@ -70,20 +59,15 @@
   --text-faint: var(--ink-400);
   --text-invert: var(--paper-000);
   --text-on-accent: var(--ink-900);
-  --text-link: var(--avocado-600);
+  --text-link: var(--aqua-600);
 
-  --accent: var(--avocado-400);
-  --accent-hover: var(--avocado-300);
-  --accent-press: var(--avocado-500);
-  --accent-text: var(--avocado-600);
-  --accent-soft: var(--avocado-200);
-  --accent-softer: var(--avocado-100);
-
-  --accent-2: var(--aqua-400);
-  --accent-2-hover: var(--aqua-300);
-  --accent-2-press: var(--aqua-500);
-  --accent-2-text: var(--aqua-600);
-  --accent-2-soft: var(--aqua-200);
+  --accent: var(--aqua-400);
+  --accent-hover: var(--aqua-300);
+  --accent-press: var(--aqua-500);
+  --accent-text: var(--aqua-600);
+  --accent-deep: var(--aqua-700);
+  --accent-soft: var(--aqua-200);
+  --accent-softer: var(--aqua-100);
 
   --border-ink: var(--ink-800);
   --border-strong: var(--ink-900);
@@ -91,7 +75,7 @@
   --shadow-ink: var(--ink-800);
   --focus-ring: var(--ink-900);
 
-  /* Terminal/editor panel (dark in BOTH themes, per the mock) */
+  /* Terminal/editor panel (always dark ink, per the mock) */
   --terminal-bg: var(--ink-900);
   --terminal-head: var(--ink-800);
   --terminal-fg: var(--paper-100);
@@ -151,49 +135,10 @@
   --shadow-1: 2px 2px 0 0 var(--shadow-ink);
   --shadow-2: 4px 4px 0 0 var(--shadow-ink);
   --shadow-3: 6px 6px 0 0 var(--shadow-ink);
-  --shadow-avocado: 4px 4px 0 0 var(--avocado-400);
   --press-shift: 2px;
   --ease-snap: cubic-bezier(0.2, 0, 0, 1);
   --dur-fast: 90ms;
   --dur-med: 160ms;
-}
-
-/* ---- DERIVED dark theme (not in the source system: pending approval).
-   The inversion rule: the ink sections of the light design become the page;
-   paper tones become the ink. Accents unchanged; borders shift to near-black
-   with lighter surfaces carrying the separation; shadows stay hard. ---- */
-:root[data-theme='dark'] {
-  --bg-page: #16150f;
-  --bg-sunken: #11100b;
-  --surface-card: #232217;
-  --surface-receipt: #282619;
-  --surface-invert: #efeadb;
-
-  --text-strong: #fdfcf6;
-  --text-body: #efeadb;
-  --text-secondary: #d3cbb2;
-  --text-muted: #9a9583;
-  --text-faint: #767161;
-  --text-invert: #201f16;
-  --text-on-accent: #16150f;
-  --text-link: var(--avocado-300);
-
-  --accent-text: var(--avocado-300);
-  --accent-soft: #3c3f20;
-  --accent-softer: #2c2e1a;
-  --accent-2-text: var(--aqua-300);
-  --accent-2-soft: #1c3a32;
-
-  --border-ink: #0b0a07;
-  --border-strong: #0b0a07;
-  --border-hairline: #37352a;
-  --shadow-ink: #0b0a07;
-  --focus-ring: var(--avocado-400);
-
-  --terminal-bg: #0f0e0a;
-  --terminal-head: #1a1912;
-  --terminal-fg: #efeadb;
-  --terminal-muted: #767161;
 }
 
 /* ---- Base ---- */
@@ -204,7 +149,7 @@
 }
 
 ::selection {
-  background: var(--avocado-400);
+  background: var(--aqua-300);
   color: var(--ink-900);
 }
 

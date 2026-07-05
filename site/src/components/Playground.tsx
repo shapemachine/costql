@@ -224,7 +224,7 @@ export default function Playground() {
                 totalLabel={r.totalLabel}
                 totalFlagged={r.totalFlagged}
                 footer={r.footer}
-                width={300}
+                width={320}
               />
             )}
           </div>
