@@ -5,6 +5,7 @@
   "scripts": {
     "sync": "node scripts/sync-content.mjs",
     "dev": "npm run sync && astro dev",
+    "prebuild": "npm --prefix ../js ci --no-audit --no-fund && npm --prefix ../js run build",
     "build": "npm run sync && astro build && node scripts/llms.mjs",
     "preview": "astro preview",
     "astro": "astro"
