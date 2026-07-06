@@ -19,6 +19,7 @@ export function ReceiptView({
   totalFlagged = false,
   footer,
   width = 300,
+  pulse = false,
 }: {
   title?: string;
   meta?: string;
@@ -28,6 +29,7 @@ export function ReceiptView({
   totalFlagged?: boolean;
   footer?: React.ReactNode;
   width?: number;
+  pulse?: boolean;
 }) {
   return (
     <div className="cql-receipt" style={{ width }}>
@@ -51,7 +53,7 @@ export function ReceiptView({
             <div className="cql-receipt__rule" />
             <div className={`cql-receipt__total${totalFlagged ? ' cql-receipt__total--flagged' : ''}`}>
               <span>{totalLabel}</span>
-              <span className="cql-receipt__total-value">{total}</span>
+              <span className={`cql-receipt__total-value${pulse ? ' cql-receipt__total-value--pulse' : ''}`}>{total}</span>
             </div>
           </>
         )}

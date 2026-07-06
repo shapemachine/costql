@@ -71,8 +71,13 @@ server-side instrumentation; see [tier fidelity](tiers.md).
 
 ## 3. Point it at your own API
 
-Write a ~90-line adapter (where the API is, what real IDs to query with, and
-a set of curated calibration queries):
+Two ways in. The fast one: hand the job to a coding agent.
+[Agent-assisted onboarding](agents.md) gives it one skill to follow
+(`skills/costql-adapter`) and a prompt that works; the agent probes the
+endpoint, harvests real IDs, builds, and validates the pack for you.
+
+To write it yourself, an adapter is ~90 lines (where the API is, what real IDs
+to query with, and a set of curated calibration queries):
 
 ```bash
 cp examples/adapters/rickmorty.py my_api.py   # the minimal T1 template

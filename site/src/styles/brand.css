@@ -249,7 +249,16 @@ body {
   font-weight: var(--fw-bold);
 }
 .cql-receipt__total--flagged { background: var(--signal-low); color: var(--paper-000); }
-.cql-receipt__total-value { font-size: var(--fs-lg); }
+.cql-receipt__total-value { font-size: var(--fs-lg); display: inline-block; }
+@keyframes cql-total-pulse {
+  0%   { transform: scale(1); }
+  28%  { transform: scale(1.06); color: var(--accent-text); }
+  100% { transform: scale(1); }
+}
+.cql-receipt__total-value--pulse { animation: cql-total-pulse 450ms ease-out; }
+@media (prefers-reduced-motion: reduce) {
+  .cql-receipt__total-value--pulse { animation: none; }
+}
 .cql-receipt__footer {
   text-align: center;
   color: var(--text-muted);

@@ -415,6 +415,8 @@ export default function Playground() {
   const [astValid, setAstValid] = useState(false);
   const [schemaObj, setSchemaObj] = useState<GraphQLSchema | null>(null);
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
+  const [pulse, setPulse] = useState(false);
+  const prevTotalRef = useRef<string | null>(null);
 
   const editorHost = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
@@ -481,18 +483,9 @@ export default function Playground() {
     }
   };
 
-  const run = () => {
-    window.clearTimeout(debounceRef.current);
-    setRunning(true);
-    setTimeout(() => {
-      analyze();
-      setRunning(false);
-    }, 380); // a beat of "measuring"; the quote itself is instant
-  };
-
   const scheduleAnalyze = () => {
     window.clearTimeout(debounceRef.current);
-    debounceRef.current = window.setTimeout(analyze, 300);
+    debounceRef.current = window.setTimeout(analyze, 350); // settle after you pause, not per keystroke
   };
 
   useEffect(() => {
@@ -519,6 +512,7 @@ export default function Playground() {
   useEffect(() => {
     let cancelled = false;
     const info = PACKS[idx];
+    setRunning(true); // genuine: the pack file may still be fetching
     (async () => {
       let entry = cache.current.get(info.file);
       if (!entry) {
@@ -547,7 +541,8 @@ export default function Playground() {
       } catch {
         setExpanded(new Set());
       }
-      run();
+      analyze();       // quote the sample immediately, no invented delay
+      setRunning(false);
     })().catch((e) => { setProblem(String(e)); setRunning(false); });
     return () => { cancelled = true; };
   }, [idx]);
@@ -577,6 +572,19 @@ export default function Playground() {
 
   const r = quote ? receiptFromQuote(quote) : null;
   const queryType = schemaObj?.getQueryType() ?? null;
+
+  /** When the price lands on a new value, pulse it once so the change registers
+   * without the number twitching per keystroke. */
+  const totalStr = running ? null : r?.total ?? null;
+  useEffect(() => {
+    if (totalStr == null) return;
+    const prev = prevTotalRef.current;
+    prevTotalRef.current = totalStr;
+    if (prev == null || prev === totalStr) return; // first landing / unchanged: no pulse
+    setPulse(true);
+    const t = window.setTimeout(() => setPulse(false), 450);
+    return () => window.clearTimeout(t);
+  }, [totalStr]);
 
   return (
     <div className="cql-window">
@@ -642,10 +650,7 @@ export default function Playground() {
               }}
             />
             <div className="cql-play__run">
-              <button className="cql-btn cql-btn--primary" onClick={run} disabled={running || problem != null}>
-                {running ? 'quoting…' : 'quote →'}
-              </button>
-              <span className="cql-play__pack">pack: {PACKS[idx].file}</span>
+              <span className="cql-play__pack">pack: {PACKS[idx].file} · priced live, offline</span>
             </div>
             {problem && !running && <div className="cql-play__error">{problem}</div>}
           </div>
@@ -667,6 +672,7 @@ export default function Playground() {
                   totalFlagged={r.totalFlagged}
                   footer={r.footer}
                   width={300}
+                  pulse={pulse}
                 />
               </div>
             )}

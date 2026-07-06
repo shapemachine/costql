@@ -1,9 +1,11 @@
 # Agent-assisted onboarding
 
-The fastest way to onboard an API is to not write the adapter yourself: hand
-it to a coding agent (Claude Code, Cursor, or any tool that can read a repo
-and run a CLI). costQL ships everything an agent needs to do the job well,
-and one CLI command, `costql probe`, that removes the guesswork.
+The fastest way to onboard an API is to hand it to a coding agent (Claude
+Code, Cursor, or any tool that can read a repo and run a CLI) instead of
+writing the adapter by hand. Give the agent one skill to follow,
+[`skills/costql-adapter`](https://github.com/shapemachine/costql/blob/main/skills/costql-adapter),
+and one CLI command, `costql probe`, that removes the guesswork. Everything
+else it needs is already in the repo.
 
 ## What the human provides
 
