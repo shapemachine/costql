@@ -16,28 +16,31 @@ agent.
 
 ## The shape of an adapter
 
-An adapter module exports a factory returning an `APIConfig`:
+An adapter module exports a factory returning an `APIConfig`. Every field is
+explained on this page; the comments say where:
 
 ```python
 from costql.config import APIConfig, MinedInputs, UNSET
 
 def my_config(tier: str = "T1") -> APIConfig:
     return APIConfig(
-        name="myapi",
-        graphql_url="https://api.example.com/graphql",
-        input_source=MyInputSource(),
-        arg_resolver=MyArgResolver(),
-        tokens={}, root_auth={}, field_auth={},
-        uncoverable_fields={}, bounded_fields={},
-        known_loaders=[], size_roots=SIZE_ROOTS,
-        default_cap=20,
-        cost_currency="wall_time_ms",
-        tier=tier,
-        calibration_queries=calibration_queries,
+        name="myapi",                    # labels the pack; default output is pricing_pack_<name>.json
+        graphql_url="https://api.example.com/graphql",   # the live endpoint to calibrate
+        input_source=MyInputSource(),    # section 1: the real IDs calibration queries with
+        arg_resolver=MyArgResolver(),    # section 2: how argument names map to those IDs
+        tokens={}, root_auth={}, field_auth={},    # section 4: auth; all empty for public APIs
+        uncoverable_fields={}, bounded_fields={},  # section 4: skip / sample-in-isolation lists
+        known_loaders=[], size_roots=SIZE_ROOTS,   # section 4: declared loaders + list-size bounds
+        default_cap=20,                  # section 4: page size for lists that declare nothing
+        cost_currency="wall_time_ms",    # section 4: copy from `costql probe`, never a guess
+        tier=tier,                       # section 4: likewise; build downgrades over-claims
+        calibration_queries=calibration_queries,   # section 3: the shapes the model is fit on
     )
 ```
 
-You point the CLI at it: `costql build --adapter my_api.py:my_config`.
+You point the CLI at it: `costql build --adapter my_api.py:my_config`. The
+factory's `tier` parameter exists so `costql build --tier T1` can request a
+lower fidelity than the adapter's default without editing the file.
 
 ## 1. `InputSource`: real inputs, never fabricated
 
@@ -114,8 +117,11 @@ Rules of thumb, learned across three APIs:
   server-side clamp (e.g. a fixed 20-item page).
 - **`default_cap`**: the ceiling for lists that declare nothing (set it to
   the API's page size).
-- **`tokens` / `root_auth` / `field_auth`**: credential names and which
-  fields need them; empty for public APIs.
+- **`tokens` / `root_auth` / `field_auth`**: auth, all empty for public APIs.
+  `tokens` maps a credential name to its bearer value; `root_auth` maps a
+  root field to the credential it needs; `field_auth` does the same per
+  resolver (`"Movie.privateNotes": "admin"`) for fields stricter than their
+  root.
 - **`uncoverable_fields`**: resolvers calibration must skip (with reasons).
 - **`bounded_fields`**: resolvers kept *out* of calibration fanout and
   sampled once in isolation, e.g. a paid external call
@@ -123,6 +129,10 @@ Rules of thumb, learned across three APIs:
   authored in the adjustments file, never measured.
 - **`known_loaders`**: only for T2/T3 servers, the loader IDs your cost-trace
   emits, so dead loaders are detected. Empty for black boxes.
+- **`one_root_per_op`** (default `True`): generated coverage queries hit one
+  DB-backed root field per operation, for servers that can't run sibling
+  roots concurrently on a shared session. Leave it unless you know your
+  server handles concurrent sibling roots and you want faster calibration.
 - **`cost_currency` / `tier`**: don't choose these; observe them. Run
   `costql probe <url>` and copy what it reports: `"wall_time_ms"` / `"T1"`
   for any API you don't control, `"work_ms"` / `"T2"`-or-`"T3"` only when

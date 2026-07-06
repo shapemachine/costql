@@ -71,7 +71,6 @@ class APIConfig:
     # is authored via the #6 adjustments file, not measured.
     known_loaders: list[str] = field(default_factory=list)        # declared loaders (dead-loader detection)
     size_roots: dict[str, dict] = field(default_factory=dict)     # root -> {arg, offset, cap}
-    metrics_url: str | None = None
     one_root_per_op: bool = True     # server can't run sibling DB roots concurrently
     default_cap: int = 50
     cost_currency: str = "wall_time_ms"
