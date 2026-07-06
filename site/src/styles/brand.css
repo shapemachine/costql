@@ -147,10 +147,37 @@ body {
   font-size: var(--fs-sm);
   color: var(--text-strong);
 }
+.cql-window__title--left { text-align: left; }
 .cql-window__tools { display: flex; gap: 8px; min-width: 47px; justify-content: flex-end; }
-/* mirrors __tools so the centered title stays optically centered */
-.cql-window__spacer { min-width: 47px; }
 .cql-window__body--sunken { background: var(--bg-sunken); }
+
+/* ---- Tooltip (hover/focus): dark card under the target ---- */
+.cql-tip { position: relative; cursor: help; }
+.cql-tip::after {
+  content: attr(data-tip);
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  width: max-content;
+  max-width: 250px;
+  background: var(--surface-invert);
+  color: var(--text-invert);
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-regular);
+  letter-spacing: var(--tracking-normal);
+  line-height: 1.5;
+  text-align: left;
+  white-space: normal;
+  padding: 7px 10px;
+  border-radius: var(--radius-1);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-fast) var(--ease-snap);
+  z-index: 30;
+}
+.cql-tip:hover::after,
+.cql-tip:focus-visible::after { opacity: 1; }
 
 /* ---- Receipt ---- */
 /* borderless paper: the lightly contrasting background + a soft shadow carry
@@ -365,25 +392,30 @@ body {
   overflow-x: auto;
 }
 
-/* ---- Copy pill (install commands): deep teal, not terminal ink ---- */
+/* ---- Copy pill (install commands): quiet receipt paper, not a button ---- */
 .cql-pill {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  background: var(--accent-deep);
-  color: var(--paper-000);
-  border: var(--border-1) solid var(--border-ink);
+  background: var(--surface-receipt);
+  color: var(--text-secondary);
+  border: var(--border-hair) solid var(--border-hairline);
   border-radius: var(--radius-1);
-  box-shadow: var(--shadow-1);
+  box-shadow: none;
   font-family: var(--font-mono);
   font-size: var(--fs-sm);
-  font-weight: var(--fw-medium);
+  font-weight: var(--fw-regular);
   padding: 9px 14px;
   cursor: pointer;
 }
-.cql-pill__prompt { color: var(--green-300); }
-.cql-pill__state { color: var(--green-200); font-size: var(--fs-2xs); }
-.cql-pill__state--copied { color: var(--paper-000); }
+.cql-pill:hover { border-color: var(--text-faint); }
+.cql-pill__prompt { color: var(--accent-text); }
+.cql-pill__state { display: inline-flex; align-items: center; color: var(--text-muted); }
+.cql-pill:hover .cql-pill__state { color: var(--accent-text); }
+.cql-pill__ic-check { display: none; }
+.cql-pill--copied .cql-pill__ic-copy { display: none; }
+.cql-pill--copied .cql-pill__ic-check { display: inline; }
+.cql-pill--copied .cql-pill__state { color: var(--accent-text); }
 
 /* ---- Site header ---- */
 .cql-header {
@@ -520,14 +552,20 @@ body {
 
 /* ---- Playground: schema | operation + variables | quote ---- */
 .cql-play__titlerow { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 8px; }
+/* pack tabs: a real tab strip; the active tab punches through the rule into
+   the panel below (same paper, erased border) */
 .cql-play__tabbar {
   padding: 12px var(--space-5) 0;
+  background: var(--surface-card);
+  border-bottom: var(--border-1) solid var(--border-ink);
 }
 .cql-play__grid { display: grid; grid-template-columns: 0.9fr 1.35fr 1fr; }
 .cql-play__schema {
-  padding: var(--space-4) var(--space-4) var(--space-5) var(--space-5);
+  padding: var(--space-4) var(--space-3) var(--space-4) var(--space-4);
   border-right: var(--border-1) solid var(--border-ink);
   min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
 .cql-play__middle {
   padding: var(--space-4) var(--space-5) var(--space-5);
@@ -539,10 +577,12 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: var(--bg-page);
   min-width: 0;
 }
 .cql-play__right .cql-play__colhead { align-self: flex-start; margin-bottom: 12px; }
+/* the playground receipt prints on lighter paper than the sunken panel */
+.cql-play__right .cql-receipt__zig,
+.cql-play__right .cql-receipt__paper { background: var(--paper-000); }
 .cql-play__colhead {
   font-family: var(--font-mono);
   font-size: var(--fs-2xs);
@@ -551,27 +591,44 @@ body {
   letter-spacing: var(--tracking-wide);
   margin-bottom: 8px;
 }
-.cql-play__tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+.cql-play__tabs { display: flex; gap: 6px; flex-wrap: wrap; }
 .cql-play__tab {
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: var(--fw-bold);
-  padding: 6px 10px;
+  padding: 7px 12px;
   cursor: pointer;
   border: var(--border-1) solid var(--border-ink);
-  border-radius: var(--radius-1);
-  background: var(--surface-card);
-  color: var(--text-strong);
-  box-shadow: none;
+  border-bottom: none;
+  border-radius: var(--radius-2) var(--radius-2) 0 0;
+  background: var(--bg-page);
+  color: var(--text-muted);
+  position: relative;
 }
-.cql-play__tab--active { background: var(--accent); color: var(--ink-900); box-shadow: var(--shadow-1); }
-/* the schema field tree (Apollo-sandbox-style: + on the left adds the field) */
+.cql-play__tab:hover { color: var(--text-strong); }
+.cql-play__tab--active { background: var(--bg-sunken); color: var(--text-strong); }
+.cql-play__tab--active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(-1 * var(--border-1));
+  height: var(--border-1);
+  background: var(--bg-sunken);
+}
+/* the schema field tree (Apollo-sandbox-style: + on the left adds the field).
+   flex-basis 0 keeps the tree from driving the row height: it stretches to
+   the tallest sibling column and scrolls internally instead of clipping */
 .cql-tree {
   font-family: var(--font-mono);
   font-size: 12px;
-  max-height: 380px;
+  flex: 1 1 0;
+  min-height: 300px;
   overflow: auto;
   padding-right: 4px;
+  /* fade the scroll edge so a half-visible row reads as "more below" */
+  -webkit-mask-image: linear-gradient(#000 calc(100% - 16px), transparent);
+  mask-image: linear-gradient(#000 calc(100% - 16px), transparent);
 }
 .cql-tree__list { list-style: none; margin: 0; padding: 0; }
 .cql-tree__list .cql-tree__list { padding-left: 18px; }
@@ -726,4 +783,8 @@ body {
   .cql-play__right { border-top: none; }
   .cql-footer__grid { grid-template-columns: 1fr 1fr; }
   .cql-header__nav { display: none; }
+}
+
+@media (max-width: 640px) {
+  .cql-callout { flex-direction: column; gap: var(--space-2); }
 }

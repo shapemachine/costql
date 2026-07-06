@@ -581,10 +581,15 @@ export default function Playground() {
   return (
     <div className="cql-window">
       <div className="cql-window__bar">
-        <div className="cql-window__spacer" aria-hidden="true" />
-        <div className="cql-window__title">playground: costql.quote()</div>
+        <div className="cql-window__title cql-window__title--left">playground: costql.quote()</div>
         <div className="cql-window__tools">
-          <span className="cql-badge cql-badge--accent">offline</span>
+          <span
+            className="cql-badge cql-badge--accent cql-tip"
+            tabIndex={0}
+            data-tip="every price here is computed on this page, from the pack file alone: no server, no network requests"
+          >
+            offline
+          </span>
         </div>
       </div>
       <div className="cql-window__body--sunken">
