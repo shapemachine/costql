@@ -34,8 +34,10 @@ present, always a number, always safe to bill on. See
 
 ## How it works
 
-1. **Build (seller side, once per schema):** write a ~90-line adapter that
-   tells costQL where your API is and how to fill in its arguments, then run
+1. **Build (seller side, once per schema):** run `costql probe <url>` to see
+   what your endpoint supports, write a ~90-line adapter that tells costQL
+   where your API is and how to fill in its arguments (or hand that job to a
+   coding agent: see [docs/agents.md](docs/agents.md)), then run
    `costql build`. costQL introspects the schema, measures a set of clean
    calibration queries, and fits a per-resolver cost model.
 2. **Ship the pack:** the output is one static file (schema + fitted costs +

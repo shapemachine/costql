@@ -29,6 +29,7 @@ export default defineConfig({
         { label: 'Quickstart', slug: 'docs/quickstart' },
         { label: 'Tier fidelity', slug: 'docs/tiers' },
         { label: 'Writing an adapter', slug: 'docs/adapters' },
+        { label: 'Agent-assisted onboarding', slug: 'docs/agents' },
         { label: 'Instrumenting for T2/T3', slug: 'docs/instrumentation' },
         {
           label: 'Reference',

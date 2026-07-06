@@ -33,6 +33,11 @@ def files():
                         yield os.path.join(dirpath, n)
 
 
+def subcommands(parser) -> tuple[str, ...]:
+    """The parser's real subcommand names: never a hardcoded list to rot."""
+    return tuple(parser._subparsers._group_actions[0].choices)  # type: ignore[union-attr]
+
+
 def check_line(parser, rest: str) -> str | None:
     """Return an error string if the costql command line is invalid."""
     # normalize: strip trailing shell continuations/comments, placeholder args
@@ -44,7 +49,7 @@ def check_line(parser, rest: str) -> str | None:
         argv = shlex.split(cleaned)
     except ValueError:
         return None            # half a line of prose, not a command
-    if not argv or argv[0] not in ("build", "quote", "validate", "version"):
+    if not argv or argv[0] not in subcommands(parser):
         return f"unknown subcommand in: costql {rest}"
     try:
         parser.parse_args(argv)

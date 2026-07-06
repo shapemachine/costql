@@ -1,13 +1,15 @@
 """The ``costql`` command line.
 
+    costql probe https://rickandmortyapi.com/graphql
     costql build --adapter examples/adapters/tmdb.py:tmdb_config --out pack.json
     costql quote --pack pack.json '{ movie(id:"27205"){ title } }'
     costql validate --pack pack.json
     costql version
 
-``build`` calibrates a live API through an adapter (see the adapter guide) and
-writes the pricing pack. ``quote`` and ``validate`` are fully offline: they
-never touch the network.
+``probe`` checks a live endpoint before any adapter exists (achievable tier,
+currency, where to harvest IDs). ``build`` calibrates a live API through an
+adapter (see the adapter guide) and writes the pricing pack. ``quote`` and
+``validate`` are fully offline: they never touch the network.
 """
 from __future__ import annotations
 
@@ -98,6 +100,26 @@ def _cmd_build(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_probe(args: argparse.Namespace) -> int:
+    from .probe import ProbeError, probe_endpoint, render_probe
+    headers = {}
+    for h in args.header:
+        name, sep, value = h.partition(":")
+        if not sep:
+            raise SystemExit(f'! --header must be "Name: value" (got {h!r})')
+        headers[name.strip()] = value.strip()
+    try:
+        report = probe_endpoint(args.url, headers=headers)
+    except ProbeError as e:
+        print(f"! {e}")
+        return 1
+    if args.json:
+        print(json.dumps(report, indent=2, sort_keys=True))
+    else:
+        print(render_probe(report))
+    return 0
+
+
 def _cmd_quote(args: argparse.Namespace) -> int:
     pack = _load_pack(args.pack)
     result = pack.quote(args.query)
@@ -158,6 +180,16 @@ def build_parser() -> argparse.ArgumentParser:
     p_build.add_argument("--out", default=None,
                          help="output pack path (default pricing_pack_<name>.json)")
     p_build.set_defaults(fn=_cmd_build)
+
+    p_probe = sub.add_parser(
+        "probe", help="check a live endpoint before writing an adapter: achievable "
+                      "tier, currency, and where to harvest real IDs")
+    p_probe.add_argument("url", help="the GraphQL endpoint URL")
+    p_probe.add_argument("--header", action="append", default=[],
+                         help='extra HTTP header as "Name: value" (repeatable)')
+    p_probe.add_argument("--json", action="store_true",
+                         help="print the probe report as JSON")
+    p_probe.set_defaults(fn=_cmd_probe)
 
     p_quote = sub.add_parser(
         "quote", help="price a query from a pack: offline, no server, no network")

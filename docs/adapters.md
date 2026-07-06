@@ -8,6 +8,12 @@ This page walks through every part, using
 [`examples/adapters/rickmorty.py`](https://github.com/shapemachine/costql/blob/main/examples/adapters/rickmorty.py)
 (the minimal T1 template) as the running example.
 
+Two shortcuts before writing anything by hand. `costql probe <url>` checks
+the endpoint first and reports the tier and `cost_currency` to declare, plus
+where real IDs can be harvested. And the whole job delegates well:
+[agent-assisted onboarding](agents.md) covers handing this page to a coding
+agent.
+
 ## The shape of an adapter
 
 An adapter module exports a factory returning an `APIConfig`:
@@ -117,10 +123,11 @@ Rules of thumb, learned across three APIs:
   authored in the adjustments file, never measured.
 - **`known_loaders`**: only for T2/T3 servers, the loader IDs your cost-trace
   emits, so dead loaders are detected. Empty for black boxes.
-- **`cost_currency` / `tier`**: `"wall_time_ms"` / `"T1"` for any API you
-  don't control. Claim `"work_ms"` / `"T3"` only when the server actually
-  emits the [cost-trace extension](instrumentation.md); `costql build`
-  honestly downgrades to T1 if it observes no trace.
+- **`cost_currency` / `tier`**: don't choose these; observe them. Run
+  `costql probe <url>` and copy what it reports: `"wall_time_ms"` / `"T1"`
+  for any API you don't control, `"work_ms"` / `"T2"`-or-`"T3"` only when
+  the server actually emits the [cost-trace extension](instrumentation.md).
+  `costql build` honestly downgrades to T1 if it observes no trace.
 
 ## 5. Build, validate, spot-check
 
