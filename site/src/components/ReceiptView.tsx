@@ -15,7 +15,7 @@ export function ReceiptView({
   meta,
   items,
   total,
-  totalLabel = 'price ceiling',
+  totalLabel = 'work-time (ms)',
   totalFlagged = false,
   footer,
   width = 300,

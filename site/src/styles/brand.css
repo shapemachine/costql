@@ -293,11 +293,24 @@ body {
   color: var(--text-strong);
 }
 .cql-stat--accent { background: var(--accent); color: var(--ink-900); }
+.cql-stat__top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
 .cql-stat__value {
   font-size: var(--fs-3xl);
   font-weight: var(--fw-bold);
   line-height: var(--lh-tight);
   letter-spacing: var(--tracking-tight);
+}
+.cql-stat__tier {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--tracking-wide);
+  border: var(--border-1) solid var(--border-ink);
+  border-radius: var(--radius-1);
+  background: var(--surface-card);
+  color: var(--text-body);
+  padding: 3px 7px;
 }
 .cql-stat__caption {
   margin-top: var(--space-3);
@@ -329,6 +342,19 @@ body {
   color: var(--terminal-muted);
   letter-spacing: var(--tracking-wide);
 }
+.cql-code__tab {
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--tracking-wide);
+  color: var(--terminal-muted);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 2px 2px 3px;
+  cursor: pointer;
+}
+.cql-code__tab--active { color: var(--terminal-fg); border-bottom-color: var(--accent); }
 .cql-code pre {
   margin: 0;
   padding: var(--space-4);
@@ -409,7 +435,7 @@ body {
 .cql-hero h1 {
   font-family: var(--font-display);
   font-weight: var(--fw-bold);
-  font-size: clamp(40px, 6vw, 68px);
+  font-size: clamp(34px, 4.8vw, 54px);
   line-height: var(--lh-tight);
   letter-spacing: var(--tracking-tight);
   color: var(--text-strong);
@@ -437,7 +463,14 @@ body {
   grid-template-columns: repeat(3, 1fr);
   gap: var(--space-5);
   padding-top: 40px;
-  padding-bottom: 40px;
+}
+.cql-stats__note {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  text-align: center;
+  margin: 0;
+  padding: 18px 0 28px;
 }
 
 /* ---- Steps: a left-to-right flow, cards joined by arrows ---- */
@@ -485,18 +518,40 @@ body {
   margin-bottom: 26px;
 }
 
-/* ---- Playground ---- */
+/* ---- Playground: schema | operation + variables | quote ---- */
 .cql-play__titlerow { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 8px; }
-.cql-play__grid { display: grid; grid-template-columns: 1.3fr 0.9fr; }
-.cql-play__left { padding: var(--space-5); border-right: var(--border-1) solid var(--border-ink); }
-.cql-play__right {
-  padding: var(--space-5);
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  background: var(--bg-page);
+.cql-play__tabbar {
+  padding: 12px var(--space-5) 0;
 }
-.cql-play__tabs { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+.cql-play__grid { display: grid; grid-template-columns: 0.9fr 1.35fr 1fr; }
+.cql-play__schema {
+  padding: var(--space-4) var(--space-4) var(--space-5) var(--space-5);
+  border-right: var(--border-1) solid var(--border-ink);
+  min-width: 0;
+}
+.cql-play__middle {
+  padding: var(--space-4) var(--space-5) var(--space-5);
+  border-right: var(--border-1) solid var(--border-ink);
+  min-width: 0;
+}
+.cql-play__right {
+  padding: var(--space-4) var(--space-5) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--bg-page);
+  min-width: 0;
+}
+.cql-play__right .cql-play__colhead { align-self: flex-start; margin-bottom: 12px; }
+.cql-play__colhead {
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-bold);
+  color: var(--text-muted);
+  letter-spacing: var(--tracking-wide);
+  margin-bottom: 8px;
+}
+.cql-play__tabs { display: flex; gap: 8px; flex-wrap: wrap; }
 .cql-play__tab {
   font-family: var(--font-mono);
   font-size: 12px;
@@ -510,27 +565,54 @@ body {
   box-shadow: none;
 }
 .cql-play__tab--active { background: var(--accent); color: var(--ink-900); box-shadow: var(--shadow-1); }
-.cql-play__labelrow {
+/* the schema field tree (Apollo-sandbox-style: + on the left adds the field) */
+.cql-tree {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  max-height: 380px;
+  overflow: auto;
+  padding-right: 4px;
+}
+.cql-tree__list { list-style: none; margin: 0; padding: 0; }
+.cql-tree__list .cql-tree__list { padding-left: 18px; }
+.cql-tree__row {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 10px;
-  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  padding: 2px 4px 2px 0;
+  border-radius: var(--radius-1);
+  min-width: 0;
 }
-.cql-play__label {
+.cql-tree__row:hover { background: var(--accent-softer); }
+.cql-tree__add {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-family: var(--font-mono);
-  font-size: var(--fs-2xs);
-  font-weight: var(--fw-bold);
+  font-size: 13px;
+  line-height: 1;
+  border: var(--border-hair) solid var(--text-muted);
+  border-radius: var(--radius-pill);
+  background: transparent;
   color: var(--text-muted);
-  letter-spacing: var(--tracking-wide);
+  cursor: pointer;
+  padding: 0;
 }
-.cql-play__hint {
-  font-family: var(--font-mono);
-  font-size: var(--fs-2xs);
-  color: var(--text-muted);
-}
+.cql-tree__add:hover { border-color: var(--accent-text); color: var(--accent-text); }
+.cql-tree__add--in { background: var(--accent); border-color: var(--border-ink); color: var(--ink-900); }
+.cql-tree__add[disabled] { opacity: 0.4; cursor: default; }
+.cql-tree__name { color: var(--text-body); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cql-tree__row--in .cql-tree__name { font-weight: var(--fw-bold); color: var(--text-strong); }
+.cql-tree__args { color: var(--text-faint); margin-left: 1px; }
+.cql-tree__type { margin-left: auto; color: var(--accent-text); white-space: nowrap; flex: none; }
+.cql-tree__type--link { cursor: pointer; }
+.cql-tree__type--link:hover { text-decoration: underline; }
+.cql-tree__caret { color: var(--text-muted); }
+
 .cql-play__editor {
-  margin-top: 6px;
   border: var(--border-1) solid var(--border-ink);
   border-radius: var(--radius-1);
   overflow: hidden;
@@ -540,8 +622,32 @@ body {
   background: var(--terminal-bg);
   color: var(--terminal-fg);
   font-size: 13px;
-  min-height: 128px;
+  min-height: 200px;
+  max-height: 320px;
 }
+.cql-play__editor .cm-scroller { overflow: auto; }
+/* the schema-lint squiggle needs to read on the dark editor */
+.cql-play__editor .cm-lintRange-error {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="6" height="3"><path d="m0 3 l2 -2 l1 0 l2 2 l1 0" stroke="%23ff6b4a" fill="none" stroke-width=".8"/></svg>');
+  background-repeat: repeat-x;
+  background-position: left bottom;
+  padding-bottom: 1px;
+}
+.cql-play__vars {
+  display: block;
+  width: 100%;
+  resize: vertical;
+  border: var(--border-1) solid var(--border-ink);
+  border-radius: var(--radius-1);
+  background: var(--terminal-bg);
+  color: var(--terminal-fg);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.5;
+  padding: 8px 10px;
+}
+.cql-play__vars:focus-visible { outline-offset: 0; }
+.cql-play__stale { opacity: 0.55; }
 .cql-play__editor .cm-editor.cm-focused { outline: none; }
 .cql-play__editor .cm-content { caret-color: var(--green-400); font-family: var(--font-mono); }
 .cql-play__editor .cm-gutters { background: var(--terminal-head); color: var(--terminal-muted); border-right: 1px solid var(--terminal-head); }
@@ -603,6 +709,11 @@ body {
 }
 
 /* ---- Responsive ---- */
+@media (max-width: 1000px) {
+  .cql-play__grid { grid-template-columns: 1fr 1.2fr; }
+  .cql-play__right { grid-column: 1 / -1; border-top: var(--border-1) solid var(--border-ink); }
+}
+
 @media (max-width: 900px) {
   .cql-hero { grid-template-columns: 1fr; padding-top: 48px; }
   .cql-stats__grid,
@@ -610,7 +721,9 @@ body {
   .cql-steps__flow { grid-template-columns: 1fr; }
   .cql-steps__arrow { justify-self: center; transform: rotate(90deg); padding: 2px 0; }
   .cql-play__grid { grid-template-columns: 1fr; }
-  .cql-play__left { border-right: none; border-bottom: var(--border-1) solid var(--border-ink); }
+  .cql-play__schema,
+  .cql-play__middle { border-right: none; border-bottom: var(--border-1) solid var(--border-ink); }
+  .cql-play__right { border-top: none; }
   .cql-footer__grid { grid-template-columns: 1fr 1fr; }
   .cql-header__nav { display: none; }
 }

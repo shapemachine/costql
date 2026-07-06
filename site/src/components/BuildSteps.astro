@@ -8,6 +8,15 @@ quote = pack.quote('{ movie(id:"27205"){ cast(limit:8){ person{ name } } } }')
 quote["price"]         # 50.5   the most this query should cost
 quote["typical_price"] # 36.4   what it usually costs
 quote["confidence"]    # "high"`;
+
+const js = `import { PricingPack } from "costql";
+
+const pack = await PricingPack.load("tmdb_t3.json");  // the same file
+const quote = pack.quote('{ movie(id:"27205"){ cast(limit:8){ person{ name } } } }');
+
+quote.price          // 50.5   the most this query should cost
+quote.typical_price  // 36.4   what it usually costs
+quote.confidence     // "high"`;
 ---
 
 <section id="build" class="cql-container cql-section">
@@ -59,11 +68,28 @@ quote["confidence"]    # "high"`;
   </div>
 
   <div style="margin-top: 24px">
-    <div class="cql-code">
+    <div class="cql-code" id="quote-sample">
       <div class="cql-code__head">
-        <span class="cql-code__title">python</span>
+        <button class="cql-code__tab cql-code__tab--active" data-lang="py">python</button>
+        <button class="cql-code__tab" data-lang="js">node.js</button>
       </div>
-      <pre>{py}</pre>
+      <pre data-lang="py">{py}</pre>
+      <pre data-lang="js" hidden>{js}</pre>
     </div>
   </div>
 </section>
+
+<script is:inline>
+  {
+    const box = document.getElementById('quote-sample');
+    box.querySelectorAll('.cql-code__tab').forEach((tab) => {
+      tab.addEventListener('click', () => {
+        box.querySelectorAll('.cql-code__tab').forEach((t) =>
+          t.classList.toggle('cql-code__tab--active', t === tab));
+        box.querySelectorAll('pre').forEach((pre) => {
+          pre.hidden = pre.dataset.lang !== tab.dataset.lang;
+        });
+      });
+    });
+  }
+</script>

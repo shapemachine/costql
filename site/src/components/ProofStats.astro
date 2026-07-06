@@ -1,26 +1,42 @@
 ---
-// Proof-point stat band on ink.
+// Proof-point stat band. Every number names the tier it was measured at:
+// this page is a transparency exercise, not a sales page.
 ---
 
 <section class="cql-stats">
-  <div class="cql-container cql-stats__grid">
-    <div class="cql-stat">
-      <div class="cql-stat__value">~4%</div>
-      <div class="cql-stat__caption">
-        average pricing error on a public API we don't run, using a 93-line adapter
+  <div class="cql-container">
+    <div class="cql-stats__grid">
+      <div class="cql-stat">
+        <div class="cql-stat__top">
+          <div class="cql-stat__value">~4%</div>
+          <span class="cql-stat__tier">at T1</span>
+        </div>
+        <div class="cql-stat__caption">
+          average pricing error on a public API we don't run, with zero server changes
+        </div>
+      </div>
+      <div class="cql-stat cql-stat--accent">
+        <div class="cql-stat__top">
+          <div class="cql-stat__value">5 / 5</div>
+          <span class="cql-stat__tier">at T1</span>
+        </div>
+        <div class="cql-stat__caption">
+          test queries where the quoted ceiling was never below the real cost
+        </div>
+      </div>
+      <div class="cql-stat">
+        <div class="cql-stat__top">
+          <div class="cql-stat__value">38.5×</div>
+          <span class="cql-stat__tier">at T3</span>
+        </div>
+        <div class="cql-stat__caption">
+          repeated work our test database merged into single calls: costQL saw it and priced it once
+        </div>
       </div>
     </div>
-    <div class="cql-stat cql-stat--accent">
-      <div class="cql-stat__value">5 / 5</div>
-      <div class="cql-stat__caption">
-        test queries where the quoted ceiling was never below the real cost
-      </div>
-    </div>
-    <div class="cql-stat">
-      <div class="cql-stat__value">38.5×</div>
-      <div class="cql-stat__caption">
-        repeated work our test database merged into single calls: costQL saw it and priced it once
-      </div>
-    </div>
+    <p class="cql-stats__note">
+      T1 and T3 are two of costQL's <a href="#tiers">three depths of fidelity</a>: you pick
+      the one your needs justify.
+    </p>
   </div>
 </section>
