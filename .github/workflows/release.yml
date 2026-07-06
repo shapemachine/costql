@@ -1,13 +1,21 @@
 name: Release
 
 # Tag-driven, tokenless releases via Trusted Publishing (PyPI/TestPyPI) and
-# npm provenance. One-time setup (repo owner):
+# npm provenance. The version is DERIVED FROM THE GIT TAG (v1.2.3 -> 1.2.3) and
+# pinned into src/costql/_version.py and js/package.json at build time, so the
+# tag is the single source of truth for the version.
+#
+# Pre-release tags -- any version with letters after the number, e.g. v0.1.0rc1
+# or v0.2.0b1 -- publish ONLY to TestPyPI (a safe rehearsal). Final tags
+# (vX.Y.Z, digits only) publish TestPyPI -> PyPI -> npm.
+#
+# One-time setup (repo owner):
 #   - PyPI + TestPyPI: add a Trusted Publisher for shapemachine/costql,
 #     workflow release.yml, environments "testpypi" / "pypi".
 #   - GitHub: create environments "testpypi" and "pypi"; require manual
-#     approval on "pypi".
-#   - npm: set repository access with an automation token NPM_TOKEN, or npm
-#     Trusted Publishing when available for this repo.
+#     approval on "pypi" (public repo only).
+#   - npm: NPM_TOKEN secret in the "npm" environment (or npm Trusted Publishing
+#     when available for this repo).
 
 on:
   push:
@@ -19,11 +27,28 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.ver.outputs.version }}
+      prerelease: ${{ steps.ver.outputs.prerelease }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Derive version from tag and pin it
+        id: ver
+        run: |
+          RAW="${GITHUB_REF_NAME#v}"
+          echo "Tag ${GITHUB_REF_NAME} -> version ${RAW}"
+          printf '__version__ = "%s"\n' "$RAW" > src/costql/_version.py
+          echo "version=$RAW" >> "$GITHUB_OUTPUT"
+          if printf '%s' "$RAW" | grep -qE '[A-Za-z]'; then
+            echo "prerelease=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::${RAW} is a pre-release -> TestPyPI only"
+          else
+            echo "prerelease=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::${RAW} is a final release -> TestPyPI, PyPI, npm"
+          fi
       - run: pip install build
       - run: python -m build
       - uses: actions/upload-artifact@v4
@@ -48,9 +73,10 @@ jobs:
           skip-existing: true
 
   pypi:
-    needs: testpypi
+    needs: [build, testpypi]
+    if: ${{ needs.build.outputs.prerelease == 'false' }}
     runs-on: ubuntu-latest
-    environment: pypi   # configure required reviewers on this environment
+    environment: pypi   # configure required reviewers on this environment (public repo)
     permissions:
       id-token: write
     steps:
@@ -61,7 +87,8 @@ jobs:
       - uses: pypa/gh-action-pypi-publish@release/v1
 
   npm:
-    needs: pypi
+    needs: [build, pypi]
+    if: ${{ needs.build.outputs.prerelease == 'false' }}
     runs-on: ubuntu-latest
     environment: npm
     permissions:
@@ -77,6 +104,8 @@ jobs:
           node-version: 20
           registry-url: https://registry.npmjs.org
       - run: npm ci
+      - name: Pin version from tag
+        run: npm version "${{ needs.build.outputs.version }}" --no-git-tag-version --allow-same-version
       - run: npm run build
       - run: npm test
       - run: npm publish --provenance --access public
