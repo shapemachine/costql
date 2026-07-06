@@ -2,10 +2,15 @@
 import react from '@astrojs/react';
 import starlight from '@astrojs/starlight';
 import { defineConfig } from 'astro/config';
+import rehypeExternalLinks from 'rehype-external-links';
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://costql.com',
+  markdown: {
+    // links that leave costql.com open in a new tab
+    rehypePlugins: [[rehypeExternalLinks, { target: '_blank', rel: ['noopener'] }]],
+  },
   integrations: [
     starlight({
       title: 'costQL',

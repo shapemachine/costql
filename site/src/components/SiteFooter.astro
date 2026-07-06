@@ -45,9 +45,16 @@ const cols = [
         <div>
           <div class="cql-footer__h">{c.h}</div>
           <ul>
-            {c.links.map((l) => (
-              <li><a href={l.href}>{l.label}</a></li>
-            ))}
+            {c.links.map((l) => {
+              const newTab = !l.href.startsWith('#');
+              return (
+                <li>
+                  <a href={l.href} target={newTab ? '_blank' : undefined} rel={newTab ? 'noopener' : undefined}>
+                    {l.label}
+                  </a>
+                </li>
+              );
+            })}
           </ul>
         </div>
       ))}

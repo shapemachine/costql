@@ -56,9 +56,15 @@ h1[data-page-title] {
   box-shadow: var(--shadow-1);
 }
 
-/* tables: ink rules on paper */
+/* tables: ink rules on paper. Starlight's default cell padding is
+   8px 16px 8px 0: the zero left pad presses the first column against our
+   table border, so make it symmetric */
 .sl-markdown-content table {
   border: 2px solid var(--border-ink);
+}
+.sl-markdown-content th,
+.sl-markdown-content td {
+  padding: 8px 14px;
 }
 .sl-markdown-content th {
   background: var(--bg-sunken);

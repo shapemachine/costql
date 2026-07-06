@@ -6,4 +6,15 @@
 
 <script is:inline>
   document.documentElement.dataset.theme = 'light';
+
+  // chrome links (header GitHub icon, etc.) that leave the site open a new
+  // tab; markdown-content links are already handled by rehype-external-links
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('a[href^="http"]').forEach((a) => {
+      if (a.host !== location.host && !a.target) {
+        a.target = '_blank';
+        a.relList.add('noopener');
+      }
+    });
+  });
 </script>

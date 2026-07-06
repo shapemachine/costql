@@ -1,10 +1,11 @@
 ---
-// Sticky nav in a vintage window title-bar: traffic lights, wordmark, links.
+// Sticky nav in a vintage window title-bar: wordmark + links. Anchors stay in
+// this tab; docs and anything off-page open a new one.
 const links = [
-  { label: 'docs', href: '/docs/quickstart/' },
+  { label: 'docs', href: '/docs/quickstart/', newTab: true },
   { label: 'playground', href: '#playground' },
   { label: 'tiers', href: '#tiers' },
-  { label: 'results', href: '/docs/evaluation/' },
+  { label: 'results', href: '/docs/evaluation/', newTab: true },
 ];
 ---
 
@@ -12,7 +13,11 @@ const links = [
   <div class="cql-container cql-header__inner">
     <a href="/" class="cql-wordmark">cost<span>QL</span></a>
     <nav class="cql-header__nav">
-      {links.map((l) => <a href={l.href}>{l.label}</a>)}
+      {links.map((l) => (
+        <a href={l.href} target={l.newTab ? '_blank' : undefined} rel={l.newTab ? 'noopener' : undefined}>
+          {l.label}
+        </a>
+      ))}
     </nav>
     <div class="cql-header__right">
       <span class="cql-badge cql-badge--outline cql-badge--pill">offline-first</span>
