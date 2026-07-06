@@ -83,6 +83,12 @@ header.header {
   border-bottom: 3px solid var(--border-ink);
 }
 
+/* Starlight draws a divider after the social icons to separate them from the
+   theme picker; ours is overridden away, so the rule separates nothing */
+.social-icons::after {
+  border-inline-end: none;
+}
+
 ::selection {
   background: var(--green-300);
   color: var(--ink-900);
