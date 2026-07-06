@@ -1,10 +1,12 @@
 /** Sync the repo's canonical sources into the site:
- *   - ../docs/**\/*.md  -> src/content/docs/docs/   (H1 lifted into frontmatter)
+ *   - ../docs/**\/*.md  -> src/content/docs/docs/   (H1 lifted into frontmatter,
+ *     relative .md links resolved to site URLs: Astro renders them verbatim,
+ *     so `](agents.md)` would 404 as /docs/adapters/agents.md)
  *   - ../packs/*.json   -> public/packs/            (the playground's data)
  * Run automatically before dev/build so the site can never drift from the repo.
  */
 import { cpSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
-import { dirname, join, relative } from 'node:path';
+import { dirname, join, posix, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const SITE = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -27,7 +29,13 @@ for (const src of mdFiles(SRC_DOCS)) {
   const raw = readFileSync(src, 'utf8');
   const m = raw.match(/^#\s+(.+)\n/);
   const title = m ? m[1].trim() : rel.replace(/\.md$/, '');
-  const body = m ? raw.slice(m[0].length) : raw;
+  let body = m ? raw.slice(m[0].length) : raw;
+  // `](tiers.md)` / `](results/tmdb.md)` / `](../contract.md)` -> `/docs/.../`
+  const srcDir = posix.dirname(rel.split(sep).join('/'));
+  body = body.replace(/\]\((?!https?:|\/|#)([^)\s]+?)\.md(#[^)]*)?\)/g, (_all, target, hash = '') => {
+    const resolved = posix.normalize(posix.join(srcDir === '.' ? '' : srcDir, target));
+    return `](/docs/${resolved}/${hash})`;
+  });
   const out = `---\ntitle: "${title.replace(/"/g, '\\"')}"\n---\n\n${body}`;
   const dest = join(DEST_DOCS, rel);
   mkdirSync(dirname(dest), { recursive: true });
