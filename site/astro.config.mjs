@@ -38,6 +38,7 @@ export default defineConfig({
           label: 'Reference',
           items: [
             { label: 'The output contract', slug: 'docs/contract' },
+            { label: 'Price Pack Format', slug: 'docs/pack-format' },
             { label: 'Architecture', slug: 'docs/architecture' },
             { label: 'The JS package', slug: 'docs/js' },
             { label: 'Limitations', slug: 'docs/limitations' },

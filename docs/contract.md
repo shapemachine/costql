@@ -20,12 +20,22 @@ cost-units into money. costQL prices; the app bills.
 
 ---
 
-## Two bases
+## The basis: predicted (normal) vs measured (only when a query runs)
+
+Almost every result you handle is **`predicted`**: an offline quote computed from
+the pack, before the query runs. That is the path your app integrates against, and
+the rest of this page is about it.
+
+A **`measured`** result only appears when a query *actually executes*, which is not
+part of normal offline quoting. It happens in two places: during the build's own
+accuracy grading (running queries for real to score the pack), and when a caller
+opts into "run it once for the exact cost" on a low-confidence quote. In
+day-to-day pricing you never touch it.
 
 | `basis` | when | `price` means |
 |---|---|---|
-| `predicted` | before the query runs: a **quote** from the static pricing pack | the **safe max** (a ceiling that never under-prices); `typical_price` is the typical everyday cost |
-| `measured` | after the query ran: an **exact receipt** from the real trace | the **exact** work the run caused; `confidence` is always `exact` |
+| `predicted` | before the query runs: a **quote** from the static pricing pack (the normal path) | the **safe max** (a ceiling that never under-prices); `typical_price` is the typical everyday cost |
+| `measured` | only when a query actually runs (build grading, or the opt-in exact path) | the **exact** work the run caused; `confidence` is always `exact` |
 
 ## Three tiers = how sharply cost could be resolved
 
