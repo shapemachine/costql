@@ -342,7 +342,7 @@ body {
 .cql-tip:focus-within > .cql-tip__bubble { opacity: 1; pointer-events: auto; }
 /* :not(.cql-btn) to match the prose-link rule's specificity so this light-green
    wins on the dark bubble (a dark prose-link green is illegible here) */
-.cql-tip__bubble a:not(.cql-btn) { display: inline-block; margin-top: 6px; color: var(--green-300); font-weight: var(--fw-bold); text-decoration: underline; }
+.cql-tip__bubble a:not(.cql-btn) { display: block; margin-top: 6px; color: var(--green-300); font-weight: var(--fw-bold); text-decoration: underline; }
 .cql-tip__bubble a:not(.cql-btn):hover { color: var(--green-200); background: none; }
 
 /* ---- TierCard ---- */
