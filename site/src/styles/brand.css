@@ -153,7 +153,10 @@ body {
 
 /* ---- Tooltip (hover/focus): dark card under the target ---- */
 .cql-tip { position: relative; cursor: help; }
-.cql-tip::after {
+/* data-tip variant: text-only tooltip drawn as a pseudo-element (e.g. the
+   offline chip). Scoped to [data-tip] so .cql-tip elements that instead carry a
+   rich .cql-tip__bubble child don't render an empty pseudo box. */
+.cql-tip[data-tip]::after {
   content: attr(data-tip);
   position: absolute;
   right: 0;
@@ -176,8 +179,8 @@ body {
   transition: opacity var(--dur-fast) var(--ease-snap);
   z-index: 30;
 }
-.cql-tip:hover::after,
-.cql-tip:focus-visible::after { opacity: 1; }
+.cql-tip[data-tip]:hover::after,
+.cql-tip[data-tip]:focus-visible::after { opacity: 1; }
 
 /* ---- Receipt ---- */
 /* borderless paper: the lightly contrasting background + a soft shadow carry
@@ -277,6 +280,70 @@ body {
 }
 .cql-receipt__footer strong.ok { color: var(--signal-ok); }
 .cql-receipt__footer strong.low { color: var(--signal-low); }
+
+/* scrollable line-item region: a big query can't make the receipt run off the
+   page. Only the per-resolver lines scroll; the shared section (with its
+   overflowing tooltip) sits below, so nothing clips it. */
+.cql-receipt__items { max-height: 210px; overflow-y: auto; overscroll-behavior: contain; }
+.cql-receipt__items::-webkit-scrollbar { width: 6px; }
+.cql-receipt__items::-webkit-scrollbar-thumb { background: var(--text-faint); border-radius: 3px; }
+
+/* collapsible "shared work" section: the T3 lines that used to just say "once" */
+.cql-receipt__shared { margin: 2px 0; }
+.cql-receipt__shared-head { display: flex; align-items: center; gap: 6px; }
+.cql-receipt__shared-toggle {
+  display: inline-flex; align-items: center; gap: 6px; flex: none; min-width: 0;
+  font: inherit; font-size: var(--fs-xs); color: var(--text-muted);
+  background: none; border: 0; padding: 3px 0; cursor: pointer; text-align: left;
+  letter-spacing: var(--tracking-receipt);
+}
+.cql-receipt__shared-toggle:hover { color: var(--text-strong); }
+.cql-receipt__chevron { font-size: var(--fs-2xs); transition: transform .15s ease; flex: none; }
+.cql-receipt__shared[data-open="true"] .cql-receipt__chevron { transform: rotate(90deg); }
+.cql-receipt__shared-count { color: var(--text-faint); }
+.cql-receipt__shared-body { padding: 1px 0 3px 16px; }
+
+/* reusable hover/tap tooltip: an info hint that can also hold a link. Shows on
+   hover (desktop) and on focus (tap/keyboard), so the link inside stays reachable. */
+.cql-tip { position: relative; display: inline-flex; vertical-align: baseline; }
+.cql-tip__trigger {
+  font: inherit; color: var(--accent-deep); background: none; border: 0; padding: 0;
+  border-bottom: 1px dotted currentColor; cursor: help; line-height: inherit;
+}
+.cql-tip__trigger--icon {
+  width: 15px; height: 15px; flex: none; border: 0;
+  border-radius: 50%; background: var(--accent-soft); color: var(--accent-deep);
+  font-size: 10px; font-weight: var(--fw-bold); line-height: 15px; text-align: center;
+}
+.cql-tip__trigger:focus-visible { outline: 2px solid var(--accent-deep); outline-offset: 2px; }
+/* Interactive tooltip bubble (holds a link). Same dark, SHADOWLESS look as the
+   offline chip's data-tip tooltip, so nothing here casts the hard offset shadow
+   that Chrome smeared into a ghost rectangle. Opacity-only fade (no transform /
+   visibility) keeps it off a compositor layer entirely. */
+.cql-tip__bubble {
+  position: absolute; bottom: calc(100% + 8px); left: 0; z-index: 30;
+  width: max-content; max-width: min(250px, 72vw);
+  background: var(--surface-invert); color: var(--text-invert);
+  border-radius: var(--radius-1); padding: 8px 11px;
+  font-family: var(--font-body); font-size: var(--fs-2xs); font-weight: var(--fw-regular);
+  line-height: 1.5; letter-spacing: var(--tracking-normal); text-align: left; text-transform: none;
+  opacity: 0; pointer-events: none;
+  transition: opacity var(--dur-fast) var(--ease-snap);
+}
+/* transparent bridge across the 8px gap: keeps the mouse within .cql-tip while
+   travelling from the trigger up to the bubble (and its link), so hover doesn't
+   drop mid-crossing */
+.cql-tip__bubble::after { content: ''; position: absolute; top: 100%; left: 0; right: 0; height: 10px; }
+.cql-tip__trigger--icon + .cql-tip__bubble { left: -6px; }
+/* open the bubble inward (leftward) when the trigger sits near a clipping right
+   edge, e.g. the info icon inside the narrow receipt panel */
+.cql-tip--end > .cql-tip__bubble { left: auto; right: -6px; }
+.cql-tip:hover > .cql-tip__bubble,
+.cql-tip:focus-within > .cql-tip__bubble { opacity: 1; pointer-events: auto; }
+/* :not(.cql-btn) to match the prose-link rule's specificity so this light-green
+   wins on the dark bubble (a dark prose-link green is illegible here) */
+.cql-tip__bubble a:not(.cql-btn) { display: block; margin-top: 6px; color: var(--green-300); font-weight: var(--fw-bold); text-decoration: underline; }
+.cql-tip__bubble a:not(.cql-btn):hover { color: var(--green-200); background: none; }
 
 /* ---- TierCard ---- */
 .cql-tier {
