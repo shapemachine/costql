@@ -1,3 +1,7 @@
+---
+description: "costQL end to end: introspect a live API, calibrate it into a static pricing pack, then quote any query offline. A deterministic path, no LLM."
+---
+
 # How pricing flows: build → pack → quote
 
 This is costQL end to end: a new API arrives, the engine calibrates it into a static **pricing pack**, and from then on any app quotes queries against that pack locally: no server, no network, no re-measurement. The cost **unit** is always *work-ms* (summed real work; see [One currency, three fidelities](tiers.md)); the tiers differ only in how sharply the API lets costQL **see and factor** that work.

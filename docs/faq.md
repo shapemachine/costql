@@ -1,3 +1,7 @@
+---
+description: "Short answers to the most common costQL questions: does it call your API, what a price is in, dollars vs cost-units, and more."
+---
+
 # FAQ
 
 Short answers to the questions that come up most. Each links to the page with

@@ -1,3 +1,7 @@
+---
+description: "The one response extension (extensions.cost_trace) your GraphQL server emits to unlock costQL sharper T2 and T3 prices."
+---
+
 # Instrumenting your server for T2/T3
 
 T1 needs nothing from your server: costQL times whole requests from the

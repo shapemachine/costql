@@ -1,3 +1,7 @@
+---
+description: "The three real, unrelated GraphQL APIs costQL is proven against (TMDB, Rick & Morty, Northwind), each onboarded with one small adapter and a committed offline pack."
+---
+
 # The three demo APIs and their packs
 
 costQL was proven against three real, unrelated GraphQL APIs: a network passthrough we instrumented (TMDB), a public API we don't own and can't change (Rick & Morty), and a batch-heavy SQLite database we instrumented (Northwind). Each one was onboarded with a single small adapter and zero engine changes, and each ships a committed pricing pack in [`packs/`](../packs) that quotes fully offline. Two of the packs are T3 because we instrumented those demo servers ourselves; Rick & Morty is T1 because it is a black box, exactly [the fidelity ladder](tiers.md) a real adoption follows.

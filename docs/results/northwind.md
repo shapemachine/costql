@@ -1,3 +1,7 @@
+---
+description: "A batch-heavy database backend where entity sharing is heavy, so T3 pulls far ahead of T2. Measured against a real SQLite store, no fabricated numbers."
+---
+
 # Case study: a batch-heavy database backend
 
 On the [TMDB demo](tmdb.md), the middle fidelity (T2) priced queries just as well as the top fidelity (T3), but TMDB shares entities only lightly. To find out whether "the middle tier is enough" is a universal claim, we pointed costQL at a very different backend: a real **Northwind** store database (products, orders, customers, SQLite), deliberately shaped so a single query hammers the same tiny set of entities over and over. The finding: **the two tiers stay tied when sharing is light and pull far apart when sharing is heavy**. T3's payoff scales with how much the schema shares. Everything below is measured against the real database: real SQL, real rows, no fabricated numbers, zero paid calls.

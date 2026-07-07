@@ -1,3 +1,7 @@
+---
+description: "The one ~90-150 line file you write to onboard a GraphQL API to costQL, with zero engine changes: what it declares and how to write it."
+---
+
 # Writing an adapter
 
 An adapter is the one file you write to onboard an API, proven at ~90–150

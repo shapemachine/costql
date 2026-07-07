@@ -1,3 +1,7 @@
+---
+description: "costQL priced a live public API it does not own with a 93-line adapter, zero engine changes, and ~96% accuracy at T1."
+---
+
 # Case study: pricing a stranger's API (Rick & Morty, T1)
 
 Does costQL work on an API it has never seen, that we don't own and can't change? This experiment pointed it at the public **Rick & Morty API** (`rickandmortyapi.com/graphql`): no new server, no fake data, no special access, just the real, live, public endpoint anyone on the internet can hit. The result: a **93-line adapter**, **zero engine changes**, **~96% accuracy** on held-out queries at T1, with a safe max that never under-charged, and one offline pack in the standard contract format.

@@ -31,6 +31,9 @@ for (const src of mdFiles(SRC_DOCS)) {
   // title below (from the H1, else the frontmatter title, else the filename).
   const fm = raw.match(/^---\n([\s\S]*?)\n---\n/);
   const fmTitle = fm && fm[1].match(/^title:\s*["']?(.+?)["']?\s*$/m);
+  // A source `description:` (used for meta + og:description) is the one other
+  // field we carry through; everything else in source frontmatter is dropped.
+  const fmDesc = fm && fm[1].match(/^description:\s*(.+?)\s*$/m);
   if (fm) raw = raw.slice(fm[0].length).replace(/^\s+/, '');
   const m = raw.match(/^#\s+(.+)\n/);
   const title = m ? m[1].trim() : fmTitle ? fmTitle[1].trim() : rel.replace(/\.md$/, '');
@@ -41,7 +44,9 @@ for (const src of mdFiles(SRC_DOCS)) {
     const resolved = posix.normalize(posix.join(srcDir === '.' ? '' : srcDir, target));
     return `](/docs/${resolved}/${hash})`;
   });
-  const out = `---\ntitle: "${title.replace(/"/g, '\\"')}"\n---\n\n${body}`;
+  const front = [`title: "${title.replace(/"/g, '\\"')}"`];
+  if (fmDesc) front.push(`description: ${fmDesc[1].trim()}`);
+  const out = `---\n${front.join('\n')}\n---\n\n${body}`;
   const dest = join(DEST_DOCS, rel);
   mkdirSync(dirname(dest), { recursive: true });
   writeFileSync(dest, out);

@@ -1,3 +1,7 @@
+---
+description: "When a field calls an outside service (an LLM, a paid API), costQL names the call and observes its host; your app puts the price on it."
+---
+
 # External calls
 
 costQL prices your API by timing it. But some of your fields call an **outside
