@@ -321,7 +321,10 @@ body {
   box-shadow: var(--shadow-2); padding: 9px 11px;
   font-family: var(--font-body); font-size: var(--fs-xs); font-weight: var(--fw-regular);
   line-height: 1.45; letter-spacing: normal; text-align: left; text-transform: none;
-  opacity: 0; visibility: hidden; transform: translateY(3px);
+  /* own compositor layer (translateZ) so the hard offset shadow can't smear a
+     ghost rectangle onto the parent while the bubble fades in */
+  opacity: 0; visibility: hidden; transform: translate3d(0, 3px, 0);
+  backface-visibility: hidden; will-change: opacity, transform;
   transition: opacity .12s ease, transform .12s ease, visibility .12s;
 }
 .cql-tip__trigger--icon + .cql-tip__bubble { left: -6px; }
@@ -329,7 +332,7 @@ body {
    edge, e.g. the info icon inside the narrow receipt panel */
 .cql-tip--end > .cql-tip__bubble { left: auto; right: -6px; }
 .cql-tip:hover > .cql-tip__bubble,
-.cql-tip:focus-within > .cql-tip__bubble { opacity: 1; visibility: visible; transform: translateY(0); }
+.cql-tip:focus-within > .cql-tip__bubble { opacity: 1; visibility: visible; transform: translate3d(0, 0, 0); }
 .cql-tip__bubble a { display: inline-block; margin-top: 6px; color: var(--accent-deep); font-weight: var(--fw-bold); text-decoration: none; }
 .cql-tip__bubble a:hover { text-decoration: underline; }
 @media (prefers-reduced-motion: reduce) { .cql-tip__bubble { transition: none; } }
