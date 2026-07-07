@@ -1,5 +1,7 @@
 # costQL
 
+[![CI](https://github.com/shapemachine/costql/actions/workflows/ci.yml/badge.svg)](https://github.com/shapemachine/costql/actions/workflows/ci.yml)
+
 **Price GraphQL queries before you run them.** costQL calibrates a live GraphQL
 API into a **pricing pack**, one self-contained JSON file, then quotes any
 query against that pack fully offline. No server, no network, no measurement.
