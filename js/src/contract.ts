@@ -11,7 +11,7 @@ const CONFIDENCE = ["high", "medium", "low", "exact"] as const;
 const ALLOWED_SECTIONS: Record<string, Set<string>> = {
   T1: new Set(),
   T2: new Set(["breakdown"]),
-  T3: new Set(["breakdown", "sharing", "external_costs"]),
+  T3: new Set(["breakdown", "sharing", "external_calls"]),
 };
 
 export interface QuoteResult {
@@ -26,7 +26,7 @@ export interface QuoteResult {
   caveats: string[];
   breakdown?: Array<Record<string, unknown>>;
   sharing?: Array<Record<string, unknown>>;
-  external_costs?: Array<Record<string, unknown>>;
+  external_calls?: Array<Record<string, unknown>>;
   query?: string;
 }
 
@@ -61,7 +61,7 @@ export function validate(result: unknown): string[] {
   if (typeof r.price === "number" && r.price < 0) problems.push("price must be >= 0");
 
   const allowed = ALLOWED_SECTIONS[r.tier as string] ?? new Set<string>();
-  for (const section of ["breakdown", "sharing", "external_costs"]) {
+  for (const section of ["breakdown", "sharing", "external_calls"]) {
     const v = r[section];
     if (section in r && Array.isArray(v) ? v.length : section in r && v) {
       if (!allowed.has(section)) {
@@ -84,7 +84,7 @@ export function predictedResult(opts: {
   caveats?: string[];
   breakdown?: Array<Record<string, unknown>>;
   sharing?: Array<Record<string, unknown>>;
-  externalCosts?: Array<Record<string, unknown>>;
+  externalCalls?: Array<Record<string, unknown>>;
 }): QuoteResult {
   const result: QuoteResult = {
     contract_version: CONTRACT_VERSION,
@@ -100,8 +100,8 @@ export function predictedResult(opts: {
   const allowed = ALLOWED_SECTIONS[opts.tier];
   if (opts.breakdown?.length && allowed.has("breakdown")) result.breakdown = opts.breakdown;
   if (opts.sharing?.length && allowed.has("sharing")) result.sharing = opts.sharing;
-  if (opts.externalCosts?.length && allowed.has("external_costs")) {
-    result.external_costs = opts.externalCosts;
+  if (opts.externalCalls?.length && allowed.has("external_calls")) {
+    result.external_calls = opts.externalCalls;
   }
   return result;
 }

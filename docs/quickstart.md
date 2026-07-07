@@ -26,8 +26,8 @@ pricing pack: schema 26c786209ec27586 · tier T3 · currency work_ms · offline
 ```
 
 No server is running. Nothing touched the network. The pack file carries the
-schema, the fitted per-resolver costs, and the authored fees: everything a
-quote needs. The same works from Python:
+schema, the fitted per-resolver costs, and any observed outside hosts: everything
+a quote needs. The same works from Python:
 
 ```python
 from costql import PricingPack

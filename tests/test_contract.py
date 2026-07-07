@@ -19,7 +19,7 @@ def test_all_committed_examples_validate(contract_examples):
 def _clean():
     return predicted_result(tier="T3", currency="work_ms", schema_hash="abc123",
                             price=10.0, typical_price=8.0, confidence="high",
-                            caveats=[], breakdown=[], sharing=[], external_costs=[])
+                            caveats=[], breakdown=[], sharing=[], external_calls=[])
 
 
 class _FakeExact:
@@ -60,7 +60,7 @@ def test_tier_gating_is_enforced():
     t1 = predicted_result(tier="T1", currency="work_ms", schema_hash="h",
                           price=1.0, typical_price=1.0, confidence="high",
                           caveats=[], breakdown=line, sharing=share,
-                          external_costs=[])
+                          external_calls=[])
     assert "breakdown" not in t1 and "sharing" not in t1
 
 

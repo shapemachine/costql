@@ -33,7 +33,7 @@ _CONFIDENCE = ("high", "medium", "low", "exact")
 _ALLOWED_SECTIONS = {
     "T1": set(),                                  # total only
     "T2": {"breakdown"},                          # per-resolver work, no observed sharing
-    "T3": {"breakdown", "sharing", "external_costs"},  # + observed sharing + named hosts
+    "T3": {"breakdown", "sharing", "external_calls"},  # + observed sharing + named outside calls
 }
 
 # Mandatory core fields, present and identically-shaped at EVERY tier and basis.
@@ -78,7 +78,7 @@ def validate(result: dict) -> list[str]:
 
     tier = result.get("tier")
     allowed = _ALLOWED_SECTIONS.get(tier, set())
-    for section in ("breakdown", "sharing", "external_costs"):
+    for section in ("breakdown", "sharing", "external_calls"):
         if section in result and result[section]:
             if section not in allowed:
                 problems.append(
@@ -98,7 +98,7 @@ def _assemble(*, tier: str, basis: str, currency: str, schema_hash: str,
               price: float, confidence: str, typical_price: float | None = None,
               caveats: list | None = None, breakdown: list | None = None,
               sharing: list | None = None,
-              external_costs: list | None = None) -> dict:
+              external_calls: list | None = None) -> dict:
     result = {
         "contract_version": CONTRACT_VERSION,
         "tier": tier,
@@ -118,8 +118,8 @@ def _assemble(*, tier: str, basis: str, currency: str, schema_hash: str,
         result["breakdown"] = breakdown
     if sharing and "sharing" in allowed:
         result["sharing"] = sharing
-    if external_costs and "external_costs" in allowed:
-        result["external_costs"] = external_costs
+    if external_calls and "external_calls" in allowed:
+        result["external_calls"] = external_calls
     return result
 
 
@@ -128,12 +128,12 @@ def predicted_result(*, tier: str, currency: str, schema_hash: str,
                      caveats: list | None = None,
                      breakdown: list | None = None,
                      sharing: list | None = None,
-                     external_costs: list | None = None) -> dict:
+                     external_calls: list | None = None) -> dict:
     """Shape a pre-execution QUOTE (from the pricing pack) into the contract."""
     return _assemble(tier=tier, basis="predicted", currency=currency,
                      schema_hash=schema_hash, price=price, typical_price=typical_price,
                      confidence=confidence, caveats=caveats, breakdown=breakdown,
-                     sharing=sharing, external_costs=external_costs)
+                     sharing=sharing, external_calls=external_calls)
 
 
 def measured_result(exact, schema_hash: str) -> dict:
@@ -147,12 +147,16 @@ def measured_result(exact, schema_hash: str) -> dict:
                 "calls": lo.actual_calls, "saved": lo.saved,
                 "cache_hits": lo.cache_hits, "external": lo.external}
                for lo in exact.loaders]
-    external_costs = [{"host": h, "measured_fee": False,
-                       "note": "seller authors the per-call fee (cost-units); "
-                               "counted once per deduped call"}
+    # named outside calls: which foreign hosts this run hit and how many billable
+    # calls landed (after dedup). No fee: the consuming app prices those calls.
+    calls_by_host: dict[str, int] = {}
+    for lo in exact.loaders:
+        if lo.external and lo.host:
+            calls_by_host[lo.host] = calls_by_host.get(lo.host, 0) + lo.actual_calls
+    external_calls = [{"host": h, "calls": calls_by_host.get(h, 0)}
                       for h in exact.external_hosts]
     return _assemble(tier=exact.tier, basis="measured", currency=exact.currency,
                      schema_hash=schema_hash, price=exact.total,
                      typical_price=exact.total, confidence="exact",
                      caveats=exact.caveats, breakdown=breakdown,
-                     sharing=sharing, external_costs=external_costs)
+                     sharing=sharing, external_calls=external_calls)

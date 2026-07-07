@@ -37,10 +37,10 @@ See [Tier fidelity](tiers.md).
 <details>
 <summary>Can it price a call to a paid API, like an LLM?</summary>
 
-Yes. The *work* a paid call takes is timed automatically, like any other field.
-If that call also costs real money downstream (an LLM, a licensed feed), you set
-its per-call fee once and every quote folds it in, counted once even when the
-call is batched. Here is how: [Paid & external fees](paid-fees.md).
+The *work* a paid call takes is timed automatically, like any other field. But
+costQL can't know what an outside service charges you, so it doesn't guess: it
+names the call (the host, and how many) and your app puts the price on it. Here
+is how: [External calls](external-calls.md).
 
 </details>
 

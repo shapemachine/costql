@@ -25,7 +25,7 @@ quote.confidence      // "high" | "medium" | "low"
 quote.caveats         // e.g. the cyclic-recursion explanation, when flagged
 quote.breakdown       // per-resolver cost lines (T2/T3 packs)
 quote.sharing         // folded shared loaders (T3 packs)
-quote.external_costs  // named paid hosts (T3 packs)
+quote.external_calls  // named outside hosts + call count (T3 packs)
 
 validate(quote)       // [] (contract v1.0 violations, if any)
 ```
@@ -41,7 +41,7 @@ the Python loader.
 
 "Identical to the Python engine" is a tested claim, not a hope. The repo
 freezes an oracle ([`conformance/quotes.json`](https://github.com/shapemachine/costql/blob/main/conformance/quotes.json),
-46 full quote results spanning simple, fanout, sharing-heavy, external-cost,
+46 full quote results spanning simple, fanout, sharing-heavy, external-call,
 and cyclic queries across all five demo packs) and CI runs both engines
 against it on every PR. Numbers must agree within
 `max(1e-6, 1e-9 · |expected|)`; every other field must be deep-equal. Even the

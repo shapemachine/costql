@@ -26,9 +26,14 @@ rmSync(DEST_DOCS, { recursive: true, force: true });
 let count = 0;
 for (const src of mdFiles(SRC_DOCS)) {
   const rel = relative(SRC_DOCS, src);
-  const raw = readFileSync(src, 'utf8');
+  let raw = readFileSync(src, 'utf8');
+  // Strip any pre-existing frontmatter so we never double-wrap. We re-derive the
+  // title below (from the H1, else the frontmatter title, else the filename).
+  const fm = raw.match(/^---\n([\s\S]*?)\n---\n/);
+  const fmTitle = fm && fm[1].match(/^title:\s*["']?(.+?)["']?\s*$/m);
+  if (fm) raw = raw.slice(fm[0].length).replace(/^\s+/, '');
   const m = raw.match(/^#\s+(.+)\n/);
-  const title = m ? m[1].trim() : rel.replace(/\.md$/, '');
+  const title = m ? m[1].trim() : fmTitle ? fmTitle[1].trim() : rel.replace(/\.md$/, '');
   let body = m ? raw.slice(m[0].length) : raw;
   // `](tiers.md)` / `](results/tmdb.md)` / `](../contract.md)` -> `/docs/.../`
   const srcDir = posix.dirname(rel.split(sep).join('/'));

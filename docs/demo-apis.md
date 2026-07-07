@@ -38,8 +38,8 @@ Running the server needs free TMDB keys; quoting the committed pack needs nothin
 **What it demonstrates:** the full T3 result (observed sharing), plus two
 deliberately awkward cost dimensions: `Movie.chemistryScore` (local O(n²)
 compute, zero downstream calls: cost that only work-ms can see) and
-`Movie.aiSummary` (a **paid** Anthropic call, auto-flagged as external so the
-seller can author its per-call fee). Accuracy across the tiers (T1 17% / T2 11% /
+`Movie.aiSummary` (an **outside** Anthropic call, whose host costQL observes and
+names for the app to price). Accuracy across the tiers (T1 17% / T2 11% /
 T3 11%) is in [the case study](results/tmdb.md).
 
 **Committed pack:** [`packs/tmdb_t3.json`](../packs/tmdb_t3.json), tier **T3**,
@@ -54,7 +54,8 @@ costql quote --pack packs/tmdb_t3.json \
 #    which loaders fold to a single counted fetch
 
 costql quote --pack packs/tmdb_t3.json '{ movie(id:"27205"){ aiSummary } }'
-# -> an "external_costs" entry naming api.anthropic.com with the authored fee
+# -> an "external_calls" entry naming api.anthropic.com + the call count (no fee;
+#    your app prices the outside call)
 
 costql quote --pack packs/tmdb_t3.json \
   '{ movie(id:"27205"){ recommendations{ recommendations{ title } } } }'

@@ -1,10 +1,10 @@
 """The pricing pack: a self-contained, static, per-schema pricing reference.
 
 This is the artifact that crosses the build -> use boundary. Everything needed to
-price a query lives inside ONE file: the introspected schema, the fitted cost
-model (unit costs, sizes, sharing groups, safety), and the hand-authored fee
-adjustments. Loading it needs no server, no network, no measurement, and no
-re-introspection: a consumer prices queries by pure local traversal.
+price a query lives inside ONE file: the introspected schema and the fitted cost
+model (unit costs, sizes, sharing groups, safety, and any observed outside hosts).
+Loading it needs no server, no network, no measurement, and no re-introspection:
+a consumer prices queries by pure local traversal.
 
 Design intent (decided with the user): the whole point of a static per-schema
 reference is that it is consumed WITHOUT a service. No sidecar, no pricing
@@ -44,7 +44,6 @@ class PricingPack:
     currency: str
     introspection: dict          # the raw GraphQL introspection (rebuilds the schema)
     model: CostModel             # fitted cost model
-    adjustments: dict = field(default_factory=dict)   # #6 authored fees (cost-units)
     tier: str = "T3"             # fidelity the pack was built at (what the API affords)
 
     # ---- persistence ------------------------------------------------------
@@ -59,7 +58,6 @@ class PricingPack:
                      "(never dollars); the consuming app converts to money."),
             "introspection": self.introspection,
             "model": json.loads(self.model.to_json()),
-            "adjustments": self.adjustments,
         }
 
     def save(self, path: str) -> None:
@@ -93,44 +91,22 @@ class PricingPack:
         model = CostModel(**d["model"])
         return cls(schema_hash=d["schema_hash"], currency=d.get("currency", model.cost_currency),
                    introspection=d["introspection"], model=model,
-                   adjustments=d.get("adjustments", {}), tier=d.get("tier", "T3"))
+                   tier=d.get("tier", "T3"))
 
     # ---- the app-side interface ------------------------------------------
-    def _effective_model(self) -> CostModel:
-        """The model with #6 authored fees folded into per-resolver unit costs:
-        (measured_unit_cost + authored_unit_cost) then x invocations at price
-        time (DECISIONS #6). Fees are in cost-units; 0 (no-op) by default."""
-        fees = {}
-        for rid, adj in (self.adjustments.get("adjustments") or {}).items():
-            try:
-                fee = float(adj.get("added_unit_cost", 0.0) or 0.0)
-            except (TypeError, ValueError):
-                fee = 0.0
-            if fee:
-                fees[rid] = fee
-        if not fees:
-            return self.model
-        unit = dict(self.model.unit_cost)
-        for rid, fee in fees.items():
-            unit[rid] = unit.get(rid, 0.0) + fee
-        eff = CostModel(**json.loads(self.model.to_json()))
-        eff.unit_cost = unit
-        eff.batch_groups = dict(self.model.batch_groups)
-        return eff
-
     def quote(self, query: str) -> dict:
         """Price a query from the pack alone: no server, no measurement.
 
         Returns a FROZEN contract result (see contract.py): the safe billable
         **ceiling** `price` plus a fair `typical_price`, `confidence`, and: gated
         by the pack's tier: a per-resolver `breakdown`, observed `sharing`, and
-        named `external_costs`. Confidence is diagnostic (a "run it for the exact
+        named `external_calls`. Confidence is diagnostic (a "run it for the exact
         cost" hint on cyclic queries); the billable number is the ceiling, which
         never under-prices. `query` is echoed for convenience (not part of the
         contract core).
         """
         tg = TypeGraph(self.introspection)
-        model = self._effective_model()
+        model = self.model
         pricer = Pricer(tg, model)
         sels = parse_query(query)
 
@@ -150,18 +126,18 @@ class PricingPack:
                 folds.setdefault(loader, []).append(rid)
         sharing = [{"loader": lo, "folds": sorted(rs), "counted_once": True}
                    for lo, rs in sorted(folds.items())]
-        # named external/paid costs (T3): #6 adjustments for resolvers this query hits
-        adj = self.adjustments.get("adjustments") or {}
-        external_costs = [
-            {"resolver_id": rid, "host": a.get("downstream_host"),
-             "authored_fee": float(a.get("added_unit_cost", 0.0) or 0.0),
-             "measured_fee": False}
-            for rid, a in adj.items() if rid in used]
+        # named external calls (T3): outside hosts costQL OBSERVED at build time for
+        # the resolvers this query hits, with the ceiling call count. No fee: costQL
+        # never knows what the outside service charges; the consuming app prices it.
+        inv_by_rid = {b["resolver_id"]: int(b.get("invocations", 1)) for b in breakdown}
+        external_calls = [
+            {"resolver_id": rid, "host": host, "calls": inv_by_rid.get(rid, 1)}
+            for rid, host in sorted(self.model.external_hosts.items()) if rid in used]
 
         result = predicted_result(
             tier=self.tier, currency=self.currency, schema_hash=self.schema_hash,
             price=ceiling.score, typical_price=typical.score, confidence=conf.level,
             caveats=conf.caveats, breakdown=breakdown, sharing=sharing,
-            external_costs=external_costs)
+            external_calls=external_calls)
         result["query"] = query
         return result

@@ -1,16 +1,4 @@
 {
-  "adjustments": {
-    "_comment": "costQL #6 hand-authored adjustments (cost-units, NEVER dollars). Auto-generated; edit the added_unit_cost values, survives rebuild.",
-    "adjustments": {
-      "Movie.aiSummary": {
-        "added_unit_cost": 0.0,
-        "downstream_host": "api.anthropic.com",
-        "note": "seller sets per-call fee in cost-units; counted once per deduped call",
-        "reason": "paid external call"
-      }
-    },
-    "schema_hash": "26c786209ec27586"
-  },
   "currency": "work_ms",
   "introspection": {
     "data": {
@@ -2184,6 +2172,9 @@
     },
     "cost_currency": "work_ms",
     "default_cap": 20,
+    "external_hosts": {
+      "Movie.aiSummary": "api.anthropic.com"
+    },
     "loader_fns": {
       "/discover/movie": {
         "base": 32.70785,

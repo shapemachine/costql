@@ -135,12 +135,13 @@ def tmdb_config(tier: str = "T3") -> APIConfig:
         arg_resolver=TMDBArgResolver(),
         tokens={},
         root_auth={}, field_auth={}, uncoverable_fields={},
-        # aiSummary is a PAID Anthropic call. Its per-invocation work-ms is a
+        # aiSummary calls an OUTSIDE host (Anthropic). Its per-invocation work-ms is a
         # constant, so we sample it once in isolation (build_isolation) instead of
         # fanning it out across the deep panel (which would cost thousands of Haiku
-        # calls). The per-call FEE is authored via the adjustments file, not measured.
-        bounded_fields={"Movie.aiSummary": "paid external call (api.anthropic.com); "
-                        "sampled in isolation, fee authored via adjustments"},
+        # calls). costQL records the observed host; it never prices the outside call
+        # (it can't know what Anthropic charges) - the consuming app prices it.
+        bounded_fields={"Movie.aiSummary": "outside call (api.anthropic.com); "
+                        "sampled in isolation, host observed, priced by the app"},
         known_loaders=KNOWN_LOADERS,
         size_roots=SIZE_ROOTS,
         default_cap=20,                         # TMDB returns 20 results per page

@@ -18,12 +18,6 @@ export class PackVersionError extends Error {
 
 const REQUIRED_KEYS = ["schema_hash", "introspection", "model"] as const;
 
-interface AdjustmentEntry {
-  added_unit_cost?: number | string | null;
-  downstream_host?: string;
-  [k: string]: unknown;
-}
-
 export interface PackData {
   pack_version: number;
   schema_hash: string;
@@ -31,7 +25,6 @@ export interface PackData {
   tier?: string;
   introspection: unknown;
   model: CostModelData;
-  adjustments?: { adjustments?: Record<string, AdjustmentEntry> } | Record<string, never>;
 }
 
 export class PricingPack {
@@ -40,7 +33,6 @@ export class PricingPack {
   readonly tier: string;
   readonly introspection: unknown;
   readonly model: CostModelData;
-  readonly adjustments: PackData["adjustments"];
   private tg: TypeGraph | null = null;
 
   private constructor(d: PackData) {
@@ -49,7 +41,6 @@ export class PricingPack {
     this.currency = d.currency ?? d.model.cost_currency;
     this.tier = d.tier ?? "T3";
     this.introspection = d.introspection;
-    this.adjustments = d.adjustments ?? {};
   }
 
   /** Build from an already-parsed pack object (e.g. a fetch().json() result). */
@@ -92,28 +83,11 @@ export class PricingPack {
     return this.tg;
   }
 
-  /** The model with hand-authored fees folded into per-resolver unit costs. */
-  private effectiveModel(): CostModelData {
-    const adj = (this.adjustments as PackData["adjustments"])?.adjustments ?? {};
-    const fees: Record<string, number> = {};
-    for (const [rid, a] of Object.entries(adj)) {
-      const raw = a?.added_unit_cost ?? 0.0;
-      const fee = Number(raw || 0.0);
-      if (Number.isFinite(fee) && fee) fees[rid] = fee;
-    }
-    if (!Object.keys(fees).length) return this.model;
-    const unit = { ...this.model.unit_cost };
-    for (const [rid, fee] of Object.entries(fees)) {
-      unit[rid] = (unit[rid] ?? 0.0) + fee;
-    }
-    return { ...this.model, unit_cost: unit, batch_groups: { ...(this.model.batch_groups ?? {}) } };
-  }
-
   /** Price a query from the pack alone: no server, no measurement. Returns a
    * frozen contract v1.0 result identical to the Python engine's. */
   quote(query: string): QuoteResult {
     const tg = this.typeGraph();
-    const model = this.effectiveModel();
+    const model = this.model;
     const pricer = new Pricer(tg, model);
     const sels = parseQuery(query);
 
@@ -136,20 +110,20 @@ export class PricingPack {
       .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
       .map(([loader, rs]) => ({ loader, folds: [...rs].sort(), counted_once: true }));
 
-    const adj = (this.adjustments as PackData["adjustments"])?.adjustments ?? {};
-    const externalCosts = Object.entries(adj)
+    // named external calls (T3): outside hosts costQL OBSERVED at build time for the
+    // resolvers this query hits, with the ceiling call count. No fee: costQL never
+    // knows what the outside service charges; the consuming app prices it.
+    const invByRid: Record<string, number> = {};
+    for (const b of breakdown) invByRid[b.resolver_id] = Number(b.invocations ?? 1);
+    const externalCalls = Object.entries(this.model.external_hosts ?? {})
       .filter(([rid]) => used.has(rid))
-      .map(([rid, a]) => ({
-        resolver_id: rid,
-        host: a?.downstream_host ?? null,
-        authored_fee: Number((a?.added_unit_cost ?? 0.0) || 0.0) || 0.0,
-        measured_fee: false,
-      }));
+      .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
+      .map(([rid, host]) => ({ resolver_id: rid, host, calls: invByRid[rid] ?? 1 }));
 
     const result = predictedResult({
       tier: this.tier, currency: this.currency, schemaHash: this.schemaHash,
       price: ceiling.score, typicalPrice: typical.score, confidence: conf.level,
-      caveats: conf.caveats, breakdown, sharing, externalCosts,
+      caveats: conf.caveats, breakdown, sharing, externalCalls,
     });
     result.query = query;
     return result;

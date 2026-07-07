@@ -62,7 +62,7 @@ sanity checks (a wider `first:` never prices lower; a cyclic query flags
 | where | what |
 | --- | --- |
 | `skills/costql-adapter` | write an adapter: probe-first, can self-harvest IDs, runs from just a URL |
-| `skills/costql-build-pack` | build or rebuild a pack, author fee adjustments, explain T1 downgrades |
+| `skills/costql-build-pack` | build or rebuild a pack, handle outside-call fields, explain T1 downgrades |
 | `skills/costql-quote-debug` | interpret a quote: price vs typical, confidence, breakdown, sharing folds |
 | `AGENTS.md` | repo map, commands, and conventions for any agent working in the repo |
 | [`llms.txt`](https://costql.com/llms.txt) | this documentation, indexed for tools that read the web |

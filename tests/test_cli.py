@@ -23,7 +23,7 @@ def test_no_args_prints_help(capsys):
 def test_quote_human(capsys):
     assert main(["quote", "--pack", PACK, '{ character(id:"1"){ name } }']) == 0
     out = capsys.readouterr().out
-    assert "price" in out and "wall_time_ms" in out and "ceiling" in out
+    assert "price" in out and "wall_time_ms" in out and "safe max" in out
 
 
 def test_quote_json_is_contract_valid(capsys):

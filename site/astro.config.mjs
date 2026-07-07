@@ -32,7 +32,7 @@ export default defineConfig({
         { label: 'Writing an adapter', slug: 'docs/adapters' },
         { label: 'Agent-assisted onboarding', slug: 'docs/agents' },
         { label: 'Instrumenting for T2/T3', slug: 'docs/instrumentation' },
-        { label: 'Paid & external fees', slug: 'docs/paid-fees' },
+        { label: 'External calls', slug: 'docs/external-calls' },
         { label: 'FAQ', slug: 'docs/faq' },
         {
           label: 'Reference',

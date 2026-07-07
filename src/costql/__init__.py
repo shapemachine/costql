@@ -3,7 +3,7 @@
 Build side (seller, needs network + ``costql[build]``): point ``build_pack`` at a
 live GraphQL endpoint with a small adapter (an :class:`APIConfig`) and it
 calibrates a cost model and emits a **pricing pack**: one self-contained JSON
-file (schema + fitted per-resolver costs + authored fees).
+file (schema + fitted per-resolver costs + any observed outside hosts).
 
 Quote side (app, fully offline): load the pack and price any query by pure local
 traversal: no server, no network, no measurement::

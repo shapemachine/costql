@@ -48,9 +48,10 @@ def test_oracle_spans_the_interesting_cases():
     cyc = by_query[("packs/tmdb_t3.json",
                     '{ movie(id:"27205"){ recommendations{ recommendations{ title } } } }')]
     assert cyc["confidence"] == "low" and cyc["price"] > 0
-    # a paid external field is named at T3
+    # a field that calls an outside host is named at T3 (host + call count, no fee)
     ai = by_query[("packs/tmdb_t3.json", '{ movie(id:"27205"){ aiSummary } }')]
-    assert ai["external_costs"][0]["host"] == "api.anthropic.com"
+    assert ai["external_calls"][0]["host"] == "api.anthropic.com"
+    assert ai["external_calls"][0]["calls"] == 1
     # T1 results carry no breakdown/sharing (tier-gated)
     t1 = by_query[("packs/rickmorty_t1.json",
                    '{ character(id:"1"){ name status species gender } }')]

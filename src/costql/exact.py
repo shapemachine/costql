@@ -84,10 +84,9 @@ class ExactPrice:
         caveats: list[str] = []
         for h in external_hosts:
             caveats.append(
-                f"external/paid host {h}: a per-call fee applies that costQL does "
-                f"not measure or price (money is the consuming app's job, DECISIONS "
-                f"#6). Billable calls after dedup are the loader's actual_calls; the "
-                f"seller authors the per-call fee, counted once per deduped call.")
+                f"outside host {h}: costQL names the call but does not price it "
+                f"(it can't know what {h} charges; the consuming app prices it). "
+                f"Billable calls after dedup are the loader's actual_calls.")
 
         # --- tier ladder: use the sharpest resolution the trace affords -------
         if rwork:

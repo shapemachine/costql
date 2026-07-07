@@ -24,8 +24,9 @@ https://costql.com/docs/contract/). Get one with
 - **`breakdown`** (T2/T3): per-resolver cost lines, sorted descending =
   the cost drivers. `invocations` shows the fanout multiplication.
 - **`sharing`** (T3): resolvers folded onto one shared loader, counted once.
-- **`external_costs`** (T3): named paid hosts with their AUTHORED fee
-  (measured_fee is false: fees are seller-authored, never measured).
+- **`external_calls`** (T3): outside hosts costQL observed, each with the call
+  count (`{resolver_id, host, calls}`). No fee: costQL can't know what the
+  outside service charges, so the consuming app prices these.
 
 ## Common "why is it…" answers
 

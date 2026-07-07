@@ -62,17 +62,15 @@ def test_saved_file_is_stable_json(packs, tmp_path):
     packs["northwind_t3"].save(str(p))
     d = json.loads(p.read_text())
     assert d["pack_version"] == PACK_VERSION
-    assert set(d) >= {"schema_hash", "tier", "currency", "introspection",
-                      "model", "adjustments"}
+    assert set(d) >= {"schema_hash", "tier", "currency", "introspection", "model"}
 
 
-def test_authored_fee_folds_into_price(packs):
+def test_external_call_is_named_without_a_fee(packs):
+    """The pack NAMES the outside call (observed host + count) but never prices
+    it: no fee anywhere. The consuming app puts the price on it."""
     pack = packs["tmdb_t3"]
-    q = '{ movie(id:"27205"){ aiSummary } }'
-    base = pack.quote(q)["price"]
-    d = pack.to_dict()
-    d["adjustments"] = {"adjustments": {"Movie.aiSummary": {
-        "added_unit_cost": 100.0, "downstream_host": "api.anthropic.com"}}}
-    fee_quote = PricingPack.from_dict(d).quote(q)
-    assert fee_quote["price"] > base + 50     # the authored fee raises the ceiling
-    assert fee_quote["external_costs"][0]["authored_fee"] == 100.0
+    q = pack.quote('{ movie(id:"27205"){ aiSummary } }')
+    call = q["external_calls"][0]
+    assert call == {"resolver_id": "Movie.aiSummary",
+                    "host": "api.anthropic.com", "calls": 1}
+    assert "authored_fee" not in json.dumps(q) and "measured_fee" not in json.dumps(q)

@@ -38,6 +38,7 @@ class CostModel:
     typical_size: dict[str, int] = field(default_factory=dict)  # observed AVERAGE list sizes
     uncovered_edges: list[str] = field(default_factory=list)
     scan_before_paginate: list[str] = field(default_factory=list)
+    external_hosts: dict[str, str] = field(default_factory=dict)  # bounded resolver_id -> observed outside host
 
     def to_json(self) -> str:
         return json.dumps({
@@ -49,6 +50,7 @@ class CostModel:
             "loader_fns": self.loader_fns,
             "uncovered_edges": self.uncovered_edges,
             "scan_before_paginate": self.scan_before_paginate,
+            "external_hosts": self.external_hosts,
         }, indent=2, sort_keys=True)
 
     @staticmethod

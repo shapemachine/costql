@@ -73,9 +73,11 @@ def _render_quote(q: dict) -> str:
         for r in top:
             lines.append(f"      {r['resolver_id']:<28} {r.get('cost', 0):>8.1f}"
                          f"   (x{r.get('invocations', r.get('list_size', 1))})")
-    for ec in q.get("external_costs") or []:
-        lines.append(f"  external   : {ec['resolver_id']} -> {ec['host']} "
-                     f"(authored fee {ec['authored_fee']}, not measured)")
+    for ec in q.get("external_calls") or []:
+        rid = ec.get("resolver_id")
+        who = f"{rid} -> {ec['host']}" if rid else ec["host"]
+        lines.append(f"  external   : {who} "
+                     f"(x{ec.get('calls', 1)} outside call(s); app prices these)")
     return "\n".join(lines)
 
 
@@ -83,15 +85,7 @@ def _cmd_build(args: argparse.Namespace) -> int:
     from .build import build_pack  # imports the measurement path (needs requests)
     factory = _load_adapter(args.adapter)
     config = factory(tier=args.tier) if args.tier else factory()
-    adjustments = None
-    if args.adjustments:
-        if os.path.exists(args.adjustments):
-            with open(args.adjustments) as fh:
-                adjustments = json.load(fh)
-        else:
-            print(f"  adjustments file {args.adjustments} not found; a no-op "
-                  f"template will be attached", flush=True)
-    pack = build_pack(config, repeats=args.repeats, adjustments=adjustments)
+    pack = build_pack(config, repeats=args.repeats)
     out = args.out or f"pricing_pack_{config.name}.json"
     pack.save(out)
     size_kb = os.path.getsize(out) / 1024
@@ -150,8 +144,8 @@ def _cmd_validate(args: argparse.Namespace) -> int:
     print(f"model      : {len(pack.model.unit_cost)} resolver costs · "
           f"{len(pack.model.batch_groups)} shared-loader groups · "
           f"safety x{pack.model.safety}")
-    adj = (pack.adjustments.get("adjustments") or {}) if pack.adjustments else {}
-    print(f"adjustments: {len(adj)} authored fee entries")
+    ext = pack.model.external_hosts or {}
+    print(f"external   : {len(ext)} observed outside-host call(s)")
     if problems:
         for p in problems:
             print(f"! {p}")
@@ -175,8 +169,6 @@ def build_parser() -> argparse.ArgumentParser:
     p_build.add_argument("--repeats", type=int,
                          default=int(os.environ.get("COSTQL_REPEATS", "5")),
                          help="measurement rounds per query (default 5, env COSTQL_REPEATS)")
-    p_build.add_argument("--adjustments", default=None,
-                         help="hand-authored #6 fee file to attach (JSON)")
     p_build.add_argument("--out", default=None,
                          help="output pack path (default pricing_pack_<name>.json)")
     p_build.set_defaults(fn=_cmd_build)

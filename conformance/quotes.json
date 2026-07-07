@@ -416,11 +416,10 @@
         "confidence": "high",
         "contract_version": "1.0",
         "currency": "work_ms",
-        "external_costs": [
+        "external_calls": [
           {
-            "authored_fee": 0.0,
+            "calls": 1,
             "host": "api.anthropic.com",
-            "measured_fee": false,
             "resolver_id": "Movie.aiSummary"
           }
         ],

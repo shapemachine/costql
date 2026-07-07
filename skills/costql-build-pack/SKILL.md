@@ -1,6 +1,6 @@
 ---
 name: costql-build-pack
-description: Build (or rebuild) a costQL pricing pack from a live GraphQL API and verify it's sound. Use when the user wants to run `costql build`, regenerate a pack after a schema change, author fee adjustments, or asks why a build downgraded to T1.
+description: Build (or rebuild) a costQL pricing pack from a live GraphQL API and verify it's sound. Use when the user wants to run `costql build`, regenerate a pack after a schema change, handle a field that calls an outside host, or asks why a build downgraded to T1.
 ---
 
 # Build a pricing pack
@@ -16,10 +16,10 @@ For exact flags, run `costql build --help`. Don't trust prose over it.
    `examples/demos/*/README.md` (tmdb needs TMDB keys exported; northwind
    needs its 24 MB reference DB downloaded first). For the user's own API,
    confirm the adapter's `graphql_url` answers a `{ __typename }` POST.
-2. **Mind paid fields.** If the adapter declares `bounded_fields` backed by a
-   paid host, the build makes a few real paid calls to sample them. The build
-   prints the call budget up front. Confirm with the user before large
-   `--repeats` values.
+2. **Mind outside-call fields.** If the adapter declares `bounded_fields` backed
+   by an outside host (e.g. a paid LLM), the build makes a few real calls to
+   sample them and records the host it observes. The build prints the call budget
+   up front. Confirm with the user before large `--repeats` values.
 3. **Build.**
 
    ```
@@ -33,11 +33,11 @@ For exact flags, run `costql build --help`. Don't trust prose over it.
    instrumentation isn't emitting. Check
    https://costql.com/docs/instrumentation/ for the expected
    `extensions.cost_trace` shape.
-4. **Author fees (optional).** If bounded fields exist and no
-   `--adjustments` file was given, the pack carries a zero-fee template.
-   To charge for a paid call: copy the template out of the pack's
-   `adjustments` section into a JSON file, set `added_unit_cost` (COST-UNITS,
-   never dollars), and rebuild with `--adjustments <file>`.
+4. **Outside calls are named, not priced.** If bounded fields call an outside
+   host, the pack records that host (in `model.external_hosts`) and a T3 quote
+   surfaces it as `external_calls` (host + call count, no fee). costQL never
+   prices the outside call: the consuming app does. Nothing to author. See
+   https://costql.com/docs/external-calls/.
 5. **Verify before shipping.**
 
    ```
@@ -56,4 +56,4 @@ For exact flags, run `costql build --help`. Don't trust prose over it.
 Rebuild whenever the schema changes (quotes carry `schema_hash`; a consumer
 comparing hashes will notice drift) or when real costs shift materially
 (infra change, new data distribution). Rebuilding is cheap (minutes of
-measurement) and the adjustments file survives via `--adjustments`.
+measurement); observed outside hosts are re-detected each build.

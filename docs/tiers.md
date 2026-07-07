@@ -23,7 +23,7 @@ consuming app's job.
 |---|---|---|
 | **T1** | one stopwatch on the whole request (wall-clock); per-resolver costs recovered by regression across many queries | none (coarsest) |
 | **T2** | each resolver's invocations + each downstream call's duration → summed work-ms | **parallelism**: no longer fooled by concurrent calls; sharing still *inferred* |
-| **T3** | the above **plus** each call's key + cache status | **sharing**: dedup/coalescing observed exactly, batch sizes priced on learned curves, paid hosts named |
+| **T3** | the above **plus** each call's key + cache status | **sharing**: dedup/coalescing observed exactly, batch sizes priced on learned curves, outside hosts named |
 
 - **T1 (black box).** Sees only whole-query elapsed time. Work done in parallel or
   in batches hides inside elapsed time, so T1 tends to **under-count**: e.g. a
@@ -35,9 +35,10 @@ consuming app's job.
   cache; shared calls are counted once and each shared loader is priced by a
   **learned batch-size curve** (a 300-key batch costs more than a 3-key one; a
   database loader's curve rises, a network loader's stays flat: learned, never
-  assumed). External/paid hosts are named, carrying seller-authored per-call fees.
+  assumed). Outside hosts are named, with the call count; costQL doesn't price the
+  outside call (it can't know what that host charges), so the consuming app does.
 
-What each tier's *result* carries (breakdown, sharing, external costs) is
+What each tier's *result* carries (breakdown, sharing, external calls) is
 specified and validator-enforced in [the output contract](contract.md).
 
 ## What each tier requires, honestly

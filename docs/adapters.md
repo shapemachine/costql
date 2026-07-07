@@ -124,9 +124,10 @@ Rules of thumb, learned across three APIs:
   root.
 - **`uncoverable_fields`**: resolvers calibration must skip (with reasons).
 - **`bounded_fields`**: resolvers kept *out* of calibration fanout and
-  sampled once in isolation, e.g. a paid external call
-  (`{"Movie.aiSummary": "paid external call"}`). Their per-call *fee* is
-  authored in the adjustments file, never measured.
+  sampled once in isolation, e.g. a call to an outside host
+  (`{"Movie.aiSummary": "outside call (api.anthropic.com)"}`). costQL records
+  the host it observed; it never prices the outside call (the consuming app
+  does). See [External calls](external-calls.md).
 - **`known_loaders`**: only for T2/T3 servers, the loader IDs your cost-trace
   emits, so dead loaders are detected. Empty for black boxes.
 - **`one_root_per_op`** (default `True`): generated coverage queries hit one

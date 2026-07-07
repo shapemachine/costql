@@ -22,6 +22,7 @@ export interface CostModelData {
   typical_size?: Record<string, number>;
   uncovered_edges?: string[];
   scan_before_paginate?: string[];
+  external_hosts?: Record<string, string>;  // bounded resolver_id -> observed outside host
 }
 
 export interface BreakdownLine extends Record<string, unknown> {

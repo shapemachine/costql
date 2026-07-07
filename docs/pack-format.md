@@ -1,18 +1,14 @@
----
-title: "Price Pack Format"
----
-
+# Price Pack Format
 
 A **pricing pack** is the single file costQL produces, and the only thing your
 app needs to price queries. It is fully self-contained: the schema, the fitted
-costs, the observed sizes, and any authored fees, with no server, no sidecar, and
-no network call. This page documents what is inside one, so you can inspect, diff,
+costs, the observed sizes, and any observed outside hosts, with no server, no
+sidecar, and no network call. This page documents what is inside one, so you can inspect, diff,
 or debug a pack directly.
 
-You never hand-edit a pack (except the [authored fees](paid-fees.md)); apps read
-it through `PricingPack.load()`. What the pack *produces*, the quote result, is a
-separate shape specified in [the output contract](contract.md). This page is the
-other half: what goes *in*.
+You never hand-edit a pack; apps read it through `PricingPack.load()`. What the
+pack *produces*, the quote result, is a separate shape specified in [the output
+contract](contract.md). This page is the other half: what goes *in*.
 
 ## Top-level keys
 
@@ -23,15 +19,14 @@ other half: what goes *in*.
 | `tier` | string | `"T1"`, `"T2"`, or `"T3"`: the fidelity this pack was built at (see [tier fidelity](tiers.md)). |
 | `currency` | string | the cost-unit every price is in: `"work_ms"` (T2/T3) or `"wall_time_ms"` (the T1 wall-clock proxy). Never dollars. |
 | `introspection` | object | the API's GraphQL introspection result, stored so the pack can walk the schema and price any query with no live endpoint. |
-| `model` | object | the cost model: the actual pricing payload (below). |
-| `adjustments` | object | hand-authored per-call fees for paid or external resolvers (see [Paid & external fees](paid-fees.md)). `{}` when there are none. |
+| `model` | object | the cost model: the actual pricing payload (below), including any observed outside hosts (see [External calls](external-calls.md)). |
 | `note` | string | a human-readable reminder of what the pack is (offline, cost-units, never dollars). |
 
 ## Inside `model`: the pricing payload
 
 This is where a query's price actually comes from. Every price is computed from
 these fields alone. The pack stores no per-query prices and does no lookup:
-`price = sum over the query of (unit_cost + any fee) x invocations`.
+`price = sum over the query of unit_cost x invocations`.
 
 | field | type | what it does |
 |---|---|---|
@@ -41,6 +36,7 @@ these fields alone. The pack stores no per-query prices and does no lookup:
 | `default_cap` | number | the list size assumed for an edge that declares no size and was never observed. A conservative fallback. |
 | `safety` | number | a calibration-derived multiplier (`>= 1`) applied so the safe max never lands below a measured calibration cost. |
 | `noise_buffer_ms` | number | a small additive allowance for measurement noise, in ms. Usually `0`. |
+| `external_hosts` | `{resolver_id: host}` | **T3 only.** For a bounded field that calls an outside service, the host costQL observed at build time (e.g. `api.anthropic.com`). Surfaced in a quote as `external_calls` for your app to price (see [External calls](external-calls.md)). Empty when there are none. |
 | `batch_groups` | `{resolver_id: loader_key}` | **T3 only.** Which resolvers are served by a shared loader, so their repeated work is counted once. Empty at T1/T2. |
 | `loader_fns` | `{loader_key: curve}` | **T3 only.** The learned batch-size curve for each shared loader (below). Empty at T1/T2. |
 | `scan_before_paginate` | `[resolver_id]` | resolvers whose backend scans a full set before paginating, so a small page can still cost like a large scan. Usually empty. |
@@ -78,8 +74,8 @@ costs more than a 3-key one. Which one it is comes from the data, never assumed.
   that no longer hide parallel work. Sharing is still inferred, so no observed
   `loader_fns`.
 - **T3** (work plus sharing trace): adds `batch_groups` and `loader_fns` (observed
-  coalescing, priced once on the learned curve), and names paid hosts in
-  `adjustments`.
+  coalescing, priced once on the learned curve), and names any observed outside
+  hosts in `external_hosts`.
 
 ## Inspecting a pack
 

@@ -67,9 +67,10 @@ If the human hands you curated IDs, use theirs; otherwise harvest your own
    downgrades to T1 anyway if it observes no trace, so over-claiming just
    wastes a build. Claiming T2/T3 requires the server to emit the cost-trace
    extension (https://costql.com/docs/instrumentation/).
-7. **Declare paid/external fields** in `bounded_fields` so they are sampled
-   once in isolation instead of fanned out (e.g. an LLM-backed field). Their
-   per-call fee is authored in the adjustments file, never measured.
+7. **Declare outside-call fields** in `bounded_fields` so they are sampled
+   once in isolation instead of fanned out (e.g. an LLM-backed field). costQL
+   records the host it observes; it never prices the outside call (the consuming
+   app does). See https://costql.com/docs/external-calls/.
 8. **Build and verify.**
 
    ```

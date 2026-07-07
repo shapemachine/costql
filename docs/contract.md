@@ -49,7 +49,7 @@ carries, **not** whether you get a billable `price`.
 | `typical_price` | ✅ | ✅ | ✅ |
 | `breakdown`: per-resolver cost | | ✅ | ✅ |
 | `sharing`: observed dedup / cache | | | ✅ |
-| `external_costs`: named paid/3rd-party hosts | | | ✅ |
+| `external_calls`: named outside hosts + call count | | | ✅ |
 
 - **T1**: a single total only. When that is all the API affords, the total is a
   wall-clock proxy (`currency: wall_time_ms`); work hidden by parallelism/batching
@@ -60,8 +60,8 @@ carries, **not** whether you get a billable `price`.
   either: the run reported a total without a per-resolver split; a *predicted* T2
   quote does carry one, because the model can decompose.)
 - **T3**: per-resolver work **plus** observed `sharing` (which loads coalesced or
-  hit cache) **plus** `external_costs` (paid hosts named, carrying the seller's
-  authored per-call fee).
+  hit cache) **plus** `external_calls` (outside hosts named, with the call count;
+  no fee, since costQL can't know what the outside service charges).
 
 The validator enforces the gating: e.g. an observed `sharing` section at T1 or T2
 is a contract violation.
@@ -91,8 +91,11 @@ Tier-gated detail (optional; present only where the table above allows):
 - `sharing` (object[]): observed sharing. Inner shape differs by basis (honest
   asymmetry): **predicted** `{ loader, folds:[resolver…], counted_once }`;
   **measured** `{ loader, requested, calls, saved, cache_hits, external }`.
-- `external_costs` (object[]): `{ resolver_id, host, authored_fee, measured_fee:false }`;
-  the per-call fee is authored by the seller in cost-units, never measured.
+- `external_calls` (object[]): outside calls costQL observed. Inner shape differs by
+  basis: **predicted** `{ resolver_id, host, calls }`; **measured** `{ host, calls }`.
+  `host` is the outside address; `calls` is the count. No fee: costQL can't know what
+  the outside service charges, so the consuming app prices these (see
+  [External calls](external-calls.md)).
 
 A `predicted` result also echoes `query` (convenience, not part of the core).
 
@@ -129,16 +132,19 @@ A `predicted` result also echoes `query` (convenience, not part of the core).
 }
 ```
 
-**Predicted · T3 with a paid host** (`{ movie(id:"27205"){ aiSummary } }`): `external_costs` names it for the authored fee:
+**Predicted · T3 with an outside call** (`{ movie(id:"27205"){ aiSummary } }`): `external_calls` names the host and count; your app prices it:
 
 ```json
 {
   "contract_version": "1.0", "tier": "T3", "basis": "predicted",
-  "currency": "work_ms", "price": 40.61, "typical_price": 32.31,
+  "currency": "work_ms", "price": 2393.23, "typical_price": 1722.62,
   "confidence": "high", "schema_hash": "26c786209ec27586", "caveats": [],
-  "breakdown": [ { "resolver_id": "Query.movie", "cost": 29.69, "invocations": 1, "list_size": 1 } ],
-  "external_costs": [
-    { "resolver_id": "Movie.aiSummary", "host": "api.anthropic.com", "authored_fee": 0.0, "measured_fee": false }
+  "breakdown": [
+    { "resolver_id": "Query.movie", "cost": 29.68, "invocations": 1, "list_size": 1 },
+    { "resolver_id": "Movie.aiSummary", "cost": 1690.41, "invocations": 1, "list_size": 1 }
+  ],
+  "external_calls": [
+    { "resolver_id": "Movie.aiSummary", "host": "api.anthropic.com", "calls": 1 }
   ]
 }
 ```

@@ -21,10 +21,12 @@ Consuming the resulting pack does not.
 from __future__ import annotations
 
 import statistics
+from urllib.parse import urlparse
 
 from .batchmodel import attach_loader_curves, recalibrate_safety
 from .config import APIConfig
 from .coverage import CoverageGenerator
+from .exact import ExactPrice
 from .harness import Harness, _requests
 from .inputs import ArgProvider
 from .introspect import INTROSPECTION_QUERY, TypeGraph
@@ -54,21 +56,6 @@ def endpoint_up(url: str) -> bool:
         return False
 
 
-def default_adjustments(schema_hash: str, config: APIConfig) -> dict:
-    """A no-op #6 adjustments document: one zero-fee entry per bounded field.
-    Sellers edit ``added_unit_cost`` (cost-units, NEVER dollars); the file
-    survives rebuilds."""
-    return {
-        "_comment": ("costQL hand-authored adjustments (cost-units, NEVER dollars). "
-                     "Edit added_unit_cost; survives rebuild."),
-        "schema_hash": schema_hash,
-        "adjustments": {
-            rid: {"added_unit_cost": 0.0, "reason": reason,
-                  "note": "per-call fee in cost-units; counted once per deduped call"}
-            for rid, reason in config.bounded_fields.items()},
-    }
-
-
 def _calibration_queries(config: APIConfig, tg: TypeGraph, mined) -> list[str]:
     if config.calibration_queries is not None:
         out = []
@@ -86,14 +73,13 @@ def _calibration_queries(config: APIConfig, tg: TypeGraph, mined) -> list[str]:
 
 
 def build_pack(config: APIConfig, *, repeats: int = 5,
-               adjustments: dict | None = None,
                verbose: bool = True) -> PricingPack:
     """Calibrate ``config``'s live endpoint and return the pricing pack.
 
     ``repeats``: measurement rounds per query (sample-level round-robin, so
-    host drift is common-mode). ``adjustments``: a #6 hand-authored fee
-    document; when None and the adapter declares bounded fields, a no-op
-    template is attached (fees default to 0 until the seller authors them).
+    host drift is common-mode). Any bounded field that calls an outside host is
+    sampled in isolation; costQL records the host it OBSERVED (never a fee: it
+    can't know what the outside service charges; the consuming app prices it).
     """
     def say(msg: str) -> None:
         if verbose:
@@ -168,14 +154,20 @@ def build_pack(config: APIConfig, *, repeats: int = 5,
     recalibrate_safety(tg, model, [{"query": r["query"], "work": r["work"]}
                                    for r in calib])
 
-    # --- fold each bounded field's isolated per-invocation cost into its unit cost ---
+    # --- fold each bounded field's isolated per-invocation cost into its unit cost,
+    #     and record any outside host costQL observed it call (host only, no fee) ---
+    primary_host = urlparse(config.graphql_url).hostname
     for i, op in enumerate(iso):
         m = meas[("i", i)]
         if m.ok and m.work_ms is not None:
+            observed = ExactPrice.from_cost_trace(
+                m.cost_trace, primary_host=primary_host).external_hosts
             for rid in op.fired_resolvers:
                 if rid in config.bounded_fields:
                     model.unit_cost[rid] = round(
                         m.resolver_work_ms.get(rid, m.work_ms), 2)
+                    if observed:
+                        model.external_hosts[rid] = observed[0]
 
     tier = config.tier
     if not traced and tier != "T1":
@@ -184,12 +176,8 @@ def build_pack(config: APIConfig, *, repeats: int = 5,
         tier = "T1"
 
     schema_hash = tg.schema_hash()
-    if adjustments is None and config.bounded_fields:
-        adjustments = default_adjustments(schema_hash, config)
-
     pack = PricingPack(schema_hash=schema_hash, currency=model.cost_currency,
-                       introspection=introspection, model=model,
-                       adjustments=adjustments or {}, tier=tier)
+                       introspection=introspection, model=model, tier=tier)
     say(f"built pack: schema {schema_hash} · tier {tier} · "
         f"{len(model.unit_cost)} resolver costs · currency {model.cost_currency}")
     return pack

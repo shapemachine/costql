@@ -296,10 +296,11 @@ function receiptFromQuote(q: QuoteResult): {
       muted: true,
     });
   }
-  for (const e of q.external_costs ?? []) {
+  for (const e of q.external_calls ?? []) {
+    const calls = (e as any).calls ?? 1;
     items.push({
       label: `${shortResolver((e as any).resolver_id)} → ${(e as any).host}`,
-      value: String((e as any).authored_fee),
+      value: `${calls} call${calls === 1 ? '' : 's'} · app prices`,
       muted: true,
     });
   }

@@ -66,9 +66,9 @@ class APIConfig:
     uncoverable_fields: dict[str, str] = field(default_factory=dict)  # resolver_id -> reason
     bounded_fields: dict[str, str] = field(default_factory=dict)   # resolver_id -> reason: coverable
     # but kept OUT of the combinatorial fanout panel and sampled in ISOLATION instead
-    # (e.g. a paid external call whose per-invocation cost is a constant: a few samples
-    # suffice; fanning it out would multiply cost with no modelling gain). The fee itself
-    # is authored via the #6 adjustments file, not measured.
+    # (e.g. a call to an outside host whose per-invocation cost is a constant: a few
+    # samples suffice; fanning it out would multiply cost with no modelling gain). costQL
+    # records the observed host; it never prices the outside call (the consuming app does).
     known_loaders: list[str] = field(default_factory=list)        # declared loaders (dead-loader detection)
     size_roots: dict[str, dict] = field(default_factory=dict)     # root -> {arg, offset, cap}
     one_root_per_op: bool = True     # server can't run sibling DB roots concurrently

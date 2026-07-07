@@ -41,7 +41,7 @@ present, always a number, always safe to bill on. See
    `costql build`. costQL introspects the schema, measures a set of clean
    calibration queries, and fits a per-resolver cost model.
 2. **Ship the pack:** the output is one static file (schema + fitted costs +
-   authored fees). Vendor it into any app.
+   any observed outside hosts). Vendor it into any app.
 3. **Quote (app side, forever):** load the pack, price queries locally; in
    Python or JavaScript.
 

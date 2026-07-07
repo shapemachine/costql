@@ -55,7 +55,7 @@ via the `APIConfig.calibration_queries` hook (a callable taking a size, `"whale"
 `"small"`, and returning query strings).
 
 **What ships is the rate table, not the queries.** The pricing pack contains
-schema + `unit_cost` table + batch curves + observed sizes + authored fees. It does **not**
+schema + `unit_cost` table + batch curves + observed sizes + observed outside hosts. It does **not**
 contain the calibration queries or their measured prices. The calibration queries dissolve
 into the rate table; they do not survive as retrievable entries.
 
