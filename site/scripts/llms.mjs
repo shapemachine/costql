@@ -35,7 +35,7 @@ for (const p of [...mdFiles(DOCS)].sort()) {
 const index = [
   '# costQL',
   '',
-  '> Price GraphQL queries before you run them: calibrate a live API into a static',
+  '> Price GraphQL queries before they run: calibrate a live API into a static',
   '> pricing pack, then quote any query offline: in Python or JavaScript. Cost-units',
   '> only, never dollars. No hosted service; the pack is a plain local file.',
   '',
