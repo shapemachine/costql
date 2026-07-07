@@ -618,6 +618,21 @@ export default function Playground() {
               </button>
             ))}
           </div>
+          <div className="cql-play__dataset">
+            <select
+              className="cql-play__dataset-select"
+              aria-label="data set"
+              value={idx}
+              onChange={(e) => setIdx(Number(e.target.value))}
+            >
+              {PACKS.map((p, i) => (
+                <option key={p.id} value={i}>
+                  {p.file}
+                </option>
+              ))}
+            </select>
+            <span className="cql-play__dataset-caret" aria-hidden="true">▾</span>
+          </div>
         </div>
         <div className="cql-play__grid">
           <div className="cql-play__schema">
