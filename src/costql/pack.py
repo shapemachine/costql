@@ -19,7 +19,7 @@ the docs of whatever tool is pricing the API, and price against locally.
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 from .confidence import assess
 from .contract import predicted_result
