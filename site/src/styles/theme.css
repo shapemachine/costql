@@ -112,14 +112,17 @@ header.header {
   cursor: pointer;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
   font-family: var(--font-display);
   font-weight: 700;
   list-style: none;
 }
+/* question text fills the row; the + marker gets pushed to the far right */
+.sl-markdown-content details > summary::after { margin-left: auto; }
 .sl-markdown-content details > summary::-webkit-details-marker { display: none; }
+.sl-markdown-content details > summary::marker { content: ""; }
 .sl-markdown-content details > summary::after {
   content: '+';
   font-family: var(--font-display);

@@ -37,9 +37,10 @@ See [Tier fidelity](tiers.md).
 <details>
 <summary>Can it price a call to a paid API, like an LLM?</summary>
 
-Yes. costQL can't *time* a per-call fee, so you author it once and every quote
-folds it in, counted once even when the call is batched. See
-[Paid & external fees](paid-fees.md).
+Yes. The *work* a paid call takes is timed automatically, like any other field.
+If that call also costs real money downstream (an LLM, a licensed feed), you set
+its per-call fee once and every quote folds it in, counted once even when the
+call is batched. Here is how: [Paid & external fees](paid-fees.md).
 
 </details>
 
