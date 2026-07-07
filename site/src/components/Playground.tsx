@@ -502,6 +502,7 @@ export default function Playground() {
           keymap.of([...defaultKeymap, ...historyKeymap]),
           autocompletion(),
           graphql(), // completion + schema lint: the red squiggles
+          EditorView.contentAttributes.of({ 'aria-label': 'GraphQL query editor' }),
           EditorView.updateListener.of((u) => {
             if (!u.docChanged || suppressRef.current) return;
             scheduleAnalyze();
@@ -658,6 +659,7 @@ export default function Playground() {
             <div className="cql-play__colhead" style={{ marginTop: 10 }}>variables (json)</div>
             <textarea
               className="cql-play__vars"
+              aria-label="query variables (JSON)"
               rows={2}
               spellCheck={false}
               value={varsText}
