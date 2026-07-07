@@ -17,9 +17,10 @@ Three answers. Everything else is discoverable.
 
 1. **The endpoint URL.**
 2. **An auth header**, if the API needs one.
-3. **Do you run the server?** If yes and you want sharper prices later, the
-   agent will point you at [the one trace extension](instrumentation.md)
-   to emit; if no, T1 is the honest ceiling and needs nothing from anyone.
+3. **Do you run the server?** If yes and your API's shape calls for an
+   instrumented tier (it batches, caches, or parallelizes work), the agent
+   will point you at [the one trace extension](instrumentation.md) to
+   emit; if no, T1 is the fit and needs nothing from anyone.
 
 ## What the agent does
 

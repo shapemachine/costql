@@ -31,10 +31,10 @@ leaves *pricing* to you.
 <summary>Do I have to change my server?</summary>
 
 Not to start. Your first pack (T1) times whole queries from the outside and
-needs no server changes at all. Sharper tiers (T2, T3) ask your server to
-report per-resolver work; that's the one change, covered in
-[Instrumenting for T2/T3](instrumentation.md). Most APIs get real value at T1.
-See [Tier fidelity](tiers.md).
+needs no server changes at all. The instrumented tiers (T2, T3) ask your server
+to report per-resolver work; that's the one change, covered in
+[Instrumenting for T2/T3](instrumentation.md). Which tier fits is a fact
+about your API, not a ranking: see [Tier fidelity](tiers.md).
 
 </details>
 

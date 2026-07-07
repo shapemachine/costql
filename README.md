@@ -80,8 +80,9 @@ disjoint; there is no query→price lookup):
 - **TMDB demo (instrumented):** mean error T1 17% / T2 11% / T3 11%
 - **Rick & Morty (public API, not ours):** ~4% mean error at T1, ceiling never
   under the real cost
-- **Northwind (batch-heavy SQLite):** heavy entity sharing is where T3 pays:
-  T2 315% vs T3 12% on hub queries ([case study](docs/results/northwind.md))
+- **Northwind (batch-heavy SQLite):** heavy entity sharing, the API shape that
+  needs the sharing-watching tier: 12% mean error at T3 on hub queries that a
+  sharing-blind fidelity cannot price ([case study](docs/results/northwind.md))
 
 Cyclic-recursion queries (whose runtime dedup is unknowable pre-execution) are
 automatically flagged **low confidence** and priced as a structural ceiling.

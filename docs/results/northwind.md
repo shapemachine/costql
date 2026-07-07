@@ -1,10 +1,10 @@
 ---
-description: "A batch-heavy database backend where entity sharing is heavy, so T3 pulls far ahead of T2. Measured against a real SQLite store, no fabricated numbers."
+description: "A batch-heavy database backend where entity sharing is heavy: the API shape that needs the tier that watches sharing (T3). Measured against a real SQLite store, no fabricated numbers."
 ---
 
 # Case study: a batch-heavy database backend
 
-On the [TMDB demo](tmdb.md), the middle fidelity (T2) priced queries just as well as the top fidelity (T3), but TMDB shares entities only lightly. To find out whether "the middle tier is enough" is a universal claim, we pointed costQL at a very different backend: a real **Northwind** store database (products, orders, customers, SQLite), deliberately shaped so a single query hammers the same tiny set of entities over and over. The finding: **the two tiers stay tied when sharing is light and pull far apart when sharing is heavy**. T3's payoff scales with how much the schema shares. Everything below is measured against the real database: real SQL, real rows, no fabricated numbers, zero paid calls.
+On the [TMDB demo](tmdb.md), per-resolver timing (T2) and the sharing trace (T3) priced queries identically — TMDB shares entities only lightly, so there was almost nothing for the sharing trace to watch. To find out what happens on an API whose shape is the opposite, we pointed costQL at a very different backend: a real **Northwind** store database (products, orders, customers, SQLite), deliberately shaped so a single query hammers the same tiny set of entities over and over. The finding: **when sharing is light the two fidelities see the same thing; when sharing is heavy, only the tier that watches the sharing can price the queries.** Which tier an API needs is a property of its schema. Everything below is measured against the real database: real SQL, real rows, no fabricated numbers, zero paid calls.
 
 ## What we tested it on
 
@@ -37,29 +37,29 @@ A single hub query asked for a category **107 times and the database read it
 once** (8 distinct categories, 99 repeats served from cache). This is heavy
 sharing, not a token amount, so the tier comparison is a fair test of the claim.
 
-## The result: the tier gap is sharing-dependent
+## The result: tier fit is sharing-dependent
 
 On the predictable, billable queries, mean error vs. real measured cost, first
 with the naive sharing rule that simply folds every shared read to "counted once":
 
-| | middle tier (T2) | top tier (T3, flat fold) | gap |
+| | T2 (sharing inferred) | T3 (sharing observed), flat fold | mismatch |
 |---|---:|---:|---:|
 | **light-sharing queries** | **6%** | **6%** | **~0%** |
 | **heavy-sharing queries** | **315%** | **75%** | **+239%** |
 | all predictable (mixed) | ~160% | ~41% | ~+120% |
 
-- **When sharing is light, the middle tier is enough**: it matches the top tier
-  to within a rounding error. This reproduces the TMDB result on a completely
-  different, database-backed schema.
-- **When sharing is heavy, the two tiers split wide open.** The middle tier,
-  which doesn't watch the sharing happen, charges for *every* repeated request
-  and over-prices by ~3×. The top tier, which *observes* the coalescing, is far
-  closer. On TMDB the T2→T3 gap was ~0; here it reaches **+239%** on the heaviest
-  queries. **The gap widens with sharing.**
+- **When sharing is light, the two fidelities tie**: with nothing to coalesce,
+  inferring the sharing and observing it see the same work. This reproduces the
+  TMDB result on a completely different, database-backed schema.
+- **When sharing is heavy, only the tier that watches can price it.** T2 never
+  sees the sharing happen, so it charges for *every* repeated request and
+  over-prices by ~3× — not a defect of T2, but the measured cost of pointing a
+  sharing-blind fidelity at a sharing-heavy schema. T3, which *observes* the
+  coalescing, is far closer. **The mismatch widens with sharing.**
 
 ## Why "counted once" isn't enough for a database, and the batch curve that fixes it
 
-Even with the gap established, the flat fold left the top tier imperfect, and in
+Even with the mismatch established, the flat fold left T3 imperfect, and in
 the **unsafe** direction: on the heaviest queries it **under-priced** (predicting
 ~0.04 vs a real ~0.33). The reason is specific. On TMDB, "sharing" only ever meant
 "the same single item asked for twice," so counting it once was exactly right. A
@@ -84,7 +84,7 @@ The pagination-bounded batches went from **~88% under-priced to within ~5%**, an
 the pack's **ceiling is genuinely safe** on them (it sits above the real cost,
 where the flat fold sat ~10× below). Re-measuring the whole predictable band:
 
-| | middle tier (T2) | T3, flat fold | T3, size-aware curve |
+| | T2 (sharing inferred) | T3, flat fold | T3, size-aware curve |
 |---|---:|---:|---:|
 | light-sharing queries | 11% | 13% | **10%** |
 | heavy-sharing queries | 346% | 77% | **12%** |
@@ -93,11 +93,12 @@ where the flat fold sat ~10× below). Re-measuring the whole predictable band:
 (These re-measured T2 figures differ slightly from the first table's run: live
 measurement, two separate runs. The shape is identical.)
 
-Note what the fix did *not* do: it did not shrink the tier gap. The middle tier
-genuinely cannot price coalesced reads, because it never watches the sharing.
-That is real, irreducible tier value. Fixing the fold made the top tier accurate,
-which made the measured gap **wider** (+269% → +334% on the heavy queries): the
-flat rule had been *understating* T3's advantage by crippling T3 itself.
+Note what the fix did *not* do: it did not shrink the mismatch. A fidelity that
+never watches the sharing genuinely cannot price coalesced reads; that is
+irreducible, and it is why this API shape needs T3. Fixing the fold made T3
+accurate, which made the measured mismatch **wider** (+269% → +334% on the heavy
+queries): the flat rule had been *understating* what watching the sharing is
+worth here, by crippling T3 itself.
 
 ## The honest residue
 
@@ -139,11 +140,11 @@ quoting queries **with the server switched off**.
 
 ## Bottom line
 
-1. **"The middle tier is enough" is not universal.** It holds when a schema shares
-   entities lightly (TMDB, and Northwind's light queries) and fails when a schema
-   shares heavily (Northwind's hub queries), where observing the sharing is worth
-   a lot. This is a measured number, not an assertion: T3's payoff scales with how
-   much the schema shares.
+1. **Tier fit is a property of the schema.** When a schema shares entities
+   lightly (TMDB, and Northwind's light queries), T2's sight already covers
+   everything that happens. When it shares heavily (Northwind's hub queries),
+   only the tier that watches the sharing can price the work. This is a measured
+   number, not an assertion.
 2. **Batched reads are priced by size, safely.** A batch of *N* distinct rows is
    priced on a learned size→cost curve, closing the under-pricing where the batch
    size is knowable and restoring the ceiling guarantee on database backends.

@@ -33,13 +33,13 @@ heaviest). Declaring sizes (pagination arguments) restores high confidence.
 
 If an API emits no cost-trace instrumentation, costQL still prices it. That is
 the T1 fidelity, and it is [the designed starting point](tiers.md). The
-degradation is in *detail*, not in the guarantee: a T1 result carries the total
+difference is in *detail*, not in the guarantee: a T1 result carries the total
 only (`currency: wall_time_ms`, a wall-clock proxy for work-ms) with no
 per-resolver `breakdown`, no observed `sharing`, and no `external_calls`. Work
 hidden by parallelism or batching is not decomposed and tends to be
 under-counted in the proxy. Measured honestly, T1 still performed well where the
 cost is dominated by what a black-box caller actually experiences: ~96% accuracy
-on a public network API.
+on the public [Rick & Morty API](results/rickmorty.md).
 
 ## Size curves are light on the single-resolver dimension
 
