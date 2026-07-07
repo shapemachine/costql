@@ -153,7 +153,10 @@ body {
 
 /* ---- Tooltip (hover/focus): dark card under the target ---- */
 .cql-tip { position: relative; cursor: help; }
-.cql-tip::after {
+/* data-tip variant: text-only tooltip drawn as a pseudo-element (e.g. the
+   offline chip). Scoped to [data-tip] so .cql-tip elements that instead carry a
+   rich .cql-tip__bubble child don't render an empty pseudo box. */
+.cql-tip[data-tip]::after {
   content: attr(data-tip);
   position: absolute;
   right: 0;
@@ -176,8 +179,8 @@ body {
   transition: opacity var(--dur-fast) var(--ease-snap);
   z-index: 30;
 }
-.cql-tip:hover::after,
-.cql-tip:focus-visible::after { opacity: 1; }
+.cql-tip[data-tip]:hover::after,
+.cql-tip[data-tip]:focus-visible::after { opacity: 1; }
 
 /* ---- Receipt ---- */
 /* borderless paper: the lightly contrasting background + a soft shadow carry
