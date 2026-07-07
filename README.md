@@ -1,6 +1,8 @@
 # costQL
 
 [![CI](https://github.com/shapemachine/costql/actions/workflows/ci.yml/badge.svg)](https://github.com/shapemachine/costql/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/costql?logo=pypi&logoColor=white&label=PyPI)](https://pypi.org/project/costql/)
+[![npm](https://img.shields.io/npm/v/costql?logo=npm&label=npm)](https://www.npmjs.com/package/costql)
 
 **Price GraphQL queries before you run them.** costQL calibrates a live GraphQL
 API into a **pricing pack**, one self-contained JSON file, then quotes any
