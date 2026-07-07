@@ -263,6 +263,7 @@ function shortResolver(rid: string): string {
 function receiptFromQuote(q: QuoteResult): {
   items: ReceiptItem[];
   typical?: string;
+  typicalLabel: string;
   total: string;
   totalLabel: string;
   totalFlagged: boolean;
@@ -270,6 +271,8 @@ function receiptFromQuote(q: QuoteResult): {
 } {
   const items: ReceiptItem[] = [];
   const low = q.confidence === 'low';
+  const unit = q.currency === 'work_ms' ? 'work-ms'
+    : q.currency === 'wall_time_ms' ? 'wall-ms' : q.currency;
 
   const lines = [...(q.breakdown ?? [])]
     .sort((a, b) => (b.cost as number) - (a.cost as number))
@@ -307,8 +310,9 @@ function receiptFromQuote(q: QuoteResult): {
   return {
     items,
     typical: q.typical_price != null ? (q.typical_price as number).toFixed(1) : undefined,
+    typicalLabel: `typical (${unit})`,
     total: (q.price as number).toFixed(1),
-    totalLabel: low ? 'safe max (work-ms) · flagged' : 'safe max (work-ms)',
+    totalLabel: low ? `safe max (${unit}) · flagged` : `safe max (${unit})`,
     totalFlagged: low,
     footer: (
       <span>
@@ -667,6 +671,7 @@ export default function Playground() {
                   meta={`${PACKS[idx].file} · offline`}
                   items={r.items}
                   typical={r.typical}
+                  typicalLabel={r.typicalLabel}
                   total={r.total}
                   totalLabel={r.totalLabel}
                   totalFlagged={r.totalFlagged}

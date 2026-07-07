@@ -6,7 +6,7 @@ live API (through a small adapter) into a static **pricing pack**;
 follow a frozen contract v1.0: every quote returns two numbers. `typical_price`
 is what the query usually costs (average list sizes); `price` is the **safe max**,
 the most it could cost (worst-case list sizes), guaranteed never below the real
-cost, in cost-units, never dollars. The safe max is the number to bill on, and the
+cost, in cost-units, never dollars. Price on the safe max to avoid undercharging, and the
 two are equal unless a query's size can balloon. There is no hosted service.
 
 ## Map

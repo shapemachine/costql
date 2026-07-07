@@ -44,7 +44,7 @@ specified and validator-enforced in [the output contract](contract.md).
 
 **T1 works against any GraphQL API, today, with no cooperation from the server.**
 The [Rick & Morty case study](results/rickmorty.md) priced a live public API that
-we don't own and can't change to **~4% mean error** with a **93-line adapter and
+we don't own and can't change to **~96% accuracy** with a **93-line adapter and
 zero server changes**.
 
 **T2 and T3 require seller-side instrumentation**: the API server must emit

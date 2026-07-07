@@ -65,7 +65,7 @@ offline.
 
 Because the Rick & Morty API is a black box we can't instrument, the pack is
 **T1**: wall-clock currency, total-only quotes. That is the designed starting
-point for any API you can send queries to, measured at ~4% mean error on
+point for any API you can send queries to, measured at ~96% accuracy on
 held-out queries ([case study](results/rickmorty.md)). Richer tiers need
 server-side instrumentation; see [tier fidelity](tiers.md).
 

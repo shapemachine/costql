@@ -44,14 +44,6 @@ folds it in, counted once even when the call is batched. See
 </details>
 
 <details>
-<summary>Do Python and JavaScript give the same answer?</summary>
-
-Yes. The pack is one file; both packages read it and return the same number for
-the same query. See [The JS package](js.md).
-
-</details>
-
-<details>
 <summary>What happens when my schema changes?</summary>
 
 Rebuild the pack (minutes of measurement). Every quote carries a `schema_hash`,
@@ -71,7 +63,7 @@ items its lists return, which you cannot know for sure until you run it.
   everyday cost.
 - **Safe max** (the `price` field) is the *most* it could cost. costQL assumes the
   largest sizes it has seen, and it is guaranteed never to fall below the real
-  cost. This is the number you **bill on**, so you never undercharge.
+  cost. Price on it whenever never undercharging matters.
 
 They are **equal** when a query's size is fixed (bounded lists, single objects) and
 differ only when a query could balloon in size. Rideshare rule: *"usually $12,

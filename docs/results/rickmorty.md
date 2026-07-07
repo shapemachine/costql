@@ -1,6 +1,6 @@
 # Case study: pricing a stranger's API (Rick & Morty, T1)
 
-Does costQL work on an API it has never seen, that we don't own and can't change? This experiment pointed it at the public **Rick & Morty API** (`rickandmortyapi.com/graphql`): no new server, no fake data, no special access, just the real, live, public endpoint anyone on the internet can hit. The result: a **93-line adapter**, **zero engine changes**, **~4% mean error** on held-out queries at T1, a ceiling that never under-charged, and one offline pack in the standard contract format.
+Does costQL work on an API it has never seen, that we don't own and can't change? This experiment pointed it at the public **Rick & Morty API** (`rickandmortyapi.com/graphql`): no new server, no fake data, no special access, just the real, live, public endpoint anyone on the internet can hit. The result: a **93-line adapter**, **zero engine changes**, **~96% accuracy** on held-out queries at T1, with a safe max that never under-charged, and one offline pack in the standard contract format.
 
 ## What it took to onboard: one small file
 
@@ -24,7 +24,7 @@ costQL measured a set of real queries against the live API to learn its costs, t
 [the evaluation methodology](../evaluation.md)).
 
 - On the **predictable** queries (the ones a customer would actually want a price
-  for), costQL's quote was off by only **4% on average**, and its safe "you will
+  for), costQL's quote was **96% accurate on average**, and its safe "you will
   never pay more than this" ceiling was **never once too low** (5 out of 5).
 - Every query got a price. costQL never refused, never crashed, never guessed at
   data it didn't have.
@@ -64,7 +64,7 @@ costQL is **not** a one-API trick. Pointed at a second, unrelated, live API it h
 never seen, it:
 
 1. figured the API out by itself (a 93-line adapter, zero engine changes),
-2. priced unseen queries to within 4% with a ceiling that never under-charged,
+2. priced unseen queries to ~96% accuracy with a safe max that never under-charged,
 3. knew which queries it couldn't safely predict and said so, and
 4. shipped the whole thing as one offline file in its standard, stable format.
 

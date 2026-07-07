@@ -103,7 +103,11 @@ header.header {
   box-shadow: var(--shadow-1);
   background: var(--surface-card);
   margin-block: var(--space-3);
+  text-align: left;
 }
+.sl-markdown-content details,
+.sl-markdown-content details > summary,
+.sl-markdown-content details > :not(summary) { text-align: left; }
 .sl-markdown-content details > summary {
   cursor: pointer;
   display: flex;

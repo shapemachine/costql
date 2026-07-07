@@ -9,7 +9,7 @@ no keys, no server to run.
 
 **What it demonstrates:** black-box onboarding. A 93-line adapter
 ([`examples/adapters/rickmorty.py`](../examples/adapters/rickmorty.py)), zero
-server changes, ~4% mean error on held-out queries, ceiling never under the real
+server changes, ~96% accuracy on held-out queries, with a safe max never under the real
 cost. The full story is in [the case study](results/rickmorty.md).
 
 **Committed pack:** [`packs/rickmorty_t1.json`](../packs/rickmorty_t1.json),

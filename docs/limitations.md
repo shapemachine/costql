@@ -34,7 +34,7 @@ only (`currency: wall_time_ms`, a wall-clock proxy for work-ms) with no
 per-resolver `breakdown`, no observed `sharing`, and no `external_costs`. Work
 hidden by parallelism or batching is not decomposed and tends to be
 under-counted in the proxy. Measured honestly, T1 still performed well where the
-cost is dominated by what a black-box caller actually experiences: ~4% mean error
+cost is dominated by what a black-box caller actually experiences: ~96% accuracy
 on a public network API.
 
 ## Size curves are light on the single-resolver dimension
