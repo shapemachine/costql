@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 /** React twin of Receipt.astro: same classes, same markup. Used by the
  * playground to render live quotes. */
@@ -10,10 +10,17 @@ export interface ReceiptItem {
   indent?: boolean;
 }
 
+/** One shared-loader group: several resolvers whose repeated work is billed once. */
+export interface SharedGroup {
+  resolvers: string[];
+  loader: string;
+}
+
 export function ReceiptView({
   title = 'costql quote',
   meta,
   items,
+  shared,
   typical,
   typicalLabel = 'typical',
   total,
@@ -26,6 +33,7 @@ export function ReceiptView({
   title?: string;
   meta?: string;
   items: ReceiptItem[];
+  shared?: SharedGroup[];
   typical?: string;
   typicalLabel?: string;
   total?: string;
@@ -35,6 +43,7 @@ export function ReceiptView({
   width?: number;
   pulse?: boolean;
 }) {
+  const [sharedOpen, setSharedOpen] = useState(false);
   return (
     <div className="cql-receipt" style={{ width }}>
       <div className="cql-receipt__zig cql-receipt__zig--top" />
@@ -42,16 +51,62 @@ export function ReceiptView({
         <div className="cql-receipt__title">{title}</div>
         {meta && <div className="cql-receipt__meta">{meta}</div>}
         <div className="cql-receipt__rule" />
-        {items.map((it, i) => (
-          <div
-            key={i}
-            className={`cql-receipt__row${it.muted ? ' cql-receipt__row--muted' : ''}${it.indent ? ' cql-receipt__row--indent' : ''}`}
-          >
-            <span className="cql-receipt__label">{it.label}</span>
-            <span className="cql-receipt__leader" />
-            <span className="cql-receipt__value">{it.value}</span>
+        {/* line items scroll so a big query can't run the receipt off the page */}
+        <div className="cql-receipt__items">
+          {items.map((it, i) => (
+            <div
+              key={i}
+              className={`cql-receipt__row${it.muted ? ' cql-receipt__row--muted' : ''}${it.indent ? ' cql-receipt__row--indent' : ''}`}
+            >
+              <span className="cql-receipt__label">{it.label}</span>
+              <span className="cql-receipt__leader" />
+              <span className="cql-receipt__value">{it.value}</span>
+            </div>
+          ))}
+        </div>
+        {/* shared work: the T3 lines that used to just say "once", now a labeled
+            section you can open, with an info tooltip explaining batching */}
+        {shared && shared.length > 0 && (
+          <div className="cql-receipt__shared" data-open={sharedOpen}>
+            <div className="cql-receipt__shared-head">
+              <button
+                type="button"
+                className="cql-receipt__shared-toggle"
+                aria-expanded={sharedOpen}
+                onClick={() => setSharedOpen((o) => !o)}
+              >
+                <span className="cql-receipt__chevron" aria-hidden="true">▸</span>
+                <span>shared · counted once</span>
+                <span className="cql-receipt__shared-count">({shared.length})</span>
+              </button>
+              <span className="cql-tip">
+                <button
+                  type="button"
+                  className="cql-tip__trigger cql-tip__trigger--icon"
+                  aria-label="What does “counted once” mean?"
+                >
+                  i
+                </button>
+                <span className="cql-tip__bubble" role="tooltip">
+                  Batching: when several fields hit the same loader, costQL counts that
+                  shared work <strong>once</strong>, not once per row.
+                  <a href="/docs/tiers/">Learn more &rarr;</a>
+                </span>
+              </span>
+            </div>
+            {sharedOpen && (
+              <div className="cql-receipt__shared-body">
+                {shared.map((g, i) => (
+                  <div key={i} className="cql-receipt__row cql-receipt__row--muted">
+                    <span className="cql-receipt__label">{g.resolvers.join(', ')} &rarr; {g.loader}</span>
+                    <span className="cql-receipt__leader" />
+                    <span className="cql-receipt__value">once</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-        ))}
+        )}
         {total != null && (
           <>
             <div className="cql-receipt__rule" />

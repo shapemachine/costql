@@ -21,7 +21,7 @@ import {
   type GraphQLSchema,
 } from 'graphql';
 import React, { useEffect, useRef, useState } from 'react';
-import { ReceiptView, type ReceiptItem } from './ReceiptView.js';
+import { ReceiptView, type ReceiptItem, type SharedGroup } from './ReceiptView.js';
 
 /** The playground: an Apollo-sandbox-style composer wired to the REAL costql
  * engine (the npm package) against the committed packs. Three columns: the
@@ -262,6 +262,7 @@ function shortResolver(rid: string): string {
 
 function receiptFromQuote(q: QuoteResult): {
   items: ReceiptItem[];
+  shared: SharedGroup[];
   typical?: string;
   typicalLabel: string;
   total: string;
@@ -289,13 +290,10 @@ function receiptFromQuote(q: QuoteResult): {
   if (!lines.length) {
     items.push({ label: `${q.tier} pack: whole-query price only`, value: q.currency, muted: true });
   }
-  for (const s of (q.sharing ?? []).slice(0, 3)) {
-    items.push({
-      label: `${(s as any).folds.map(shortResolver).join(', ')} → ${(s as any).loader}`,
-      value: 'once',
-      muted: true,
-    });
-  }
+  const shared: SharedGroup[] = (q.sharing ?? []).map((s) => ({
+    resolvers: ((s as any).folds as string[]).map(shortResolver),
+    loader: (s as any).loader as string,
+  }));
   for (const e of q.external_calls ?? []) {
     const calls = (e as any).calls ?? 1;
     items.push({
@@ -310,6 +308,7 @@ function receiptFromQuote(q: QuoteResult): {
 
   return {
     items,
+    shared,
     typical: q.typical_price != null ? (q.typical_price as number).toFixed(1) : undefined,
     typicalLabel: `typical (${unit})`,
     total: (q.price as number).toFixed(1),
@@ -671,6 +670,7 @@ export default function Playground() {
                   title="costql quote"
                   meta={`${PACKS[idx].file} · offline`}
                   items={r.items}
+                  shared={r.shared}
                   typical={r.typical}
                   typicalLabel={r.typicalLabel}
                   total={r.total}

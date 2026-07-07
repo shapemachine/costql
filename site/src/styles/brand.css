@@ -278,6 +278,60 @@ body {
 .cql-receipt__footer strong.ok { color: var(--signal-ok); }
 .cql-receipt__footer strong.low { color: var(--signal-low); }
 
+/* scrollable line-item region: a big query can't make the receipt run off the
+   page. Only the per-resolver lines scroll; the shared section (with its
+   overflowing tooltip) sits below, so nothing clips it. */
+.cql-receipt__items { max-height: 210px; overflow-y: auto; overscroll-behavior: contain; }
+.cql-receipt__items::-webkit-scrollbar { width: 6px; }
+.cql-receipt__items::-webkit-scrollbar-thumb { background: var(--text-faint); border-radius: 3px; }
+
+/* collapsible "shared work" section: the T3 lines that used to just say "once" */
+.cql-receipt__shared { margin: 2px 0; }
+.cql-receipt__shared-head { display: flex; align-items: center; gap: 6px; }
+.cql-receipt__shared-toggle {
+  display: inline-flex; align-items: center; gap: 6px; flex: none; min-width: 0;
+  font: inherit; font-size: var(--fs-xs); color: var(--text-muted);
+  background: none; border: 0; padding: 3px 0; cursor: pointer; text-align: left;
+  letter-spacing: var(--tracking-receipt);
+}
+.cql-receipt__shared-toggle:hover { color: var(--text-strong); }
+.cql-receipt__chevron { font-size: var(--fs-2xs); transition: transform .15s ease; flex: none; }
+.cql-receipt__shared[data-open="true"] .cql-receipt__chevron { transform: rotate(90deg); }
+.cql-receipt__shared-count { color: var(--text-faint); }
+.cql-receipt__shared-body { padding: 1px 0 3px 16px; }
+
+/* reusable hover/tap tooltip: an info hint that can also hold a link. Shows on
+   hover (desktop) and on focus (tap/keyboard), so the link inside stays reachable. */
+.cql-tip { position: relative; display: inline-flex; vertical-align: baseline; }
+.cql-tip__trigger {
+  font: inherit; color: var(--accent-deep); background: none; border: 0; padding: 0;
+  border-bottom: 1px dotted currentColor; cursor: help; line-height: inherit;
+}
+.cql-tip__trigger--icon {
+  width: 15px; height: 15px; flex: none; border: 1px solid var(--text-faint);
+  border-bottom: 1px solid var(--text-faint); border-radius: 50%;
+  color: var(--text-muted); font-size: 10px; font-weight: var(--fw-bold);
+  line-height: 13px; text-align: center;
+}
+.cql-tip__trigger:focus-visible { outline: 2px solid var(--accent-deep); outline-offset: 2px; }
+.cql-tip__bubble {
+  position: absolute; bottom: calc(100% + 8px); left: 0; z-index: 30;
+  width: max-content; max-width: min(250px, 72vw);
+  background: var(--surface-card); color: var(--text-body);
+  border: var(--border-1) solid var(--border-ink); border-radius: var(--radius-2);
+  box-shadow: var(--shadow-2); padding: 9px 11px;
+  font-family: var(--font-body); font-size: var(--fs-xs); font-weight: var(--fw-regular);
+  line-height: 1.45; letter-spacing: normal; text-align: left; text-transform: none;
+  opacity: 0; visibility: hidden; transform: translateY(3px);
+  transition: opacity .12s ease, transform .12s ease, visibility .12s;
+}
+.cql-tip__trigger--icon + .cql-tip__bubble { left: -6px; }
+.cql-tip:hover > .cql-tip__bubble,
+.cql-tip:focus-within > .cql-tip__bubble { opacity: 1; visibility: visible; transform: translateY(0); }
+.cql-tip__bubble a { display: inline-block; margin-top: 6px; color: var(--accent-deep); font-weight: var(--fw-bold); text-decoration: none; }
+.cql-tip__bubble a:hover { text-decoration: underline; }
+@media (prefers-reduced-motion: reduce) { .cql-tip__bubble { transition: none; } }
+
 /* ---- TierCard ---- */
 .cql-tier {
   position: relative;
