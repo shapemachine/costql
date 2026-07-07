@@ -8,6 +8,7 @@ import ProofStats from '../components/ProofStats.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import Tiers from '../components/Tiers.astro';
+import Analytics from '@vercel/analytics/astro';
 import '../styles/brand-tokens.css';
 import '../styles/brand.css';
 
@@ -89,5 +90,6 @@ const structuredData = {
       <PlaygroundSection />
     </main>
     <SiteFooter />
+    <Analytics />
   </body>
 </html>

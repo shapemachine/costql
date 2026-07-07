@@ -20,10 +20,12 @@ export default defineConfig({
         { icon: 'github', label: 'GitHub', href: 'https://github.com/shapemachine/costql' },
       ],
       customCss: ['./src/styles/theme.css'],
-      // light-only: pin the theme and drop the light/dark picker
+      // light-only: pin the theme and drop the light/dark picker.
+      // Head is overridden to inject Vercel Web Analytics on the docs pages.
       components: {
         ThemeProvider: './src/components/starlight/ThemeProvider.astro',
         ThemeSelect: './src/components/starlight/ThemeSelect.astro',
+        Head: './src/components/starlight/Head.astro',
       },
       sidebar: [
         { label: 'Playground', link: '/playground/' },
