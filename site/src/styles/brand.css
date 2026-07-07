@@ -308,10 +308,9 @@ body {
   border-bottom: 1px dotted currentColor; cursor: help; line-height: inherit;
 }
 .cql-tip__trigger--icon {
-  width: 15px; height: 15px; flex: none; border: 1px solid var(--text-faint);
-  border-bottom: 1px solid var(--text-faint); border-radius: 50%;
-  color: var(--text-muted); font-size: 10px; font-weight: var(--fw-bold);
-  line-height: 13px; text-align: center;
+  width: 15px; height: 15px; flex: none; border: 0;
+  border-radius: 50%; background: var(--accent-soft); color: var(--accent-deep);
+  font-size: 10px; font-weight: var(--fw-bold); line-height: 15px; text-align: center;
 }
 .cql-tip__trigger:focus-visible { outline: 2px solid var(--accent-deep); outline-offset: 2px; }
 .cql-tip__bubble {
@@ -326,6 +325,9 @@ body {
   transition: opacity .12s ease, transform .12s ease, visibility .12s;
 }
 .cql-tip__trigger--icon + .cql-tip__bubble { left: -6px; }
+/* open the bubble inward (leftward) when the trigger sits near a clipping right
+   edge, e.g. the info icon inside the narrow receipt panel */
+.cql-tip--end > .cql-tip__bubble { left: auto; right: -6px; }
 .cql-tip:hover > .cql-tip__bubble,
 .cql-tip:focus-within > .cql-tip__bubble { opacity: 1; visibility: visible; transform: translateY(0); }
 .cql-tip__bubble a { display: inline-block; margin-top: 6px; color: var(--accent-deep); font-weight: var(--fw-bold); text-decoration: none; }

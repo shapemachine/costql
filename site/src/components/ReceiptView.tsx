@@ -79,7 +79,7 @@ export function ReceiptView({
                 <span>shared · counted once</span>
                 <span className="cql-receipt__shared-count">({shared.length})</span>
               </button>
-              <span className="cql-tip">
+              <span className="cql-tip cql-tip--end">
                 <button
                   type="button"
                   className="cql-tip__trigger cql-tip__trigger--icon"
