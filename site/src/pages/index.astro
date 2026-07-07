@@ -10,6 +10,46 @@ import SiteHeader from '../components/SiteHeader.astro';
 import Tiers from '../components/Tiers.astro';
 import '../styles/brand-tokens.css';
 import '../styles/brand.css';
+
+const description =
+  'costQL turns your GraphQL API into a pricing pack: one small file that prices any query before you run it, in Python or JavaScript, with no calls to a server.';
+
+// Structured data (schema.org) so search engines model costQL as one entity:
+// a free, open-source developer tool published by Shape Machine.
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': 'https://costql.com/#website',
+      url: 'https://costql.com/',
+      name: 'costQL',
+      description,
+      publisher: { '@id': 'https://costql.com/#org' },
+    },
+    {
+      '@type': 'Organization',
+      '@id': 'https://costql.com/#org',
+      name: 'Shape Machine',
+      url: 'https://costql.com/',
+      sameAs: ['https://github.com/shapemachine'],
+    },
+    {
+      '@type': 'SoftwareApplication',
+      '@id': 'https://costql.com/#software',
+      name: 'costQL',
+      description,
+      url: 'https://costql.com/',
+      applicationCategory: 'DeveloperApplication',
+      operatingSystem: 'Cross-platform (Python 3, Node.js)',
+      softwareHelp: 'https://costql.com/docs/quickstart/',
+      license: 'https://www.apache.org/licenses/LICENSE-2.0',
+      author: { '@id': 'https://costql.com/#org' },
+      sameAs: ['https://github.com/shapemachine/costql'],
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    },
+  ],
+};
 ---
 
 <!doctype html>
@@ -18,20 +58,14 @@ import '../styles/brand.css';
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>costQL: price GraphQL queries before you run them</title>
-    <meta
-      name="description"
-      content="costQL turns your GraphQL API into a pricing pack: one small file that prices any query before you run it, in Python or JavaScript, with no calls to a server."
-    />
+    <meta name="description" content={description} />
     <link rel="canonical" href="https://costql.com/" />
     <link rel="icon" href="/favicon.svg" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="costQL" />
     <meta property="og:url" content="https://costql.com/" />
     <meta property="og:title" content="costQL: price GraphQL queries before you run them" />
-    <meta
-      property="og:description"
-      content="costQL turns your GraphQL API into a pricing pack: one small file that prices any query before you run it, in Python or JavaScript, with no calls to a server."
-    />
+    <meta property="og:description" content={description} />
     <meta property="og:image" content="https://costql.com/og-card.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -41,11 +75,9 @@ import '../styles/brand.css';
     />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="costQL: price GraphQL queries before you run them" />
-    <meta
-      name="twitter:description"
-      content="costQL turns your GraphQL API into a pricing pack: one small file that prices any query before you run it, in Python or JavaScript, with no calls to a server."
-    />
+    <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content="https://costql.com/og-card.png" />
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
   </head>
   <body class="cql">
     <SiteHeader />
