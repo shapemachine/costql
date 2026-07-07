@@ -16,6 +16,13 @@ function* mdFiles(dir) {
   }
 }
 
+/** Trim to <=max chars on a word boundary, adding an ellipsis if we cut. */
+function clip(text, max) {
+  if (text.length <= max) return text;
+  const cut = text.slice(0, max - 1);
+  return `${cut.slice(0, cut.lastIndexOf(' ')).trimEnd()}…`;
+}
+
 const pages = [];
 for (const p of [...mdFiles(DOCS)].sort()) {
   const rel = relative(DOCS, p).replace(/\.md$/, '');
@@ -36,7 +43,7 @@ const index = [
   '',
   '## Docs',
   '',
-  ...pages.map((p) => `- [${p.title}](https://costql.com/docs/${p.rel}/): ${p.firstPara.slice(0, 160)}`),
+  ...pages.map((p) => `- [${p.title}](https://costql.com/docs/${p.rel}/): ${clip(p.firstPara, 160)}`),
   '',
   '## Source',
   '',

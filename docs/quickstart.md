@@ -1,3 +1,7 @@
+---
+description: "From a live GraphQL API to your first offline price in about a minute: install costQL, quote a demo pack, then build your own."
+---
+
 # Quickstart
 
 costQL turns a live GraphQL API into a **pricing pack** (one self-contained

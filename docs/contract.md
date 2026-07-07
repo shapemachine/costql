@@ -1,3 +1,7 @@
+---
+description: "The frozen v1.0 result shape every costQL quote follows: a billable price in cost-units, safe to bill on, at every tier and on every query."
+---
+
 # The output contract (v1.0)
 
 Every price costQL produces (at any tier, on any query, predicted or measured) follows one frozen, stable shape. This is the contract an application budgets against: it is enforced by `costql.contract.validate()` (dependency-free), and anything that fails validation is, by definition, a contract violation. The contract is demonstrated against the real TMDB demo at every tier in [`packs/contract_examples.json`](../packs/contract_examples.json) (last run: **18 examples, 0 violations**).

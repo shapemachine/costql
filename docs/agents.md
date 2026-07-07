@@ -1,3 +1,7 @@
+---
+description: "Hand a GraphQL API to a coding agent (Claude Code, Cursor) and let it write the costQL adapter and build the pricing pack for you."
+---
+
 # Agent-assisted onboarding
 
 The fastest way to onboard an API is to hand it to a coding agent (Claude

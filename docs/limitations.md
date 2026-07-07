@@ -1,3 +1,7 @@
+---
+description: "Where costQL is least certain: cyclic-recursion and data-dependent queries. In every case it degrades gracefully to a safe price plus an honest confidence tag."
+---
+
 # Honest limitations
 
 costQL's core guarantee (a billable `price` on every query, with a ceiling that never under-prices) holds everywhere we have measured it. But some queries are genuinely less predictable than others, some APIs afford less visibility than others, and v0.1 has real edges. This page states them plainly, because a pricing tool you can't trust about its own blind spots isn't worth trusting about prices. In every case below, the designed behavior is **graceful degradation, never refusal**: you always get a contract-valid price plus an honest confidence tag.

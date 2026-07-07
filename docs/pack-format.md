@@ -1,3 +1,7 @@
+---
+description: "What is inside a costQL pricing pack: the schema, fitted costs, observed sizes, and hosts, all in one self-contained file with no server or network."
+---
+
 # Price Pack Format
 
 A **pricing pack** is the single file costQL produces, and the only thing your

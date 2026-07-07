@@ -1,3 +1,7 @@
+---
+description: "costQL prices in one currency, work-ms, across three tiers of fidelity. T1 works on any API black-box; T2 and T3 sharpen prices with server traces."
+---
+
 # One currency, three fidelities
 
 costQL prices everything in one currency, **work-ms** (the summed duration of the real work a query causes), and offers three *tiers* that are fidelities of one engine, not three different products or units. A tier is simply how sharply the API's instrumentation lets costQL see and factor that work: each step up removes a specific *blur* between what is observable and the true work. The highest tier your API affords is the correct one, and every tier produces the same billable result shape under the same [output contract](contract.md).

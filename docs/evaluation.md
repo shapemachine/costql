@@ -1,3 +1,7 @@
+---
+description: "The model, baseline, and dataset behind every costQL accuracy number, and how calibration and held-out query sets are kept disjoint."
+---
+
 # How costQL measures its own accuracy
 
 Any accuracy number needs three pieces: a **model** whose prediction is on trial, a **baseline** (ground truth) to compare against, and a **dataset** the comparison runs over. This doc pins down exactly what each is in costQL, and, importantly, what each is *not*. It complements the [tier overview](tiers.md) and the step-by-step [pricing flow](architecture.md); the measured results themselves live in the [TMDB](results/tmdb.md), [Rick & Morty](results/rickmorty.md), and [Northwind](results/northwind.md) case studies.

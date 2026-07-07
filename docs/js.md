@@ -1,3 +1,7 @@
+---
+description: "npm install costql gives you the quote side in JavaScript/TypeScript: load a pack and price queries offline in Node, browsers, or edge. Zero runtime deps."
+---
+
 # The JS package
 
 `npm install costql` gives you the **quote side** of costQL in

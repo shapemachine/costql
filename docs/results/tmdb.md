@@ -1,3 +1,7 @@
+---
+description: "Three-tier accuracy on the TMDB demo. On this lightly-sharing API the cheaper middle tier (T2) matches the expensive T3."
+---
+
 # Case study: three-tier accuracy on the TMDB demo
 
 Measured against the **real** TMDB demo API (live data, work-ms currency, zero Anthropic calls), this experiment answers a standing question head-on: **do you need the expensive T3 instrumentation, or is the cheaper middle tier good enough?** On this lightly-sharing passthrough API, the answer is that T2 matches T3, but see the [Northwind case study](northwind.md) for where that stops being true.
