@@ -492,6 +492,21 @@ body {
   cursor: pointer;
 }
 .cql-code__tab--active { color: var(--terminal-fg); border-bottom-color: var(--accent); }
+.cql-code__copy {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  color: var(--terminal-muted);
+  background: transparent;
+  border: none;
+  padding: 2px;
+  cursor: pointer;
+}
+.cql-code__copy:hover { color: var(--terminal-fg); }
+.cql-code__ic-check { display: none; }
+.cql-code__copy--copied { color: var(--accent); }
+.cql-code__copy--copied .cql-code__ic-copy { display: none; }
+.cql-code__copy--copied .cql-code__ic-check { display: inline; }
 .cql-code pre {
   margin: 0;
   padding: var(--space-4);
@@ -564,6 +579,66 @@ body {
 }
 .cql-header__nav a:hover { background: var(--accent-soft); color: var(--ink-900); }
 .cql-header__right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+
+/* Hamburger: hidden on desktop, revealed at the same breakpoint the inline
+   nav collapses. Three ink bars that fold into an X when the panel is open. */
+.cql-header__burger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 34px;
+  padding: 0;
+  background: none;
+  border: var(--border-1) solid var(--border-ink);
+  border-radius: var(--radius-1);
+  cursor: pointer;
+}
+.cql-header__burger-lines,
+.cql-header__burger-lines span {
+  display: block;
+  box-sizing: border-box;
+}
+.cql-header__burger-lines { position: relative; width: 18px; height: 12px; }
+.cql-header__burger-lines span {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--text-strong);
+  border-radius: 2px;
+  transition: transform 0.18s ease, opacity 0.18s ease;
+}
+.cql-header__burger-lines span:nth-child(1) { top: 0; }
+.cql-header__burger-lines span:nth-child(2) { top: 5px; }
+.cql-header__burger-lines span:nth-child(3) { top: 10px; }
+.cql-header__burger--open .cql-header__burger-lines span:nth-child(1) { transform: translateY(5px) rotate(45deg); }
+.cql-header__burger--open .cql-header__burger-lines span:nth-child(2) { opacity: 0; }
+.cql-header__burger--open .cql-header__burger-lines span:nth-child(3) { transform: translateY(-5px) rotate(-45deg); }
+
+/* The panel the hamburger reveals: full-width list of destinations plus the
+   primary CTA, dropping below the header bar. */
+.cql-header__menu {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px var(--space-4) 16px;
+  border-top: var(--border-1) solid var(--border-ink);
+  background: var(--bg-page);
+}
+.cql-header__menu[hidden] { display: none; }
+.cql-header__menu a:not(.cql-btn) {
+  font-size: 15px;
+  font-weight: var(--fw-medium);
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 10px 8px;
+  border-radius: var(--radius-1);
+}
+.cql-header__menu a:not(.cql-btn):hover { background: var(--accent-soft); color: var(--ink-900); }
+.cql-header__menu-cta { margin-top: 8px; text-align: center; justify-content: center; }
+/* Above the collapse point the panel never shows, even if left open on resize. */
+@media (min-width: 901px) { .cql-header__menu { display: none; } }
 
 /* ---- Hero ---- */
 .cql-hero {
@@ -725,6 +800,32 @@ body {
   bottom: calc(-1 * var(--border-1));
   height: var(--border-1);
   background: var(--bg-sunken);
+}
+/* mobile-only dataset picker: a styled <select> that replaces the tab row on
+   narrow screens (the filename tabs wrap and get fiddly to tap on a phone) */
+.cql-play__dataset { display: none; position: relative; }
+.cql-play__dataset-select {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: var(--fw-bold);
+  color: var(--text-strong);
+  background: var(--bg-page);
+  border: var(--border-1) solid var(--border-ink);
+  border-radius: var(--radius-2);
+  padding: 9px 34px 9px 12px;
+  cursor: pointer;
+}
+.cql-play__dataset-caret {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 12px;
+  pointer-events: none;
 }
 /* the schema field tree (Apollo-sandbox-style: + on the left adds the field).
    flex-basis 0 keeps the tree from driving the row height: it stretches to
@@ -893,8 +994,14 @@ body {
   .cql-play__right { border-top: none; }
   .cql-footer__grid { grid-template-columns: 1fr 1fr; }
   .cql-header__nav { display: none; }
+  .cql-header__cta { display: none; }
+  .cql-header__right .cql-badge { display: none; }
+  .cql-header__burger { display: inline-flex; }
 }
 
 @media (max-width: 640px) {
   .cql-callout { flex-direction: column; gap: var(--space-2); }
+  .cql-play__tabbar { padding-bottom: 12px; }
+  .cql-play__tabs { display: none; }
+  .cql-play__dataset { display: block; }
 }

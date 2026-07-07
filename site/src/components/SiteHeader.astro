@@ -1,12 +1,16 @@
 ---
 // Sticky nav in a vintage window title-bar: wordmark + links. Anchors stay in
-// this tab; docs and anything off-page open a new one.
+// this tab; docs and anything off-page open a new one. On mobile the links
+// collapse into a hamburger panel that also carries the primary CTA.
 const links = [
   { label: 'docs', href: '/docs/quickstart/', newTab: true },
   { label: 'playground', href: '#playground' },
   { label: 'tiers', href: '#tiers' },
   { label: 'results', href: '/docs/evaluation/', newTab: true },
 ];
+// The mobile panel lists the destinations; the playground has its own CTA
+// button below, so it is dropped from the link list to avoid a duplicate.
+const menuLinks = links.filter((l) => l.href !== '#playground');
 ---
 
 <header class="cql-header">
@@ -21,7 +25,42 @@ const links = [
     </nav>
     <div class="cql-header__right">
       <span class="cql-badge cql-badge--outline cql-badge--pill">offline-first</span>
-      <a href="#playground" class="cql-btn cql-btn--primary cql-btn--sm">Try the playground</a>
+      <a href="#playground" class="cql-btn cql-btn--primary cql-btn--sm cql-header__cta">Try the playground</a>
+      <button
+        type="button"
+        class="cql-header__burger"
+        aria-label="Menu"
+        aria-expanded="false"
+        aria-controls="cql-mobile-menu"
+      >
+        <span class="cql-header__burger-lines" aria-hidden="true"><span></span><span></span><span></span></span>
+      </button>
     </div>
   </div>
+  <nav class="cql-header__menu" id="cql-mobile-menu" hidden>
+    {menuLinks.map((l) => (
+      <a href={l.href} target={l.newTab ? '_blank' : undefined} rel={l.newTab ? 'noopener' : undefined}>
+        {l.label}
+      </a>
+    ))}
+    <a href="#playground" class="cql-btn cql-btn--primary cql-header__menu-cta">Try the playground</a>
+  </nav>
 </header>
+
+<script is:inline>
+  {
+    const header = document.querySelector('.cql-header');
+    const burger = header?.querySelector('.cql-header__burger');
+    const menu = document.getElementById('cql-mobile-menu');
+    if (burger && menu) {
+      const setOpen = (open) => {
+        burger.setAttribute('aria-expanded', String(open));
+        burger.classList.toggle('cql-header__burger--open', open);
+        menu.hidden = !open;
+      };
+      burger.addEventListener('click', () => setOpen(menu.hidden));
+      // A tap on any menu link (or the CTA) closes the panel.
+      menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+    }
+  }
+</script>
