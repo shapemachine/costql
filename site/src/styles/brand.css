@@ -330,6 +330,10 @@ body {
   opacity: 0; pointer-events: none;
   transition: opacity var(--dur-fast) var(--ease-snap);
 }
+/* transparent bridge across the 8px gap: keeps the mouse within .cql-tip while
+   travelling from the trigger up to the bubble (and its link), so hover doesn't
+   drop mid-crossing */
+.cql-tip__bubble::after { content: ''; position: absolute; top: 100%; left: 0; right: 0; height: 10px; }
 .cql-tip__trigger--icon + .cql-tip__bubble { left: -6px; }
 /* open the bubble inward (leftward) when the trigger sits near a clipping right
    edge, e.g. the info icon inside the narrow receipt panel */
