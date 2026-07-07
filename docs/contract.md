@@ -24,7 +24,7 @@ cost-units into money. costQL prices; the app bills.
 
 | `basis` | when | `price` means |
 |---|---|---|
-| `predicted` | before the query runs: a **quote** from the static pricing pack | safe **ceiling** (never under-prices); `typical_price` is the fair average estimate |
+| `predicted` | before the query runs: a **quote** from the static pricing pack | the **safe max** (a ceiling that never under-prices); `typical_price` is the typical everyday cost |
 | `measured` | after the query ran: an **exact receipt** from the real trace | the **exact** work the run caused; `confidence` is always `exact` |
 
 ## Three tiers = how sharply cost could be resolved
@@ -68,7 +68,7 @@ Core (mandatory, every result):
 - `currency` (string): cost-unit; `"work_ms"` (T2/T3, and measured T1 when
   work-ms is present) or `"wall_time_ms"` (T1 wall proxy).
 - `price` (number ≥ 0): the billable number (see the guarantee above).
-- `typical_price` (number | null): fair average estimate; equals `price` for a
+- `typical_price` (number | null): the typical everyday cost; equals `price` for a
   measured receipt.
 - `confidence` (string): `"high" | "medium" | "low"` for a quote (predictability,
   orthogonal to tier; cyclic queries are flagged `low`), `"exact"` when measured.

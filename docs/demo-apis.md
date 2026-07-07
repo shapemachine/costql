@@ -19,7 +19,7 @@ tier **T1**, currency **`wall_time_ms`** (the black-box wall-clock proxy).
 
 ```bash
 costql quote --pack packs/rickmorty_t1.json '{ character(id:"1"){ name } }'
-# -> total-only T1 result, high confidence: price (ceiling) + typical_price,
+# -> total-only T1 result, high confidence: price (safe max) + typical_price,
 #    no breakdown/sharing sections. That detail needs T2/T3 instrumentation
 
 costql quote --pack packs/rickmorty_t1.json \

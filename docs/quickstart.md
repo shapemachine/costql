@@ -20,8 +20,8 @@ pricing pack: schema 26c786209ec27586 · tier T3 · currency work_ms · offline
 
   query      : { movie(id:"27205"){ cast(limit:8){ person{ name } } } }
   tier/basis : T3 · predicted
-  price      : 50.5 work_ms   (safe billable ceiling)
-  typical    : 36.4 work_ms   (fair average estimate)
+  price      : 50.5 work_ms   (safe max, never under real cost)
+  typical    : 36.4 work_ms   (typical everyday cost)
   confidence : high
 ```
 
@@ -34,7 +34,7 @@ from costql import PricingPack
 
 pack = PricingPack.load("packs/tmdb_t3.json")
 quote = pack.quote('{ movie(id:"27205"){ cast(limit:8){ person{ name } } } }')
-quote["price"]         # 50.5384 (safe billable ceiling, in cost-units)
+quote["price"]         # 50.5384 (safe max, in cost-units)
 ```
 
 …and from JavaScript (`npm install costql`):
@@ -93,7 +93,7 @@ result with `costql validate --pack my_api.json` and a few spot quotes.
 The pack is a plain file. Vendor it into the app that needs to budget queries;
 load it with either language's `PricingPack`; call `quote()` before running a
 query. Every result follows the [frozen output contract](contract.md): `price`
-is always present, always a number, always a safe ceiling; cost-units only,
+is always present, always a number, always a safe max; cost-units only,
 never dollars (converting to money is your app's business).
 
 Cyclic queries (a type re-entering itself through a list edge) are priced as a

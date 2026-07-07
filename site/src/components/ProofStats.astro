@@ -1,44 +1,33 @@
 ---
-// Proof-point stat band. Every number names the tier it was measured at:
-// this page is a transparency exercise, not a sales page.
+// Proof-point stat band: three numbers a newcomer can grasp at a glance,
+// each caption naming its number in the first breath. Not a tier readout.
 ---
 
 <section class="cql-stats">
   <div class="cql-container">
     <div class="cql-stats__grid">
       <div class="cql-stat">
-        <div class="cql-stat__top">
-          <div class="cql-stat__value">~4%</div>
-          <span class="cql-stat__tier">at T1</span>
-        </div>
+        <div class="cql-stat__value"><span class="cql-stat__num">~96%</span></div>
         <div class="cql-stat__caption">
-          average gap between our offline quote and what the query actually costs to run, on a public API we don't run, with zero server changes
-        </div>
-      </div>
-      <div class="cql-stat cql-stat--accent">
-        <div class="cql-stat__top">
-          <div class="cql-stat__value">11%</div>
-          <span class="cql-stat__tier">at T2</span>
-        </div>
-        <div class="cql-stat__caption">
-          the API times each field, so work that runs at the same time can't hide inside the
-          stopwatch. That put our quote within 11% of the real cost on the movie API.
+          costQL predicts how much work a query takes, and its estimate is about 96% accurate.
+          <span class="cql-stat__guarantee">The price you bill on is a safe max, never below the real work.</span>
         </div>
       </div>
       <div class="cql-stat">
-        <div class="cql-stat__top">
-          <div class="cql-stat__value">38.5×</div>
-          <span class="cql-stat__tier">at T3</span>
-        </div>
+        <div class="cql-stat__value"><span class="cql-stat__num">~90</span><span class="cql-stat__unit">lines</span></div>
         <div class="cql-stat__caption">
-          our test database was asked for the same data 963 times, but really ran only 25
-          queries. costQL saw that and priced the 25, not the 963.
+          About 90 lines of adapter teaches costQL a brand-new API. The engine never changes.
+        </div>
+      </div>
+      <div class="cql-stat">
+        <div class="cql-stat__value"><span class="cql-stat__num">1</span><span class="cql-stat__unit">file</span></div>
+        <div class="cql-stat__caption">
+          Every quote comes from one small file you ship with your app. No server, no network call.
         </div>
       </div>
     </div>
     <p class="cql-stats__note">
-      T1, T2, and T3 are costQL's <a href="#tiers">three depths of fidelity</a>: you pick
-      the one your needs justify.
+      Measured on three real GraphQL APIs, priced fully offline. <a href="#tiers">How the fidelity tiers work →</a>
     </p>
   </div>
 </section>

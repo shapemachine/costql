@@ -52,7 +52,7 @@ flowchart TD
     direction TB
     Q(["Price a query  (a QUOTE - the query is NOT run)"])
     Q --> P1
-    P1["Predict it from the pack ALONE - EVERY query, seen or unseen<br/>(the pack stores no query prices; there is no lookup)<br/>price = sum of ( unit_cost + authored_fee )  x  invocations<br/><br/>invocations = fanout counts multiplied down the query tree<br/>size basis:  typical size (fair quote)  OR  worst-case (safe ceiling)<br/>T3 prices each SHARED loader by its learned batch-size curve<br/>->  shared work counted once, a big batch costing more than a small one"]
+    P1["Predict it from the pack ALONE - EVERY query, seen or unseen<br/>(the pack stores no query prices; there is no lookup)<br/>price = sum of ( unit_cost + authored_fee )  x  invocations<br/><br/>invocations = fanout counts multiplied down the query tree<br/>size basis:  average size (the typical)  OR  worst-case size (the safe max)<br/>T3 prices each SHARED loader by its learned batch-size curve<br/>->  shared work counted once, a big batch costing more than a small one"]
     P1 --> P2{"is the query's size RUNTIME-UNKNOWABLE?<br/>(a) cyclic recursion re-enters a type via a list edge, OR<br/>(b) >=2 un-paginated list edges compound on one path"}
     P2 -->|"no  -  size is bounded / declared"| P3["HIGH confidence<br/>quote it"]
     P2 -->|"yes  -  size is data-dependent"| P4["LOW confidence<br/>structural quote + FLAG + caveat<br/>(ceiling stays SAFE; for an exact number, run it once  ->)"]

@@ -8,7 +8,7 @@ A query that re-enters a type through a list edge (movie → recommendations →
 recommendations…; character → episodes → characters…) fans out combinatorially,
 and the real backend de-duplicates by an amount only *running* the query reveals.
 costQL does not fabricate a dedup guess. It prices the query **structurally** (a
-safe ceiling), flags it `confidence: low`, and attaches a caveat: run it once for
+safe max), flags it `confidence: low`, and attaches a caveat: run it once for
 the exact cost. On the [TMDB demo](results/tmdb.md), the 4 cyclic held-out queries
 averaged ~92% error on the typical estimate, which is exactly why they are
 flagged rather than billed on. On [Rick & Morty](results/rickmorty.md), every

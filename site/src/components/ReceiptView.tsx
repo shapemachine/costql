@@ -14,6 +14,8 @@ export function ReceiptView({
   title = 'costql quote',
   meta,
   items,
+  typical,
+  typicalLabel = 'typical',
   total,
   totalLabel = 'work-time (ms)',
   totalFlagged = false,
@@ -24,6 +26,8 @@ export function ReceiptView({
   title?: string;
   meta?: string;
   items: ReceiptItem[];
+  typical?: string;
+  typicalLabel?: string;
   total?: string;
   totalLabel?: string;
   totalFlagged?: boolean;
@@ -51,6 +55,12 @@ export function ReceiptView({
         {total != null && (
           <>
             <div className="cql-receipt__rule" />
+            {typical != null && (
+              <div className="cql-receipt__subtotal">
+                <span>{typicalLabel}</span>
+                <span>{typical}</span>
+              </div>
+            )}
             <div className={`cql-receipt__total${totalFlagged ? ' cql-receipt__total--flagged' : ''}`}>
               <span>{totalLabel}</span>
               <span className={`cql-receipt__total-value${pulse ? ' cql-receipt__total-value--pulse' : ''}`}>{total}</span>

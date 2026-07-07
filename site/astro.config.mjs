@@ -26,11 +26,14 @@ export default defineConfig({
         ThemeSelect: './src/components/starlight/ThemeSelect.astro',
       },
       sidebar: [
+        { label: 'Playground', link: '/playground/' },
         { label: 'Quickstart', slug: 'docs/quickstart' },
         { label: 'Tier fidelity', slug: 'docs/tiers' },
         { label: 'Writing an adapter', slug: 'docs/adapters' },
         { label: 'Agent-assisted onboarding', slug: 'docs/agents' },
         { label: 'Instrumenting for T2/T3', slug: 'docs/instrumentation' },
+        { label: 'Paid & external fees', slug: 'docs/paid-fees' },
+        { label: 'FAQ', slug: 'docs/faq' },
         {
           label: 'Reference',
           items: [

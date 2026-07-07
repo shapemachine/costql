@@ -5,8 +5,8 @@ const py = `from costql import PricingPack
 pack = PricingPack.load("tmdb_t3.json")          # one static file
 quote = pack.quote('{ movie(id:"27205"){ cast(limit:8){ person{ name } } } }')
 
-quote["price"]         # 50.5   safe billable ceiling: never charge past this
-quote["typical_price"] # 36.4   fair average: what it usually costs
+quote["price"]         # 50.5   safe max: the most to bill, never under real cost
+quote["typical_price"] # 36.4   typical: what the query usually costs
 quote["confidence"]    # "high"`;
 
 const js = `import { PricingPack } from "costql";
@@ -14,8 +14,8 @@ const js = `import { PricingPack } from "costql";
 const pack = await PricingPack.load("tmdb_t3.json");  // the same file
 const quote = pack.quote('{ movie(id:"27205"){ cast(limit:8){ person{ name } } } }');
 
-quote.price          // 50.5   safe billable ceiling: never charge past this
-quote.typical_price  // 36.4   fair average: what it usually costs
+quote.price          // 50.5   safe max: the most to bill, never under real cost
+quote.typical_price  // 36.4   typical: what the query usually costs
 quote.confidence     // "high"`;
 ---
 

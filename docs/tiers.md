@@ -54,7 +54,7 @@ the demo servers ourselves*. That is the honest reason they can show observed
 sharing.
 
 **Your first pack will be T1, and that is the designed starting point.** It
-already gives you the full contract-shaped result with a safe billable ceiling;
+already gives you the full contract-shaped result with a safe max;
 adding instrumentation later upgrades the same pack pipeline to sharper fidelity
 without changing how your app reads the price.
 

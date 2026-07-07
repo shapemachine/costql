@@ -116,8 +116,8 @@ run. Two scoping caveats worth stating plainly:
 
 - **That run, that data.** The measured total is the true cost of *this* execution against
   *today's* data. Against a larger table the true total changes, which is why the model
-  predicts a worst-case **ceiling** (safe billable number) separately from a **typical**
-  estimate (fair average), and why data-dependent-size queries are confidence-flagged
+  predicts a worst-case **safe max** (the billable number) separately from a **typical**
+  everyday cost, and why data-dependent-size queries are confidence-flagged
   (see [Honest limitations](limitations.md)).
 - **Jitter.** A single timing has sub-ms noise; the ground truth is a trimmed mean over
   repeated rounds, not one stopwatch reading.

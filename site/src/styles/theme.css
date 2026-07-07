@@ -89,6 +89,51 @@ header.header {
   border-inline-end: none;
 }
 
+/* Expressive Code wraps every block in a terminal/editor frame with a header
+   bar (three traffic-light dots, or a filename tab). We want the code, not the
+   chrome, so drop the header. */
+.sl-markdown-content .expressive-code figcaption.header {
+  display: none;
+}
+
+/* ---- FAQ toggle lists: native <details>, brand-styled as accordions ---- */
+.sl-markdown-content details {
+  border: 2px solid var(--border-ink);
+  border-radius: var(--radius-2);
+  box-shadow: var(--shadow-1);
+  background: var(--surface-card);
+  margin-block: var(--space-3);
+}
+.sl-markdown-content details > summary {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  font-family: var(--font-display);
+  font-weight: 700;
+  list-style: none;
+}
+.sl-markdown-content details > summary::-webkit-details-marker { display: none; }
+.sl-markdown-content details > summary::after {
+  content: '+';
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.3em;
+  line-height: 1;
+  color: var(--green-600);
+  transition: transform 120ms ease;
+}
+.sl-markdown-content details[open] > summary::after { transform: rotate(45deg); }
+.sl-markdown-content details[open] > summary { border-bottom: 2px solid var(--border-ink); }
+.sl-markdown-content details > :not(summary) { padding-inline: var(--space-4); }
+.sl-markdown-content details > summary + :not(summary) { margin-top: var(--space-3); }
+.sl-markdown-content details > :not(summary):last-child {
+  padding-bottom: var(--space-3);
+  margin-bottom: 0;
+}
+
 ::selection {
   background: var(--green-300);
   color: var(--ink-900);

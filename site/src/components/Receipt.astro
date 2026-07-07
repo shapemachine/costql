@@ -11,6 +11,8 @@ interface Props {
   title?: string;
   meta?: string;
   items: Item[];
+  typical?: string;
+  typicalLabel?: string;
   total?: string;
   totalLabel?: string;
   footer?: string;
@@ -20,6 +22,8 @@ const {
   title = 'costql quote',
   meta,
   items,
+  typical,
+  typicalLabel = 'typical',
   total,
   totalLabel = 'work-time (ms)',
   footer,
@@ -43,6 +47,12 @@ const {
     {total != null && (
       <>
         <div class="cql-receipt__rule"></div>
+        {typical != null && (
+          <div class="cql-receipt__subtotal">
+            <span>{typicalLabel}</span>
+            <span>{typical}</span>
+          </div>
+        )}
         <div class="cql-receipt__total">
           <span>{totalLabel}</span>
           <span class="cql-receipt__total-value">{total}</span>

@@ -19,8 +19,8 @@ const pack = await PricingPack.load("packs/tmdb_t3.json");
 const pack = PricingPack.fromObject(await (await fetch("/packs/tmdb_t3.json")).json());
 
 const quote = pack.quote('{ movie(id:"27205"){ cast(limit:8){ person{ name } } } }');
-quote.price           // 50.5384 (safe billable ceiling, cost-units)
-quote.typical_price   // 36.3769 (fair average estimate)
+quote.price           // 50.5384 (safe max, cost-units)
+quote.typical_price   // 36.3769 (typical everyday cost)
 quote.confidence      // "high" | "medium" | "low"
 quote.caveats         // e.g. the cyclic-recursion explanation, when flagged
 quote.breakdown       // per-resolver cost lines (T2/T3 packs)

@@ -62,8 +62,8 @@ def _render_quote(q: dict) -> str:
     typ = f"{q['typical_price']:.1f}" if q.get("typical_price") is not None else "n/a"
     lines = [f"  query      : {q['query'].strip()}",
              f"  tier/basis : {q['tier']} · {q['basis']}",
-             f"  price      : {q['price']:.1f} {q['currency']}   (safe billable ceiling)",
-             f"  typical    : {typ} {q['currency']}   (fair average estimate)",
+             f"  price      : {q['price']:.1f} {q['currency']}   (safe max, never under real cost)",
+             f"  typical    : {typ} {q['currency']}   (typical everyday cost)",
              f"  confidence : {q['confidence']}"]
     if q["caveats"]:
         lines.append(f"  note       : {q['caveats'][0]}")

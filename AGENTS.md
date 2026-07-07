@@ -3,8 +3,11 @@
 costQL prices GraphQL queries before they run: `costql build` calibrates a
 live API (through a small adapter) into a static **pricing pack**;
 `PricingPack.quote()` then prices any query offline, in Python or JS. Results
-follow a frozen contract v1.0: `price` is always a safe billable ceiling in
-cost-units, never dollars. There is no hosted service.
+follow a frozen contract v1.0: every quote returns two numbers. `typical_price`
+is what the query usually costs (average list sizes); `price` is the **safe max**,
+the most it could cost (worst-case list sizes), guaranteed never below the real
+cost, in cost-units, never dollars. The safe max is the number to bill on, and the
+two are equal unless a query's size can balloon. There is no hosted service.
 
 ## Map
 

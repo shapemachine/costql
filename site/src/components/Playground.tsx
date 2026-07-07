@@ -262,6 +262,7 @@ function shortResolver(rid: string): string {
 
 function receiptFromQuote(q: QuoteResult): {
   items: ReceiptItem[];
+  typical?: string;
   total: string;
   totalLabel: string;
   totalFlagged: boolean;
@@ -299,17 +300,15 @@ function receiptFromQuote(q: QuoteResult): {
       muted: true,
     });
   }
-  if (q.typical_price != null) {
-    items.push({ label: 'fair average', value: (q.typical_price as number).toFixed(1), muted: true });
-  }
   if (low) {
     items.push({ label: 'cycle detected', value: '↺', muted: true });
   }
 
   return {
     items,
+    typical: q.typical_price != null ? (q.typical_price as number).toFixed(1) : undefined,
     total: (q.price as number).toFixed(1),
-    totalLabel: low ? 'safe ceiling (work-ms) · flagged' : 'safe ceiling (work-ms)',
+    totalLabel: low ? 'safe max (work-ms) · flagged' : 'safe max (work-ms)',
     totalFlagged: low,
     footer: (
       <span>
@@ -667,6 +666,7 @@ export default function Playground() {
                   title="costql quote"
                   meta={`${PACKS[idx].file} · offline`}
                   items={r.items}
+                  typical={r.typical}
                   total={r.total}
                   totalLabel={r.totalLabel}
                   totalFlagged={r.totalFlagged}
