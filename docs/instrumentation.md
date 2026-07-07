@@ -1,11 +1,11 @@
 ---
-description: "The one response extension (extensions.cost_trace) your GraphQL server emits to unlock costQL sharper T2 and T3 prices."
+description: "The one response extension (extensions.cost_trace) your GraphQL server emits to let costQL see per-resolver and shared work (T2/T3)."
 ---
 
 # Instrumenting your server for T2/T3
 
 T1 needs nothing from your server: costQL times whole requests from the
-outside. The richer tiers need the server to *tell* costQL what work a request
+outside. The instrumented tiers (T2/T3) need the server to *tell* costQL what work a request
 actually caused, via one extension field on the GraphQL response. This page
 specifies that seam. The two demo servers
 ([`examples/demos/tmdb`](https://github.com/shapemachine/costql/tree/main/examples/demos/tmdb),
@@ -79,8 +79,11 @@ loader that never fires is reported as dead.
 
 ## Do you need this?
 
-Only if your schema **shares entities heavily**. Under light sharing the
-inferred middle tier already matched T3 (TMDB: T2 11% vs T3 11% mean error);
-under heavy sharing the gap was decisive (Northwind hub queries: T2 315% vs
-T3 12%). Read [the Northwind case study](results/northwind.md), then decide.
+Only if your API's shape calls for it. If your resolvers fire downstream work
+**in parallel**, per-resolver timing (T2) is what makes that work visible. If
+your server **batches, coalesces, or caches reads**, the sharing trace (T3) is
+the only way costQL can watch that happen — a tier that can't see sharing can't
+price those queries, and the size of that mismatch is measured in
+[the Northwind case study](results/northwind.md). If your work is serial
+and unshared, T1 already measures it well and this page is optional reading.
 Start at T1 either way. It ships today.

@@ -69,7 +69,7 @@ into the rate table; they do not survive as retrievable entries.
 
 To grade a held-out query, `Pricer` predicts it (no run) and the harness **runs it for
 real** and reads its total cost (`costql/harness.py`, `Measurement.cost_ms`). What "total
-cost" means sharpens with the tier:
+cost" means gets more specific with the tier:
 
 | Tier | Ground-truth total = | Note |
 |---|---|---|

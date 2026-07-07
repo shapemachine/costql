@@ -68,10 +68,11 @@ measuring), fits the cost model, and writes the pack. From then on, quoting is
 offline.
 
 Because the Rick & Morty API is a black box we can't instrument, the pack is
-**T1**: wall-clock currency, total-only quotes. That is the designed starting
-point for any API you can send queries to, measured at ~96% accuracy on
-held-out queries ([case study](results/rickmorty.md)). Richer tiers need
-server-side instrumentation; see [tier fidelity](tiers.md).
+**T1**: wall-clock currency, total-only quotes — and for this API, the fit. On
+its held-out queries T1 measured ~96% accuracy
+([case study](results/rickmorty.md)). The instrumented tiers (T2/T3) see
+per-resolver and shared work and need one server-side change; whether your
+API's shape calls for them is in [tier fidelity](tiers.md).
 
 ## 3. Point it at your own API
 
