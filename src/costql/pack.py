@@ -71,6 +71,23 @@ class PricingPack:
         return cls.from_dict(d)
 
     @classmethod
+    def demo(cls, name: str = "tmdb_t3") -> PricingPack:
+        """Load a demo pricing pack that ships inside the installed package.
+
+        So a bare `pip install costql` can run the quickstart with no repo
+        checkout, no file to fetch, and no network. `name` is the demo's short
+        name (e.g. "tmdb_t3" -> the bundled demo_tmdb_t3.json). Real packs are
+        loaded from your own file with `load(path)`.
+        """
+        from importlib.resources import files
+        res = files("costql").joinpath("data", f"demo_{name}.json")
+        try:
+            text = res.read_text()
+        except (FileNotFoundError, OSError):
+            raise FileNotFoundError(f"no bundled demo pack named {name!r}") from None
+        return cls.from_dict(json.loads(text))
+
+    @classmethod
     def from_dict(cls, d: dict) -> PricingPack:
         if not isinstance(d, dict) or "pack_version" not in d:
             raise PackVersionError(

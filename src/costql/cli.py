@@ -58,6 +58,16 @@ def _load_pack(path: str) -> PricingPack:
         raise SystemExit(f"! {e}")
 
 
+def _resolve_pack(args: argparse.Namespace) -> PricingPack:
+    """A quote's pack comes from either --pack <file> or --demo <name>."""
+    if getattr(args, "demo", None):
+        try:
+            return PricingPack.demo(args.demo)
+        except FileNotFoundError as e:
+            raise SystemExit(f"! {e}")
+    return _load_pack(args.pack)
+
+
 def _render_quote(q: dict) -> str:
     typ = f"{q['typical_price']:.1f}" if q.get("typical_price") is not None else "n/a"
     lines = [f"  query      : {q['query'].strip()}",
@@ -115,7 +125,7 @@ def _cmd_probe(args: argparse.Namespace) -> int:
 
 
 def _cmd_quote(args: argparse.Namespace) -> int:
-    pack = _load_pack(args.pack)
+    pack = _resolve_pack(args)
     result = pack.quote(args.query)
     if args.json:
         print(json.dumps(result, indent=2, sort_keys=True))
@@ -185,7 +195,10 @@ def build_parser() -> argparse.ArgumentParser:
 
     p_quote = sub.add_parser(
         "quote", help="price a query from a pack: offline, no server, no network")
-    p_quote.add_argument("--pack", required=True, help="pricing pack JSON path")
+    src = p_quote.add_mutually_exclusive_group(required=True)
+    src.add_argument("--pack", help="pricing pack JSON path")
+    src.add_argument("--demo", metavar="NAME",
+                     help="use a demo pack bundled in the package, e.g. tmdb_t3")
     p_quote.add_argument("--json", action="store_true",
                          help="print the raw contract result as JSON")
     p_quote.add_argument("query", help="the GraphQL query to price")

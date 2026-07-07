@@ -16,7 +16,7 @@ npm install costql        # JS/TS: quote packs (build stays in Python)
 ```python
 from costql import PricingPack
 
-pack = PricingPack.load("packs/tmdb_t3.json")   # a committed demo pack
+pack = PricingPack.demo("tmdb_t3")   # a demo pack bundled in the package
 quote = pack.quote('{ movie(id:"27205"){ cast(limit:8){ person{ name } } } }')
 
 quote["price"]        # safe billable ceiling, in cost-units (never dollars)
@@ -27,8 +27,11 @@ quote["confidence"]   # high | medium | low: cyclic queries are flagged, not bil
 Or from the command line:
 
 ```bash
-costql quote --pack packs/tmdb_t3.json '{ movie(id:"27205"){ title } }'
+costql quote --demo tmdb_t3 '{ movie(id:"27205"){ title } }'
 ```
+
+(Quoting your own API? Build a pack with `costql build` and pass it with
+`--pack your_pack.json`. The bundled `--demo` pack is just for the tour.)
 
 Every result follows a **frozen output contract (v1.0)**: `price` is always
 present, always a number, always safe to bill on. See
