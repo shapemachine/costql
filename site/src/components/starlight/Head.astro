@@ -1,0 +1,11 @@
+---
+// Starlight override: render the default <head>, then inject Vercel Web
+// Analytics so the docs pages report page views. The two standalone pages
+// (index.astro, playground.astro) add <Analytics /> directly, since they
+// don't render through Starlight.
+import Default from '@astrojs/starlight/components/Head.astro';
+import Analytics from '@vercel/analytics/astro';
+---
+
+<Default><slot /></Default>
+<Analytics />
