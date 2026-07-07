@@ -12,16 +12,17 @@
           <span class="cql-stat__tier">at T1</span>
         </div>
         <div class="cql-stat__caption">
-          average pricing error on a public API we don't run, with zero server changes
+          average gap between our offline quote and what the query actually costs to run, on a public API we don't run, with zero server changes
         </div>
       </div>
       <div class="cql-stat cql-stat--accent">
         <div class="cql-stat__top">
-          <div class="cql-stat__value">5/5</div>
-          <span class="cql-stat__tier">at T1</span>
+          <div class="cql-stat__value">11%</div>
+          <span class="cql-stat__tier">at T2</span>
         </div>
         <div class="cql-stat__caption">
-          test queries where the quoted ceiling was never below the real cost
+          the API times each field, so work that runs at the same time can't hide inside the
+          stopwatch. That put our quote within 11% of the real cost on the movie API.
         </div>
       </div>
       <div class="cql-stat">
@@ -30,12 +31,13 @@
           <span class="cql-stat__tier">at T3</span>
         </div>
         <div class="cql-stat__caption">
-          repeated work our test database merged into single calls: costQL saw it and priced it once
+          our test database was asked for the same data 963 times, but really ran only 25
+          queries. costQL saw that and priced the 25, not the 963.
         </div>
       </div>
     </div>
     <p class="cql-stats__note">
-      T1 and T3 are two of costQL's <a href="#tiers">three depths of fidelity</a>: you pick
+      T1, T2, and T3 are costQL's <a href="#tiers">three depths of fidelity</a>: you pick
       the one your needs justify.
     </p>
   </div>

@@ -300,7 +300,7 @@ function receiptFromQuote(q: QuoteResult): {
     });
   }
   if (q.typical_price != null) {
-    items.push({ label: 'typical estimate', value: (q.typical_price as number).toFixed(1), muted: true });
+    items.push({ label: 'fair average', value: (q.typical_price as number).toFixed(1), muted: true });
   }
   if (low) {
     items.push({ label: 'cycle detected', value: '↺', muted: true });
@@ -309,7 +309,7 @@ function receiptFromQuote(q: QuoteResult): {
   return {
     items,
     total: (q.price as number).toFixed(1),
-    totalLabel: low ? 'work-time (ms) · flagged' : 'work-time (ms)',
+    totalLabel: low ? 'safe ceiling (work-ms) · flagged' : 'safe ceiling (work-ms)',
     totalFlagged: low,
     footer: (
       <span>

@@ -4,12 +4,15 @@ import Playground from './Playground.tsx';
 
 <section id="playground" class="cql-container cql-section">
   <div class="cql-play__titlerow">
-    <h2 class="cql-h2" style="margin: 0">Price your first query in 60 seconds</h2>
+    <h2 class="cql-h2" style="margin: 0">Three demo APIs, priced live in your browser</h2>
     <span class="cql-badge cql-badge--ink">no signup, no server</span>
   </div>
   <p class="cql-lead" style="margin-bottom: 28px">
-    This is the real costQL engine, loaded on this page with three ready-made packs. Build
-    a query from the schema on the left, or type your own: the price updates as you type.
+    These are three real demo APIs, each already calibrated into a pack and loaded on this
+    page. Build a query from the schema on the left, or type your own. The price moves with
+    what you ask for. To point costQL at your own API, the <a
+    href="/docs/quickstart/" target="_blank" rel="noopener">Quickstart</a> gets you a
+    pricing oracle in about a minute.
   </p>
 
   <Playground client:only="react" />

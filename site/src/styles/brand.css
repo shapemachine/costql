@@ -318,6 +318,15 @@ body {
 }
 .cql-callout__label { font-weight: var(--fw-bold); white-space: nowrap; }
 
+/* panel variant: a standalone callout between sections, wearing the card's
+   uniform border + hard offset shadow instead of the thin accent bar */
+.cql-callout--panel {
+  border-left-width: var(--border-1);
+  border-radius: var(--radius-2);
+  box-shadow: var(--shadow-2);
+  margin: var(--space-6) 0;
+}
+
 /* ---- StatCallout ---- */
 .cql-stat {
   border: var(--border-1) solid var(--border-ink);
