@@ -661,6 +661,271 @@
     {
       "expected": {
         "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 29.6795,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Query.movie"
+          }
+        ],
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 48.256,
+        "query": "fragment F on Movie { title genres{ name } } { movie(id:\"27205\"){ ...F } }",
+        "schema_hash": "26c786209ec27586",
+        "tier": "T3",
+        "typical_price": 34.734
+      },
+      "pack": "packs/tmdb_t3.json",
+      "query": "fragment F on Movie { title genres{ name } } { movie(id:\"27205\"){ ...F } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 29.6795,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Query.movie"
+          },
+          {
+            "cost": 29.6795,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Query.movie"
+          }
+        ],
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 89.4897,
+        "query": "{ imax: movie(id:\"27205\"){ title } rerelease: movie(id:\"155\"){ title } }",
+        "schema_hash": "26c786209ec27586",
+        "tier": "T3",
+        "typical_price": 64.4135
+      },
+      "pack": "packs/tmdb_t3.json",
+      "query": "{ imax: movie(id:\"27205\"){ title } rerelease: movie(id:\"155\"){ title } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 29.6795,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Query.movie"
+          },
+          {
+            "cost": 1.5017,
+            "invocations": 1,
+            "list_size": 8,
+            "resolver_id": "Movie.cast"
+          },
+          {
+            "cost": 0.1411,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Credit.person"
+          }
+        ],
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 50.5384,
+        "query": "{ movie(id:\"27205\"){ ... on Movie { cast(limit:8) @include(if:true){ person{ name } } } } }",
+        "schema_hash": "26c786209ec27586",
+        "sharing": [
+          {
+            "counted_once": true,
+            "folds": [
+              "Movie.cast"
+            ],
+            "loader": "/movie/{id}/credits"
+          },
+          {
+            "counted_once": true,
+            "folds": [
+              "Credit.person"
+            ],
+            "loader": "/person/{id}"
+          }
+        ],
+        "tier": "T3",
+        "typical_price": 36.3769
+      },
+      "pack": "packs/tmdb_t3.json",
+      "query": "{ movie(id:\"27205\"){ ... on Movie { cast(limit:8) @include(if:true){ person{ name } } } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 29.6795,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Query.movie"
+          },
+          {
+            "cost": 1.5017,
+            "invocations": 1,
+            "list_size": 8,
+            "resolver_id": "Movie.cast"
+          },
+          {
+            "cost": 0.1411,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Credit.person"
+          }
+        ],
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 50.5384,
+        "query": "query($n: Int = 8){ movie(id:\"27205\"){ cast(limit:$n){ person{ name } } } }",
+        "schema_hash": "26c786209ec27586",
+        "sharing": [
+          {
+            "counted_once": true,
+            "folds": [
+              "Movie.cast"
+            ],
+            "loader": "/movie/{id}/credits"
+          },
+          {
+            "counted_once": true,
+            "folds": [
+              "Credit.person"
+            ],
+            "loader": "/person/{id}"
+          }
+        ],
+        "tier": "T3",
+        "typical_price": 36.3769
+      },
+      "pack": "packs/tmdb_t3.json",
+      "query": "query($n: Int = 8){ movie(id:\"27205\"){ cast(limit:$n){ person{ name } } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 29.6795,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Query.movie"
+          },
+          {
+            "cost": 1.5017,
+            "invocations": 1,
+            "list_size": 4,
+            "resolver_id": "Movie.cast"
+          },
+          {
+            "cost": 0.1411,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Credit.person"
+          }
+        ],
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 50.5384,
+        "query": "query($n: Int!){ movie(id:\"27205\"){ cast(limit:$n){ person{ name } } } }",
+        "schema_hash": "26c786209ec27586",
+        "sharing": [
+          {
+            "counted_once": true,
+            "folds": [
+              "Movie.cast"
+            ],
+            "loader": "/movie/{id}/credits"
+          },
+          {
+            "counted_once": true,
+            "folds": [
+              "Credit.person"
+            ],
+            "loader": "/person/{id}"
+          }
+        ],
+        "tier": "T3",
+        "typical_price": 36.3769
+      },
+      "pack": "packs/tmdb_t3.json",
+      "query": "query($n: Int!){ movie(id:\"27205\"){ cast(limit:$n){ person{ name } } } }",
+      "variables": {
+        "n": 4
+      }
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 29.6795,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Query.movie"
+          },
+          {
+            "cost": 1.5017,
+            "invocations": 1,
+            "list_size": 12,
+            "resolver_id": "Movie.cast"
+          },
+          {
+            "cost": 0.1411,
+            "invocations": 1,
+            "list_size": 1,
+            "resolver_id": "Credit.person"
+          }
+        ],
+        "caveats": [],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 50.5384,
+        "query": "query($n: Int){ movie(id:\"27205\"){ cast(limit:$n){ person{ name } } } }",
+        "schema_hash": "26c786209ec27586",
+        "sharing": [
+          {
+            "counted_once": true,
+            "folds": [
+              "Movie.cast"
+            ],
+            "loader": "/movie/{id}/credits"
+          },
+          {
+            "counted_once": true,
+            "folds": [
+              "Credit.person"
+            ],
+            "loader": "/person/{id}"
+          }
+        ],
+        "tier": "T3",
+        "typical_price": 36.3769
+      },
+      "pack": "packs/tmdb_t3.json",
+      "query": "query($n: Int){ movie(id:\"27205\"){ cast(limit:$n){ person{ name } } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
         "caveats": [],
         "confidence": "high",
         "contract_version": "1.0",
@@ -1432,6 +1697,142 @@
       },
       "pack": "packs/northwind_t3.json",
       "query": "{ products(first:40){ supplier{ country } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 0.0793,
+            "invocations": 20,
+            "list_size": 15,
+            "resolver_id": "Order.details"
+          },
+          {
+            "cost": 0.1266,
+            "invocations": 55,
+            "list_size": 1,
+            "resolver_id": "OrderDetail.product"
+          }
+        ],
+        "caveats": [
+          "cyclic recursion re-enters a type through a list edge at 5 path(s) (orders.on:Order.details, orders.on:Order.details.product, orders.on:Order.details.product.name\u2026); the static fanout counts the worst case, but the real backend dedups overlapping entities by an amount that only running the query reveals. Price is a structural upper bound, confidence downgraded; run it for the exact T3 cost."
+        ],
+        "confidence": "low",
+        "contract_version": "1.0",
+        "currency": "work_ms",
+        "price": 0.3455,
+        "query": "query($f: Int!){ orders(first:$f){ ...D } } fragment D on Order { orderDate details(first:15){ quantity product{ name } } }",
+        "schema_hash": "53b4f8fc00490e61",
+        "sharing": [
+          {
+            "counted_once": true,
+            "folds": [
+              "Order.details"
+            ],
+            "loader": "order_details:byOrder"
+          },
+          {
+            "counted_once": true,
+            "folds": [
+              "OrderDetail.product"
+            ],
+            "loader": "products"
+          }
+        ],
+        "tier": "T3",
+        "typical_price": 0.2173
+      },
+      "pack": "packs/northwind_t3.json",
+      "query": "query($f: Int!){ orders(first:$f){ ...D } } fragment D on Order { orderDate details(first:15){ quantity product{ name } } }",
+      "variables": {
+        "f": 20
+      }
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 2.0,
+            "invocations": 1,
+            "list_size": 5,
+            "resolver_id": "Query.search"
+          },
+          {
+            "cost": 5.0,
+            "invocations": 5,
+            "list_size": 2,
+            "resolver_id": "Movie.similar"
+          }
+        ],
+        "caveats": [
+          "cyclic recursion re-enters a type through a list edge at 2 path(s) (search.on:Movie.similar, search.on:Movie.similar.title); the static fanout counts the worst case, but the real backend dedups overlapping entities by an amount that only running the query reveals. Price is a structural upper bound, confidence downgraded; run it for the exact T3 cost.",
+          "polymorphic branches (`... on Type`) at 2 path(s) (search.on:Movie, search.on:Book); the price walks every branch, but at most one fires per object, so price and typical are upper bounds for those fields. Run it for the exact cost."
+        ],
+        "confidence": "low",
+        "contract_version": "1.0",
+        "currency": "wall_time_ms",
+        "price": 9.0625,
+        "query": "{ search(query:\"a\", first:5){ ... on Movie { title similar(first:2){ title } } ... on Book { title } } }",
+        "schema_hash": "99b2ca9903530621",
+        "tier": "T3",
+        "typical_price": 6.25
+      },
+      "pack": "conformance/union_pack.json",
+      "query": "{ search(query:\"a\", first:5){ ... on Movie { title similar(first:2){ title } } ... on Book { title } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 2.0,
+            "invocations": 1,
+            "list_size": 5,
+            "resolver_id": "Query.search"
+          }
+        ],
+        "caveats": [
+          "polymorphic branches (`... on Type`) at 1 path(s) (search.on:Movie); the price walks every branch, but at most one fires per object, so price and typical are upper bounds for those fields. Run it for the exact cost."
+        ],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "wall_time_ms",
+        "price": 2.625,
+        "query": "{ search(query:\"a\", first:5){ ... on Movie { title } } }",
+        "schema_hash": "99b2ca9903530621",
+        "tier": "T3",
+        "typical_price": 2.1
+      },
+      "pack": "conformance/union_pack.json",
+      "query": "{ search(query:\"a\", first:5){ ... on Movie { title } } }"
+    },
+    {
+      "expected": {
+        "basis": "predicted",
+        "breakdown": [
+          {
+            "cost": 2.0,
+            "invocations": 1,
+            "list_size": 3,
+            "resolver_id": "Query.search"
+          }
+        ],
+        "caveats": [
+          "polymorphic branches (`... on Type`) at 1 path(s) (search.on:Book); the price walks every branch, but at most one fires per object, so price and typical are upper bounds for those fields. Run it for the exact cost."
+        ],
+        "confidence": "high",
+        "contract_version": "1.0",
+        "currency": "wall_time_ms",
+        "price": 2.6875,
+        "query": "query($k: Int = 3){ search(query:\"a\", first:$k){ ...B } } fragment B on Book { title pages }",
+        "schema_hash": "99b2ca9903530621",
+        "tier": "T3",
+        "typical_price": 2.15
+      },
+      "pack": "conformance/union_pack.json",
+      "query": "query($k: Int = 3){ search(query:\"a\", first:$k){ ...B } } fragment B on Book { title pages }"
     }
   ],
   "tolerance": {

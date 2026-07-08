@@ -43,6 +43,7 @@ export default defineConfig({
             { label: 'Price Pack Format', slug: 'docs/pack-format' },
             { label: 'Architecture', slug: 'docs/architecture' },
             { label: 'The JS package', slug: 'docs/js' },
+            { label: 'Quoting queries', slug: 'docs/quoting' },
             { label: 'Limitations', slug: 'docs/limitations' },
           ],
         },

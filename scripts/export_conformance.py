@@ -30,12 +30,18 @@ def main() -> None:
             continue
         pack = PricingPack.load(os.path.join(ROOT, pack_path))
         for q in queries:
-            result = pack.quote(q)
+            # An entry is a query string, or {"query": ..., "variables": {...}}.
+            query, variables = (q, None) if isinstance(q, str) \
+                else (q["query"], q.get("variables"))
+            result = pack.quote(query, variables)
             errs = validate(result)
             if errs:
                 violations += 1
-                print(f"! contract violation for {pack_path} :: {q}: {errs}")
-            out.append({"pack": pack_path, "query": q, "expected": result})
+                print(f"! contract violation for {pack_path} :: {query}: {errs}")
+            entry = {"pack": pack_path, "query": query, "expected": result}
+            if variables is not None:
+                entry["variables"] = variables
+            out.append(entry)
 
     if violations:
         sys.exit(f"! {violations} contract violations; not writing the oracle")

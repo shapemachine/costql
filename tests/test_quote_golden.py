@@ -25,21 +25,22 @@ def _pack(path: str) -> PricingPack:
 @pytest.mark.parametrize("entry", _ORACLE,
                          ids=[f"{e['pack'].split('/')[-1]}::{e['query'][:40]}" for e in _ORACLE])
 def test_quote_matches_oracle(entry):
-    result = _pack(entry["pack"]).quote(entry["query"])
+    result = _pack(entry["pack"]).quote(entry["query"], entry.get("variables"))
     assert result == entry["expected"]
 
 
 @pytest.mark.parametrize("entry", _ORACLE,
                          ids=[f"{e['pack'].split('/')[-1]}::{e['query'][:40]}" for e in _ORACLE])
 def test_quote_is_contract_valid(entry):
-    assert validate(_pack(entry["pack"]).quote(entry["query"])) == []
+    assert validate(_pack(entry["pack"]).quote(entry["query"],
+                                               entry.get("variables"))) == []
 
 
 def test_oracle_covers_all_committed_packs():
     packs = {e["pack"] for e in _ORACLE}
     assert packs == {"packs/tmdb_t3.json", "packs/rickmorty_t1.json",
                      "packs/northwind_t1.json", "packs/northwind_t2.json",
-                     "packs/northwind_t3.json"}
+                     "packs/northwind_t3.json", "conformance/union_pack.json"}
 
 
 def test_oracle_spans_the_interesting_cases():

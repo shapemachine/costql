@@ -4,7 +4,7 @@ description: "Where costQL is least certain: cyclic-recursion and data-dependent
 
 # Honest limitations
 
-costQL's core guarantee (a billable `price` on every query, with a ceiling that never under-prices) holds everywhere we have measured it. But some queries are genuinely less predictable than others, some APIs afford less visibility than others, and v0.1 has real edges. This page states them plainly, because a pricing tool you can't trust about its own blind spots isn't worth trusting about prices. In every case below, the designed behavior is **graceful degradation, never refusal**: you always get a contract-valid price plus an honest confidence tag.
+costQL's core guarantee (a billable `price` on every query, with a ceiling that never under-prices) holds everywhere we have measured it. But some queries are genuinely less predictable than others, and some APIs afford less visibility than others. This page states the soft spots plainly, because a pricing tool you can't trust about its own blind spots isn't worth trusting about prices. In every case below, the designed behavior is **graceful degradation, never refusal**: you always get a contract-valid price plus an honest confidence tag.
 
 ## Cyclic-recursion queries
 
@@ -51,20 +51,19 @@ the quote yet. On passthrough-style APIs the measured effect of this was ~0%
 (list items arrive inside the parent's single fetch), but on a resolver doing
 real per-item local work it would matter.
 
-## v0.1 query-parser limitations
+## Polymorphic branches price as an upper bound
 
-`PricingPack.quote()` parses queries with a small built-in parser, which currently
-has three known edges:
+Before a query runs, nobody knows which `... on Type` branch each object
+resolves to, so [the quote](quoting.md) walks every branch. At most one fires
+per object, so the price is a safe max, and the quote says so in a caveat
+naming the branched paths. Run the query for the exact cost.
 
-- **Fragments are not supported**: a query containing a fragment spread raises
-  an error rather than mispricing silently.
-- **Aliases are not resolved**: an aliased field is seen under its alias, not
-  its schema field name, so it will not match the priced resolver.
-- **The tokenizer is lenient**: it accepts the common GraphQL query surface
-  (fields, arguments, variables-free literals, comments) rather than enforcing
-  the full spec grammar.
+## A missing variable value prices at the worst case
 
-Rewriting a query without fragments/aliases before quoting sidesteps all three.
+A `$variable` with no supplied value and no declared default loses its
+argument, so that field prices at the ceiling's worst-case bound: possibly
+higher than needed, never an under-price. Passing values
+([`quote(query, variables)`](quoting.md)) restores the exact bound.
 
 ## Non-goals (by design, not omission)
 

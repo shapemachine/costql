@@ -76,6 +76,15 @@ class FanoutCounter:
 
         def walk(sel: Selection, parent_type: str, parent_invocations: int,
                  path: str, inherited: list[int]):
+            if sel.on is not None:
+                # Fragment node: no resolver of its own. Children resolve
+                # against the type condition; when that is a branch of an
+                # abstract parent, every branch is walked (at most one fires
+                # per object, so the sum is a safe upper bound: pack.quote
+                # attaches a caveat).
+                for c in sel.children:
+                    walk(c, sel.on, parent_invocations, f"{path}.{c.name}", inherited)
+                return
             obj = self.tg.objects.get(parent_type)
             if obj is None:
                 return

@@ -126,7 +126,8 @@ def _cmd_probe(args: argparse.Namespace) -> int:
 
 def _cmd_quote(args: argparse.Namespace) -> int:
     pack = _resolve_pack(args)
-    result = pack.quote(args.query)
+    variables = json.loads(args.variables) if args.variables else None
+    result = pack.quote(args.query, variables)
     if args.json:
         print(json.dumps(result, indent=2, sort_keys=True))
     else:
@@ -201,6 +202,8 @@ def build_parser() -> argparse.ArgumentParser:
                      help="use a demo pack bundled in the package, e.g. tmdb_t3")
     p_quote.add_argument("--json", action="store_true",
                          help="print the raw contract result as JSON")
+    p_quote.add_argument("--variables", metavar="JSON", default=None,
+                         help='values for $variables, e.g. \'{"n": 8}\'')
     p_quote.add_argument("query", help="the GraphQL query to price")
     p_quote.set_defaults(fn=_cmd_quote)
 

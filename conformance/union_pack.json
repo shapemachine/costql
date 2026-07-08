@@ -1,0 +1,218 @@
+{
+  "currency": "wall_time_ms",
+  "introspection": {
+    "data": {
+      "__schema": {
+        "mutationType": null,
+        "queryType": {
+          "name": "Query"
+        },
+        "subscriptionType": null,
+        "types": [
+          {
+            "enumValues": null,
+            "fields": [
+              {
+                "args": [
+                  {
+                    "defaultValue": null,
+                    "name": "query",
+                    "type": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  {
+                    "defaultValue": null,
+                    "name": "first",
+                    "type": {
+                      "kind": "SCALAR",
+                      "name": "Int",
+                      "ofType": null
+                    }
+                  }
+                ],
+                "deprecationReason": null,
+                "isDeprecated": false,
+                "name": "search",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "UNION",
+                    "name": "SearchResult",
+                    "ofType": null
+                  }
+                }
+              }
+            ],
+            "kind": "OBJECT",
+            "name": "Query",
+            "possibleTypes": null
+          },
+          {
+            "enumValues": null,
+            "fields": null,
+            "kind": "UNION",
+            "name": "SearchResult",
+            "possibleTypes": [
+              {
+                "kind": "OBJECT",
+                "name": "Movie",
+                "ofType": null
+              },
+              {
+                "kind": "OBJECT",
+                "name": "Book",
+                "ofType": null
+              }
+            ]
+          },
+          {
+            "enumValues": null,
+            "fields": [
+              {
+                "args": [],
+                "deprecationReason": null,
+                "isDeprecated": false,
+                "name": "title",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "isDeprecated": false,
+                "name": "runtime",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                }
+              },
+              {
+                "args": [
+                  {
+                    "defaultValue": null,
+                    "name": "first",
+                    "type": {
+                      "kind": "SCALAR",
+                      "name": "Int",
+                      "ofType": null
+                    }
+                  }
+                ],
+                "deprecationReason": null,
+                "isDeprecated": false,
+                "name": "similar",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "Movie",
+                    "ofType": null
+                  }
+                }
+              }
+            ],
+            "kind": "OBJECT",
+            "name": "Movie",
+            "possibleTypes": null
+          },
+          {
+            "enumValues": null,
+            "fields": [
+              {
+                "args": [],
+                "deprecationReason": null,
+                "isDeprecated": false,
+                "name": "title",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              {
+                "args": [],
+                "deprecationReason": null,
+                "isDeprecated": false,
+                "name": "pages",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                }
+              }
+            ],
+            "kind": "OBJECT",
+            "name": "Book",
+            "possibleTypes": null
+          },
+          {
+            "enumValues": null,
+            "fields": null,
+            "kind": "SCALAR",
+            "name": "ID",
+            "possibleTypes": null
+          },
+          {
+            "enumValues": null,
+            "fields": null,
+            "kind": "SCALAR",
+            "name": "String",
+            "possibleTypes": null
+          },
+          {
+            "enumValues": null,
+            "fields": null,
+            "kind": "SCALAR",
+            "name": "Int",
+            "possibleTypes": null
+          },
+          {
+            "enumValues": null,
+            "fields": null,
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "possibleTypes": null
+          }
+        ]
+      }
+    }
+  },
+  "model": {
+    "batch_groups": {},
+    "cost_currency": "wall_time_ms",
+    "default_cap": 50,
+    "external_hosts": {},
+    "loader_fns": {},
+    "max_size": {
+      "Movie.similar": 5,
+      "Query.search": 10
+    },
+    "noise_buffer_ms": 0.0,
+    "safety": 1.25,
+    "scan_before_paginate": [],
+    "schema_hash": "99b2ca9903530621",
+    "typical_size": {
+      "Movie.similar": 2,
+      "Query.search": 4
+    },
+    "uncovered_edges": [],
+    "unit_cost": {
+      "Movie.similar": 1.0,
+      "Query.search": 2.0,
+      "__doc_fields__": 0.05
+    }
+  },
+  "note": "SYNTHETIC conformance pack: hand-authored costs over a union schema, freezing fragment-branch pricing behavior across engines. Not a calibrated demo.",
+  "pack_version": 1,
+  "schema_hash": "99b2ca9903530621",
+  "tier": "T3"
+}

@@ -1,7 +1,7 @@
 /** The pricing pack: port of costql/pack.py's consumer side. Load the same
  * JSON file the Python engine writes and quote queries by pure local
  * traversal: no server, no network, no measurement. */
-import { assess } from "./confidence.js";
+import { assess, branchPaths } from "./confidence.js";
 import { QuoteResult, predictedResult } from "./contract.js";
 import { TypeGraph } from "./introspect.js";
 import { CostModelData, DOC_FEATURE, Pricer } from "./pricer.js";
@@ -84,17 +84,30 @@ export class PricingPack {
   }
 
   /** Price a query from the pack alone: no server, no measurement. Returns a
-   * frozen contract v1.0 result identical to the Python engine's. */
-  quote(query: string): QuoteResult {
+   * frozen contract v1.0 result identical to the Python engine's.
+   * `variables` supplies values for `$name` usages; a variable with no value
+   * and no declared default loses its argument, so the ceiling's worst-case
+   * bound applies to that field. */
+  quote(query: string, variables?: Record<string, unknown> | null): QuoteResult {
     const tg = this.typeGraph();
     const model = this.model;
     const pricer = new Pricer(tg, model);
-    const sels = parseQuery(query);
+    const sels = parseQuery(query, variables);
 
     const ceiling = pricer.price(sels, "ceiling", true);
     const typical = pricer.price(sels, "expectation", true);
     const recs = pricer.counter.count(sels, "ceiling", model.max_size ?? {});
     const conf = assess(tg, recs, sels.length ? sels[0] : null);
+    const caveats = [...conf.caveats];
+    const branched = branchPaths(tg, sels);
+    if (branched.length) {
+      caveats.push(
+        `polymorphic branches (\`... on Type\`) at ${branched.length} path(s) ` +
+        `(${branched.slice(0, 3).join(", ")}${branched.length > 3 ? "…" : ""}); the ` +
+        `price walks every branch, but at most one fires per object, so ` +
+        `price and typical are upper bounds for those fields. Run it for ` +
+        `the exact cost.`);
+    }
     const used = new Set(recs.map((r) => r.resolverId));
 
     const breakdown = ceiling.perResolver.filter((b) => b.resolver_id !== DOC_FEATURE);
@@ -123,7 +136,7 @@ export class PricingPack {
     const result = predictedResult({
       tier: this.tier, currency: this.currency, schemaHash: this.schemaHash,
       price: ceiling.score, typicalPrice: typical.score, confidence: conf.level,
-      caveats: conf.caveats, breakdown, sharing, externalCalls,
+      caveats, breakdown, sharing, externalCalls,
     });
     result.query = query;
     return result;

@@ -23,6 +23,10 @@ function dataDependentPaths(tg: TypeGraph, selection: Selection): Set<string> {
   const flagged = new Set<string>();
 
   const walk = (sel: Selection, parentType: string, path: string, undeclared: number): void => {
+    if (sel.on != null) {
+      for (const c of sel.children) walk(c, sel.on, `${path}.${c.name}`, undeclared);
+      return;
+    }
     const obj = tg.objects.get(parentType);
     if (!obj) return;
     const f = obj.fields.get(sel.name);
@@ -41,6 +45,30 @@ function dataDependentPaths(tg: TypeGraph, selection: Selection): Set<string> {
   return flagged;
 }
 
+/** Paths where a fragment's type condition DIFFERS from the enclosing type:
+ * a polymorphic branch. At most one branch fires per object, but the
+ * pre-execution price walks them all, so these paths make the price an upper
+ * bound. A fragment on its own enclosing type is pure grouping (exact, not
+ * flagged). */
+export function branchPaths(tg: TypeGraph, selections: Selection[]): string[] {
+  const out: string[] = [];
+
+  const walk = (sel: Selection, parentType: string, path: string): void => {
+    if (sel.on != null) {
+      if (sel.on !== parentType) out.push(path);
+      for (const c of sel.children) walk(c, sel.on, `${path}.${c.name}`);
+      return;
+    }
+    const obj = tg.objects.get(parentType);
+    const f = obj ? obj.fields.get(sel.name) : undefined;
+    if (!f) return;
+    for (const c of sel.children) walk(c, f.type.base, `${path}.${c.name}`);
+  };
+
+  for (const s of selections) walk(s, tg.queryType, s.name);
+  return out;
+}
+
 export function assess(tg: TypeGraph, records: InvocationRecord[],
                        selection: Selection | null = null): Confidence {
   let total = 0.0;
@@ -55,6 +83,15 @@ export function assess(tg: TypeGraph, records: InvocationRecord[],
     let curType = tg.queryType;
     let isBelowCycle = false;
     for (const name of parts) {
+      if (name.startsWith("on:")) {
+        // Fragment-node path segment: switches the walk to the type
+        // condition (no resolver, no list edge of its own).
+        const t = name.slice(3);
+        if (seenTypes.has(t) && listEdges > 0) isBelowCycle = true;
+        seenTypes.add(t);
+        curType = t;
+        continue;
+      }
       const obj = tg.objects.get(curType);
       if (!obj) break;
       const f = obj.fields.get(name);

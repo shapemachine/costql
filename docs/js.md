@@ -45,8 +45,9 @@ the Python loader.
 
 "Identical to the Python engine" is a tested claim, not a hope. The repo
 freezes an oracle ([`conformance/quotes.json`](https://github.com/shapemachine/costql/blob/main/conformance/quotes.json),
-46 full quote results spanning simple, fanout, sharing-heavy, external-call,
-and cyclic queries across all five demo packs) and CI runs both engines
+56 full quote results spanning simple, fanout, sharing-heavy, external-call,
+cyclic, and sugared (fragments/aliases/variables) queries across the five demo
+packs plus a synthetic union-schema pack) and CI runs both engines
 against it on every PR. Numbers must agree within
 `max(1e-6, 1e-9 · |expected|)`; every other field must be deep-equal. Even the
 caveat *strings* match.
@@ -54,13 +55,20 @@ caveat *strings* match.
 Pinning: `costql@0.1.x` (npm) conforms to `costql` 0.1.x (PyPI), contract
 v1.0, `pack_version` 1.
 
-## Shared limitations
+## Shared parser, shared behavior
 
 The JS parser is a deliberate line-for-line port of the Python one, so the
-v0.1 [limitations](limitations.md) are shared exactly: no fragments (they
-throw), aliases are not resolved, and the tokenizer is lenient. If you hit an
-edge where the two engines disagree, that is a bug. Please file it with the
-pack + query.
+two engines accept the same query surface (fragments, aliases, variables,
+directives: see [Quoting queries](quoting.md)) and price it identically.
+To pass variable values, hand them to `quote` directly:
+
+```ts
+pack.quote('query($n: Int!){ movie(id:"27205"){ cast(limit:$n){ person{ name } } } }',
+           { n: 4 });
+```
+
+If you hit an edge where the two engines disagree, that is a bug. Please file
+it with the pack + query.
 
 ## What's deliberately absent
 
