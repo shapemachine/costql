@@ -86,9 +86,10 @@ Match substrings to route `id` to the right entity table.
 
 ## 3. `calibration_queries`: the shapes the model is fit on
 
-The single most important quality lever. Supply a callable
-`(size: "whale" | "small") -> list[str]` returning **clean, predictable,
-isolating** query strings:
+The single most important quality lever, and the part most people hand to a
+coding agent. [Agent-assisted onboarding](agents.md) walks one through it.
+Supply a callable `(size: "whale" | "small") -> list[str]` returning **clean,
+predictable, isolating** query strings:
 
 ```python
 def calibration_queries(size: str) -> list[str]:
@@ -102,6 +103,11 @@ def calibration_queries(size: str) -> list[str]:
 
 Rules of thumb, learned across three APIs:
 
+- **How many is derived, not a fixed number.** Start around eight, then add one
+  shape per resolver you price (ideally in two compositions) and ≥3 width-sweep
+  shapes per batched edge (see the next bullet). A black-box T1 API lands near
+  8–10; a batching T3 API near 20+. The three worked examples run 8
+  (rickmorty), 12 (tmdb), and 23 (northwind).
 - **Each list edge crosses into a different type and does not re-enter.**
   Cyclic shapes (`character{ episode{ characters } }`) corrupt a linear fit.
   They are what costQL *flags* at quote time, not what it calibrates on.
@@ -111,6 +117,14 @@ Rules of thumb, learned across three APIs:
   edges so per-loader size→cost curves get ≥3 distinct widths to fit
   (see the [Northwind adapter](https://github.com/shapemachine/costql/blob/main/examples/adapters/northwind.py)'s
   deliberate sweep).
+- **Most size-sensitive fields get measured for you; one kind does not.** Some
+  fields do more work the bigger their argument gets. Picture a field with
+  `limit: 500` that really processes all 500 rows in one call. If your
+  calibration only ever calls it small, costQL assumes its cost is flat, so a
+  large request against it gets priced too low. If you have a field like this,
+  add a calibration query that calls it with a large argument and name its size
+  argument. It is a [known corner](limitations.md#when-a-fields-cost-grows-with-an-argument)
+  with a simple fix.
 - Without the hook, `costql build` falls back to a shallow generic coverage
   sweep. It works, but curated shapes fit measurably better.
 

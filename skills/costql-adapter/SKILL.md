@@ -57,12 +57,15 @@ If the human hands you curated IDs, use theirs; otherwise harvest your own
 4. **Write the `ArgResolver`.** Route each arg name to the right ID table via
    `field_path` substring matching; return `UNSET` for anything you don't
    handle. Honor `size` ("whale"/"small") and `variant` ("calib"/"heldout").
-5. **Write `calibration_queries(size)`.** 8–15 clean, PREDICTABLE shapes:
-   every list edge crosses into a DIFFERENT type and never re-enters (no
-   `a{ b{ a } }` cycles: those corrupt the fit; costQL flags them at quote
-   time instead). Cover every resolver you want priced. If the server batches
-   (T2/T3), sweep each batched edge across >=3 declared widths
-   (`first:3/15/40`) so its size->cost curve can be fit.
+5. **Write `calibration_queries(size)`.** Clean, PREDICTABLE shapes; how many
+   is derived, not fixed: start around 8, add one per resolver you price, and
+   >=3 width-sweep shapes per batched edge. Black-box T1 lands near 8-10;
+   batching T3 near 20+ (the shipped examples run 8/12/23). Every list edge
+   crosses into a DIFFERENT type and never re-enters (no `a{ b{ a } }` cycles:
+   those corrupt the fit; costQL flags them at quote time instead). Cover every
+   resolver you want priced. If the server batches (T2/T3), sweep each batched
+   edge across >=3 declared widths (`first:3/15/40`) so its size->cost curve
+   can be fit.
 6. **Set fidelity from the probe (step 1), not from hope.** `costql build`
    downgrades to T1 anyway if it observes no trace, so over-claiming just
    wastes a build. Claiming T2/T3 requires the server to emit the cost-trace
