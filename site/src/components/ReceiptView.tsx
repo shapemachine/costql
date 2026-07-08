@@ -8,6 +8,27 @@ export interface ReceiptItem {
   value: string;
   muted?: boolean;
   indent?: boolean;
+  /** Hover/tap explanation; the label becomes the dotted-underline trigger. */
+  tip?: React.ReactNode;
+}
+
+function Row({ it }: { it: ReceiptItem }) {
+  return (
+    <div
+      className={`cql-receipt__row${it.muted ? ' cql-receipt__row--muted' : ''}${it.indent ? ' cql-receipt__row--indent' : ''}`}
+    >
+      {it.tip ? (
+        <span className="cql-tip cql-receipt__label">
+          <button type="button" className="cql-tip__trigger">{it.label}</button>
+          <span className="cql-tip__bubble" role="tooltip">{it.tip}</span>
+        </span>
+      ) : (
+        <span className="cql-receipt__label">{it.label}</span>
+      )}
+      <span className="cql-receipt__leader" />
+      <span className="cql-receipt__value">{it.value}</span>
+    </div>
+  );
 }
 
 /** One shared-loader group: several resolvers whose repeated work is billed once. */
@@ -20,6 +41,7 @@ export function ReceiptView({
   title = 'costql quote',
   meta,
   items,
+  extras,
   shared,
   typical,
   typicalLabel = 'typical',
@@ -33,6 +55,9 @@ export function ReceiptView({
   title?: string;
   meta?: string;
   items: ReceiptItem[];
+  /** Whole-quote lines (per-field base, safety margin): rendered below the
+   * scrolling items so their tooltips can't be clipped by the scroll box. */
+  extras?: ReceiptItem[];
   shared?: SharedGroup[];
   typical?: string;
   typicalLabel?: string;
@@ -54,16 +79,10 @@ export function ReceiptView({
         {/* line items scroll so a big query can't run the receipt off the page */}
         <div className="cql-receipt__items">
           {items.map((it, i) => (
-            <div
-              key={i}
-              className={`cql-receipt__row${it.muted ? ' cql-receipt__row--muted' : ''}${it.indent ? ' cql-receipt__row--indent' : ''}`}
-            >
-              <span className="cql-receipt__label">{it.label}</span>
-              <span className="cql-receipt__leader" />
-              <span className="cql-receipt__value">{it.value}</span>
-            </div>
+            <Row key={i} it={it} />
           ))}
         </div>
+        {extras && extras.map((it, i) => <Row key={i} it={it} />)}
         {/* shared work: the T3 lines that used to just say "once", now a labeled
             section you can open, with an info tooltip explaining batching */}
         {shared && shared.length > 0 && (

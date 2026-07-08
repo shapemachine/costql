@@ -3,7 +3,14 @@ import { defaultKeymap, history, historyKeymap } from '@codemirror/commands';
 import { EditorState } from '@codemirror/state';
 import { EditorView, keymap } from '@codemirror/view';
 import { graphql, updateSchema } from 'cm6-graphql';
-import { PricingPack, type QuoteResult } from 'costql';
+import {
+  DOC_FEATURE,
+  PricingPack,
+  countFields,
+  parseQuery,
+  type CostModelData,
+  type QuoteResult,
+} from 'costql';
 import {
   buildClientSchema,
   getNamedType,
@@ -260,8 +267,13 @@ function shortResolver(rid: string): string {
   return rid.startsWith('Query.') ? rid.slice(6) : rid;
 }
 
-function receiptFromQuote(q: QuoteResult): {
+/** One decimal, exactly as the receipt prints it: the reconciliation below is
+ * done on printed values so the visible column sums to the visible total. */
+const printed = (n: number): number => Number(n.toFixed(1));
+
+function receiptFromQuote(q: QuoteResult, model: CostModelData): {
   items: ReceiptItem[];
+  extras: ReceiptItem[];
   shared: SharedGroup[];
   typical?: string;
   typicalLabel: string;
@@ -271,24 +283,66 @@ function receiptFromQuote(q: QuoteResult): {
   footer: React.ReactNode;
 } {
   const items: ReceiptItem[] = [];
+  const extras: ReceiptItem[] = [];
   const low = q.confidence === 'low';
   const unit = q.currency === 'work_ms' ? 'work-ms'
     : q.currency === 'wall_time_ms' ? 'wall-ms' : q.currency;
 
-  const lines = [...(q.breakdown ?? [])]
-    .sort((a, b) => (b.cost as number) - (a.cost as number))
-    .slice(0, 6);
+  const all = [...(q.breakdown ?? [])]
+    .sort((a, b) => (b.cost as number) - (a.cost as number));
+  // top lines stay individual; the tail folds into one line so nothing the
+  // total counts is ever silently dropped from the receipt
+  const lines = all.length > 6 ? all.slice(0, 5) : all;
+  const rest = all.slice(lines.length);
+  let shown = 0; // sum of the values as printed
   for (const b of lines) {
     const rid = b.resolver_id as string;
     const inv = Number(b.invocations);
+    const v = printed(b.cost as number);
+    shown += v;
     items.push({
       label: `${shortResolver(rid)}${inv > 1 ? ` ×${inv}` : ''}`,
-      value: (b.cost as number).toFixed(1),
+      value: v.toFixed(1),
       indent: !rid.startsWith('Query.'),
     });
   }
-  if (!lines.length) {
+  if (rest.length) {
+    const v = printed(rest.reduce((s, b) => s + (b.cost as number), 0));
+    shown += v;
+    items.push({ label: `+ ${rest.length} more`, value: v.toFixed(1) });
+  }
+  if (!all.length) {
     items.push({ label: `${q.tier} pack: whole-query price only`, value: q.currency, muted: true });
+  } else {
+    // the two whole-quote lines that make the receipt add up: the per-field
+    // base the engine charges, and the padding that turns the sum into a
+    // ceiling. Both sit outside the scroll box so their tooltips stay visible.
+    const docUnit = model.unit_cost[DOC_FEATURE] ?? 0;
+    const n = docUnit > 0 && q.query ? countFields(parseQuery(q.query)) : 0;
+    const v = printed(docUnit * n);
+    if (v > 0) {
+      shown += v;
+      extras.push({
+        label: `every field ×${n}`,
+        value: v.toFixed(1),
+        tip: <>Each field a query asks for adds a small base cost, measured from this API.</>,
+      });
+    }
+    const margin = printed(printed(q.price as number) - shown);
+    if (margin > 0) {
+      shown += margin;
+      extras.push({
+        label: 'safety margin',
+        value: margin.toFixed(1),
+        tip: (
+          <>
+            Padding on top of the sum, sized from this API&rsquo;s measured timing
+            noise, so the safe max never undercounts.
+            <a href="/docs/faq/">Learn more &rarr;</a>
+          </>
+        ),
+      });
+    }
   }
   const shared: SharedGroup[] = (q.sharing ?? []).map((s) => ({
     resolvers: ((s as any).folds as string[]).map(shortResolver),
@@ -308,6 +362,7 @@ function receiptFromQuote(q: QuoteResult): {
 
   return {
     items,
+    extras,
     shared,
     typical: q.typical_price != null ? (q.typical_price as number).toFixed(1) : undefined,
     typicalLabel: `typical (${unit})`,
@@ -574,7 +629,7 @@ export default function Playground() {
     analyze();
   };
 
-  const r = quote ? receiptFromQuote(quote) : null;
+  const r = quote && packRef.current ? receiptFromQuote(quote, packRef.current.model) : null;
   const queryType = schemaObj?.getQueryType() ?? null;
 
   /** When the price lands on a new value, pulse it once so the change registers
@@ -687,6 +742,7 @@ export default function Playground() {
                   title="costql quote"
                   meta={`${PACKS[idx].file} · offline`}
                   items={r.items}
+                  extras={r.extras}
                   shared={r.shared}
                   typical={r.typical}
                   typicalLabel={r.typicalLabel}
