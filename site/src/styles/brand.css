@@ -698,11 +698,12 @@ body {
   font-size: var(--fs-sm);
 }
 .cql-finder__q + .cql-finder__q { border-top: var(--border-1) dashed var(--border-hairline); }
-.cql-finder__qtext { min-width: 0; }
+.cql-finder__qtext { min-width: 0; line-height: 1.35; }
 .cql-finder__qtext small {
   display: block;
   color: var(--text-muted);
   font-size: var(--fs-xs);
+  line-height: var(--lh-tight);
 }
 .cql-finder__toggle {
   flex: none;
@@ -710,7 +711,7 @@ body {
   border: var(--border-1) solid var(--border-ink);
   border-radius: var(--radius-1);
   overflow: hidden;
-  background: var(--surface-card);
+  background: var(--surface-invert); /* dark track; the white segment is the answer */
 }
 .cql-finder__toggle label { cursor: pointer; }
 .cql-finder__toggle input {
@@ -724,20 +725,25 @@ body {
   font-family: var(--font-mono);
   font-size: var(--fs-xs);
   font-weight: var(--fw-bold);
-  color: var(--text-secondary);
+  color: var(--text-invert);
+  opacity: 0.5; /* the inactive side reads as inactive */
 }
 .cql-finder__toggle label + label span { border-left: var(--border-1) solid var(--border-ink); }
 .cql-finder__toggle input:checked + span {
-  background: var(--surface-invert);
-  color: var(--text-invert);
+  background: var(--surface-card);
+  color: var(--text-strong);
+  opacity: 1;
 }
 .cql-finder__toggle input:focus-visible + span {
   outline: 2px solid var(--green-600);
   outline-offset: -2px;
 }
 .cql-finder__result {
+  /* flex-start, not baseline: baseline alignment pushed the explainer's first
+     line down to match the chip's text baseline, which read as a phantom
+     margin nothing in the box model explained */
   display: flex;
-  align-items: baseline;
+  align-items: flex-start;
   gap: var(--space-4);
   padding: var(--space-4) var(--space-5);
   background: var(--bg-sunken);
@@ -757,6 +763,11 @@ body {
 .cql-finder__why {
   margin: 0;
   font-size: var(--fs-sm);
+}
+/* same pulse the receipt total uses when a price changes */
+.cql-finder__pulse { animation: cql-total-pulse 450ms ease-out; }
+@media (prefers-reduced-motion: reduce) {
+  .cql-finder__pulse { animation: none; }
 }
 
 /* ---- Steps: a left-to-right flow, cards joined by arrows ---- */

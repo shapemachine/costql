@@ -1,5 +1,5 @@
 ---
-// "Which tier fits your API?" — a stacked checklist in a modal. Each checked
+// "Which tier fits your API?": a stacked checklist in a modal. Each checked
 // box implies a minimum tier; the fit is the highest one triggered, capped at
 // T1 when the visitor can't change the server. Fit language only: no tier is
 // ever called better, and every combination (including none) has an answer.
@@ -14,7 +14,7 @@
   <div class="cql-modal__body">
     <p class="cql-modal__intro">
       Five yes-or-no questions; the answer updates as you go.
-      No tier is better than another — the fit is a fact about your API.
+      No tier is better than another. The fit is a fact about your API.
     </p>
 
     <div class="cql-finder__group">
@@ -59,6 +59,13 @@
     const chip = document.getElementById('tf-chip');
     const why = document.getElementById('tf-why');
 
+    const pulse = (el) => {
+      el.classList.remove('cql-finder__pulse');
+      void el.offsetWidth;
+      el.classList.add('cql-finder__pulse');
+    };
+
+    let prev = '';
     const update = () => {
       const on = (k) => dialog.querySelector(`[name="tf-${k}"]:checked`).value === 'yes';
       const owner = on('owner');
@@ -68,37 +75,40 @@
       let tier, text;
       if (!owner) {
         tier = 'T1';
-        text = "the fit for an API you can't change: it needs nothing from the server and already quotes with a safe max.";
+        text = "T1 asks nothing of a server you can't change, and it still quotes a safe max you can bill on.";
         if (batch || external) {
-          text += ' Your API’s shape would put the sharing trace (T3) to work, so if you ever can instrument, that’s the change worth making.';
+          text += ' Your other answers point at T3. If you ever get access to the server, instrument for that.';
         } else if (parallel || breakdown) {
-          text += ' Your API’s shape would put per-resolver timing (T2) to work, so if you ever can instrument, that’s the change worth making.';
+          text += ' Your other answers point at T2. If you ever get access to the server, instrument for that.';
         }
       } else if (batch && external) {
         tier = 'T3';
-        text = 'your server shares work and calls outside services — the sharing trace prices the shared reads once and names the outside hosts for your app to price.';
+        text = 'Your server reuses work and calls outside services. T3 prices the shared reads once, and it names each outside host so your app can price those calls.';
       } else if (batch) {
         tier = 'T3';
-        text = 'your server batches or reuses reads, and only the tier that watches sharing can price that work once instead of many times.';
+        text = 'Your server batches or reuses reads. T3 watches that sharing and prices the work once, instead of charging for every repeat.';
       } else if (external) {
         tier = 'T3';
-        text = 'naming outside paid calls is T3 detail: the quote reports the host and call count so your app can put a price on them.';
+        text = "T3 quotes name each outside host and its call count. Your app puts the price on those calls; costQL can't know what an outside service charges.";
       } else if (parallel && breakdown) {
         tier = 'T2';
-        text = 'per-resolver timing shows your parallel work and gives every quote a per-field breakdown. With no shared reads, there’s nothing extra for T3 to see.';
+        text = 'T2 times each resolver. That timing sees your parallel work and fills the per-field breakdown you want. You said no shared reads, so T3 has nothing extra to watch.';
       } else if (parallel) {
         tier = 'T2';
-        text = 'your resolvers work in parallel, so per-resolver timing keeps real work from hiding inside one stopwatch. With no shared reads, there’s nothing extra for T3 to see.';
+        text = 'Your API works in parallel, and one stopwatch on the whole request misses that. T2 times each resolver, so the price follows the real work. You said no shared reads, so T3 has nothing extra to watch.';
       } else if (breakdown) {
         tier = 'T2';
-        text = 'a per-field breakdown arrives with per-resolver timing. With no shared reads, there’s nothing extra for T3 to see.';
+        text = 'T2 times each resolver, and that timing fills the per-field breakdown you want. You said no shared reads, so T3 has nothing extra to watch.';
       } else {
         tier = 'T1';
-        text = 'serial, unshared work is exactly what one stopwatch measures well. The fit, even though you could instrument.';
+        text = 'Your API does its work one step at a time, and one stopwatch measures that well. T1 fits, even with the server yours to change.';
       }
 
       chip.textContent = tier;
-      why.innerHTML = `<strong>Your fit: ${tier}</strong> — ${text}`;
+      why.innerHTML = `<strong>Your fit: ${tier}.</strong> ${text}`;
+      const next = `${tier}|${text}`;
+      if (prev && prev !== next) { pulse(chip); pulse(why); }
+      prev = next;
     };
 
     dialog.addEventListener('change', update);
