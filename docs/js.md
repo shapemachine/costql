@@ -59,7 +59,7 @@ v1.0, `pack_version` 1.
 
 The JS parser is a deliberate line-for-line port of the Python one, so the
 two engines accept the same query surface (fragments, aliases, variables,
-directives: see the [parser notes](limitations.md)) and price it identically.
+directives: see [Quoting queries](quoting.md)) and price it identically.
 To pass variable values, hand them to `quote` directly:
 
 ```ts

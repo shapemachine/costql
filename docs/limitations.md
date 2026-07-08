@@ -51,31 +51,19 @@ the quote yet. On passthrough-style APIs the measured effect of this was ~0%
 (list items arrive inside the parent's single fetch), but on a resolver doing
 real per-item local work it would matter.
 
-## How sugared queries are priced
+## Polymorphic branches price as an upper bound
 
-`PricingPack.quote()` parses the executable query surface: fields and
-arguments, aliases, named and inline fragments, variables, and directives.
-Queries never need rewriting before quoting. These aren't limitations, but
-they belong on this page because they follow the same design rule as
-everything above: where the price can't be exact, it errs high and says so.
-What each one means for the price:
+Before a query runs, nobody knows which `... on Type` branch each object
+resolves to, so [the quote](quoting.md) walks every branch. At most one fires
+per object, so the price is a safe max, and the quote says so in a caveat
+naming the branched paths. Run the query for the exact cost.
 
-- **Fragments and aliases cost nothing extra.** They change how a query is
-  written, never what the server does, so a sugared query prices exactly like
-  its hand-flattened equivalent. (The same field requested under two aliases
-  is priced twice: that *is* extra work.)
-- **Polymorphic branches are priced as if every branch fires.** Before a query
-  runs, nobody knows which `... on Type` branch each object resolves to, so
-  the price walks them all. At most one fires per object, so this is an upper
-  bound, and the quote says so in a caveat.
-- **Variables** take their values from `quote(query, variables)` (CLI:
-  `--variables '{"n": 8}'`) or from the declared default. A variable with
-  neither loses its argument, so the ceiling's worst-case bound applies:
-  possibly higher than needed, never an under-price.
-- **Directives are priced as included.** `@skip`/`@include` can only remove
-  work at runtime, so ignoring them never under-prices.
-- **The tokenizer is lenient**: it accepts the common GraphQL query surface
-  rather than enforcing the full spec grammar.
+## A missing variable value prices at the worst case
+
+A `$variable` with no supplied value and no declared default loses its
+argument, so that field prices at the ceiling's worst-case bound: possibly
+higher than needed, never an under-price. Passing values
+([`quote(query, variables)`](quoting.md)) restores the exact bound.
 
 ## Non-goals (by design, not omission)
 
