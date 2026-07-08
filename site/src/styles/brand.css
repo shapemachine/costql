@@ -1060,8 +1060,7 @@ body {
   font-size: var(--fs-2xs);
   line-height: 1.6;
   color: var(--text-muted);
-  max-width: 34ch;
-  margin-top: 16px;
+  margin-top: 36px;
   padding-top: 16px;
   border-top: 1px dotted var(--paper-400);
 }
