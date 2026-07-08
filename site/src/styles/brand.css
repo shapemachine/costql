@@ -281,6 +281,19 @@ body {
 .cql-receipt__footer strong.ok { color: var(--signal-ok); }
 .cql-receipt__footer strong.low { color: var(--signal-low); }
 
+/* section heads naming groups of receipt lines (per-resolver work, whole-query
+   lines), same idiom as the shared head below. They sit outside the scroll
+   box, so their tooltips never clip. */
+.cql-receipt__section-head {
+  display: flex; align-items: center; gap: 6px;
+  font-size: var(--fs-xs); color: var(--text-muted);
+  letter-spacing: var(--tracking-receipt);
+  padding: 3px 0 1px;
+}
+/* a head that follows other lines gets air above it, so the break between
+   sections is visible */
+.cql-receipt__items + .cql-receipt__section-head { margin-top: 5px; }
+
 /* scrollable line-item region: a big query can't make the receipt run off the
    page. Only the per-resolver lines scroll; the shared section (with its
    overflowing tooltip) sits below, so nothing clips it. */
