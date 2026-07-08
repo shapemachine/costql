@@ -725,11 +725,13 @@ body {
   font-size: var(--fs-xs);
   font-weight: var(--fw-bold);
   color: var(--text-secondary);
+  opacity: 0.5; /* the inactive side reads as inactive */
 }
 .cql-finder__toggle label + label span { border-left: var(--border-1) solid var(--border-ink); }
 .cql-finder__toggle input:checked + span {
   background: var(--surface-invert);
   color: var(--text-invert);
+  opacity: 1;
 }
 .cql-finder__toggle input:focus-visible + span {
   outline: 2px solid var(--green-600);
@@ -757,6 +759,11 @@ body {
 .cql-finder__why {
   margin: 0;
   font-size: var(--fs-sm);
+}
+/* same pulse the receipt total uses when a price changes */
+.cql-finder__pulse { animation: cql-total-pulse 450ms ease-out; }
+@media (prefers-reduced-motion: reduce) {
+  .cql-finder__pulse { animation: none; }
 }
 
 /* ---- Steps: a left-to-right flow, cards joined by arrows ---- */
