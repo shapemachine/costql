@@ -1,25 +1,37 @@
 name: Release
 
-# Tag-driven, tokenless releases via Trusted Publishing (PyPI/TestPyPI) and
-# npm provenance. The version is DERIVED FROM THE GIT TAG (v1.2.3 -> 1.2.3) and
-# pinned into src/costql/_version.py and js/package.json at build time, so the
-# tag is the single source of truth for the version.
+# Tag-driven, tokenless releases via Trusted Publishing (PyPI/TestPyPI AND
+# npm, both OIDC). The version is DERIVED FROM THE GIT TAG (v1.2.3 -> 1.2.3)
+# and pinned into src/costql/_version.py and js/package.json at build time, so
+# the tag is the single source of truth for the version.
 #
 # Pre-release tags -- any version with letters after the number, e.g. v0.1.0rc1
 # or v0.2.0b1 -- publish ONLY to TestPyPI (a safe rehearsal). Final tags
 # (vX.Y.Z, digits only) publish TestPyPI -> PyPI -> npm.
 #
+# Manual dispatch (fix-forward): if one leg failed after PyPI took the
+# version, do NOT re-tag. Run this workflow manually with the existing tag
+# (e.g. tag=v0.2.0): it rebuilds from that tag and publishes the npm leg
+# only, skipping TestPyPI/PyPI entirely.
+#
 # One-time setup (repo owner):
 #   - PyPI + TestPyPI: add a Trusted Publisher for shapemachine/costql,
 #     workflow release.yml, environments "testpypi" / "pypi".
-#   - GitHub: create environments "testpypi" and "pypi"; require manual
+#   - npm: add a Trusted Publisher on the costql package (GitHub Actions,
+#     shapemachine/costql, workflow release.yml, environment "npm",
+#     allowed action: publish). No NPM_TOKEN secret needed.
+#   - GitHub: create environments "testpypi", "pypi", "npm"; require manual
 #     approval on "pypi" (public repo only).
-#   - npm: NPM_TOKEN secret in the "npm" environment (or npm Trusted Publishing
-#     when available for this repo).
 
 on:
   push:
     tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing tag to publish the npm leg for (e.g. v0.2.0)"
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -32,14 +44,17 @@ jobs:
       prerelease: ${{ steps.ver.outputs.prerelease }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref }}
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - name: Derive version from tag and pin it
         id: ver
         run: |
-          RAW="${GITHUB_REF_NAME#v}"
-          echo "Tag ${GITHUB_REF_NAME} -> version ${RAW}"
+          TAG="${{ inputs.tag || github.ref_name }}"
+          RAW="${TAG#v}"
+          echo "Tag ${TAG} -> version ${RAW}"
           printf '__version__ = "%s"\n' "$RAW" > src/costql/_version.py
           echo "version=$RAW" >> "$GITHUB_OUTPUT"
           if printf '%s' "$RAW" | grep -qE '[A-Za-z]'; then
@@ -58,6 +73,7 @@ jobs:
 
   testpypi:
     needs: build
+    if: ${{ github.event_name == 'push' }}
     runs-on: ubuntu-latest
     environment: testpypi
     permissions:
@@ -74,7 +90,7 @@ jobs:
 
   pypi:
     needs: [build, testpypi]
-    if: ${{ needs.build.outputs.prerelease == 'false' }}
+    if: ${{ github.event_name == 'push' && needs.build.outputs.prerelease == 'false' }}
     runs-on: ubuntu-latest
     environment: pypi   # configure required reviewers on this environment (public repo)
     permissions:
@@ -88,7 +104,13 @@ jobs:
 
   npm:
     needs: [build, pypi]
-    if: ${{ needs.build.outputs.prerelease == 'false' }}
+    # Runs after PyPI on a tag push, or directly on manual dispatch (the
+    # fix-forward path: PyPI already has the version, publish npm only).
+    if: >-
+      ${{ always() && needs.build.result == 'success'
+          && needs.build.outputs.prerelease == 'false'
+          && (needs.pypi.result == 'success'
+              || (github.event_name == 'workflow_dispatch' && needs.pypi.result == 'skipped')) }}
     runs-on: ubuntu-latest
     environment: npm
     permissions:
@@ -99,15 +121,18 @@ jobs:
         working-directory: js
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref }}
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          registry-url: https://registry.npmjs.org
+      # npm >= 11.5 exchanges the Actions OIDC token with the registry's
+      # Trusted Publisher (no NPM_TOKEN, nothing stored); provenance is
+      # generated automatically on trusted publishes.
+      - run: npm install -g npm@latest
       - run: npm ci
       - name: Pin version from tag
         run: npm version "${{ needs.build.outputs.version }}" --no-git-tag-version --allow-same-version
       - run: npm run build
       - run: npm test
-      - run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm publish --access public
