@@ -26,6 +26,7 @@ export default defineConfig({
         ThemeProvider: './src/components/starlight/ThemeProvider.astro',
         ThemeSelect: './src/components/starlight/ThemeSelect.astro',
         Head: './src/components/starlight/Head.astro',
+        Footer: './src/components/starlight/Footer.astro',
       },
       sidebar: [
         { label: 'Playground', link: '/playground/' },
