@@ -59,7 +59,7 @@ function pack(rel: string): PricingPack {
 describe("conformance against the Python oracle", () => {
   for (const entry of oracle.quotes) {
     it(`${entry.pack.split("/").pop()} :: ${entry.query.slice(0, 60)}`, () => {
-      const result = pack(entry.pack).quote(entry.query);
+      const result = pack(entry.pack).quote(entry.query, entry.variables);
       assertDeepClose(result, entry.expected, "quote");
     });
   }

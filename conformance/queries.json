@@ -1,5 +1,5 @@
 {
-  "_comment": "The conformance corpus inputs: for each committed pack, queries spanning simple, fanout, size-declared, sharing-heavy, external-cost, and cyclic (low-confidence) shapes. scripts/export_conformance.py runs each through the Python engine and freezes the full contract results into quotes.json, the oracle for the Python golden tests AND the JS port's conformance suite.",
+  "_comment": "The conformance corpus inputs: for each committed pack, queries spanning simple, fanout, size-declared, sharing-heavy, external-cost, cyclic (low-confidence), and sugared (fragments/aliases/variables/directives) shapes. An entry is a query string, or {\"query\": ..., \"variables\": {...}} to quote with variable values. scripts/export_conformance.py runs each through the Python engine and freezes the full contract results into quotes.json, the oracle for the Python golden tests AND the JS port's conformance suite. conformance/union_pack.json is synthetic (scripts/make_union_pack.py): it pins fragment-branch pricing on a union schema, which no demo pack has.",
   "packs/tmdb_t3.json": [
     "{ movie(id:\"27205\"){ title } }",
     "{ movie(id:\"27205\"){ title genres{ name } } }",
@@ -15,7 +15,13 @@
     "{ movie(id:\"27205\"){ recommendations{ recommendations{ title } } } }",
     "{ movie(id:\"27205\"){ similar{ similar{ title } } } }",
     "{ person(id:\"500\"){ filmography{ movie{ recommendations{ title } } } } }",
-    "{ movie(id:\"27205\"){ title cast(limit:4){ person{ name filmography(limit:3){ movie{ title } } } } } }"
+    "{ movie(id:\"27205\"){ title cast(limit:4){ person{ name filmography(limit:3){ movie{ title } } } } } }",
+    "fragment F on Movie { title genres{ name } } { movie(id:\"27205\"){ ...F } }",
+    "{ imax: movie(id:\"27205\"){ title } rerelease: movie(id:\"155\"){ title } }",
+    "{ movie(id:\"27205\"){ ... on Movie { cast(limit:8) @include(if:true){ person{ name } } } } }",
+    "query($n: Int = 8){ movie(id:\"27205\"){ cast(limit:$n){ person{ name } } } }",
+    {"query": "query($n: Int!){ movie(id:\"27205\"){ cast(limit:$n){ person{ name } } } }", "variables": {"n": 4}},
+    "query($n: Int){ movie(id:\"27205\"){ cast(limit:$n){ person{ name } } } }"
   ],
   "packs/rickmorty_t1.json": [
     "{ character(id:\"1\"){ name status species gender } }",
@@ -54,6 +60,12 @@
     "{ categories{ name description } }",
     "{ orders(first:20){ details(first:15){ product{ category{ name } } } } }",
     "{ orders(first:40){ details(first:15){ product{ name } } } }",
-    "{ products(first:40){ supplier{ country } } }"
+    "{ products(first:40){ supplier{ country } } }",
+    {"query": "query($f: Int!){ orders(first:$f){ ...D } } fragment D on Order { orderDate details(first:15){ quantity product{ name } } }", "variables": {"f": 20}}
+  ],
+  "conformance/union_pack.json": [
+    "{ search(query:\"a\", first:5){ ... on Movie { title similar(first:2){ title } } ... on Book { title } } }",
+    "{ search(query:\"a\", first:5){ ... on Movie { title } } }",
+    "query($k: Int = 3){ search(query:\"a\", first:$k){ ...B } } fragment B on Book { title pages }"
   ]
 }

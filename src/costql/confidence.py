@@ -51,6 +51,10 @@ def _data_dependent_paths(tg: TypeGraph, selection: Selection) -> set:
     flagged: set = set()
 
     def walk(sel: Selection, parent_type: str, path: str, undeclared: int):
+        if sel.on is not None:
+            for c in sel.children:
+                walk(c, sel.on, f"{path}.{c.name}", undeclared)
+            return
         obj = tg.objects.get(parent_type)
         if obj is None:
             return
@@ -70,6 +74,33 @@ def _data_dependent_paths(tg: TypeGraph, selection: Selection) -> set:
 
     walk(selection, tg.query_type, selection.name, 0)
     return flagged
+
+
+def branch_paths(tg: TypeGraph, selections: list[Selection]) -> list[str]:
+    """Paths where a fragment's type condition DIFFERS from the enclosing
+    type: a polymorphic branch. At most one branch fires per object, but the
+    pre-execution price walks them all, so these paths make the price an
+    upper bound. A fragment on its own enclosing type is pure grouping
+    (exact, not flagged)."""
+    out: list[str] = []
+
+    def walk(sel: Selection, parent_type: str, path: str):
+        if sel.on is not None:
+            if sel.on != parent_type:
+                out.append(path)
+            for c in sel.children:
+                walk(c, sel.on, f"{path}.{c.name}")
+            return
+        obj = tg.objects.get(parent_type)
+        f = obj.fields.get(sel.name) if obj is not None else None
+        if f is None:
+            return
+        for c in sel.children:
+            walk(c, f.type.base, f"{path}.{c.name}")
+
+    for s in selections:
+        walk(s, tg.query_type, s.name)
+    return out
 
 
 def assess(tg: TypeGraph, records, selection: Selection | None = None) -> Confidence:
@@ -96,6 +127,15 @@ def assess(tg: TypeGraph, records, selection: Selection | None = None) -> Confid
         cur_type = tg.query_type
         is_below_cycle = False
         for name in parts:
+            if name.startswith("on:"):
+                # Fragment-node path segment: switches the walk to the type
+                # condition (no resolver, no list edge of its own).
+                t = name[3:]
+                if t in seen_types and list_edges > 0:
+                    is_below_cycle = True
+                seen_types.add(t)
+                cur_type = t
+                continue
             obj = tg.objects.get(cur_type)
             if obj is None:
                 break

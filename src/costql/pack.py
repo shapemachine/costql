@@ -21,7 +21,7 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 
-from .confidence import assess
+from .confidence import assess, branch_paths
 from .contract import predicted_result
 from .introspect import TypeGraph
 from .pricer import DOC_FEATURE, CostModel, Pricer
@@ -111,7 +111,7 @@ class PricingPack:
                    tier=d.get("tier", "T3"))
 
     # ---- the app-side interface ------------------------------------------
-    def quote(self, query: str) -> dict:
+    def quote(self, query: str, variables: dict | None = None) -> dict:
         """Price a query from the pack alone: no server, no measurement.
 
         Returns a FROZEN contract result (see contract.py): the safe billable
@@ -120,17 +120,28 @@ class PricingPack:
         named `external_calls`. Confidence is diagnostic (a "run it for the exact
         cost" hint on cyclic queries); the billable number is the ceiling, which
         never under-prices. `query` is echoed for convenience (not part of the
-        contract core).
+        contract core). `variables` supplies values for `$name` usages; a
+        variable with no value and no declared default loses its argument, so
+        the ceiling's worst-case bound applies to that field.
         """
         tg = TypeGraph(self.introspection)
         model = self.model
         pricer = Pricer(tg, model)
-        sels = parse_query(query)
+        sels = parse_query(query, variables)
 
         ceiling = pricer.price(sels, mode="ceiling", fold=True)
         typical = pricer.price(sels, mode="expectation", fold=True)
         recs = pricer.counter.count(sels, mode="ceiling", size_caps=model.max_size)
         conf = assess(tg, recs, sels[0] if sels else None)
+        caveats = list(conf.caveats)
+        branched = branch_paths(tg, sels)
+        if branched:
+            caveats.append(
+                f"polymorphic branches (`... on Type`) at {len(branched)} path(s) "
+                f"({', '.join(branched[:3])}{'…' if len(branched) > 3 else ''}); the "
+                f"price walks every branch, but at most one fires per object, so "
+                f"price and typical are upper bounds for those fields. Run it for "
+                f"the exact cost.")
         used = {r.resolver_id for r in recs}
 
         # per-resolver breakdown (T2/T3): the ceiling's cost lines
@@ -154,7 +165,7 @@ class PricingPack:
         result = predicted_result(
             tier=self.tier, currency=self.currency, schema_hash=self.schema_hash,
             price=ceiling.score, typical_price=typical.score, confidence=conf.level,
-            caveats=conf.caveats, breakdown=breakdown, sharing=sharing,
+            caveats=caveats, breakdown=breakdown, sharing=sharing,
             external_calls=external_calls)
         result["query"] = query
         return result

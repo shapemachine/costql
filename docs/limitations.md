@@ -51,20 +51,32 @@ the quote yet. On passthrough-style APIs the measured effect of this was ~0%
 (list items arrive inside the parent's single fetch), but on a resolver doing
 real per-item local work it would matter.
 
-## v0.1 query-parser limitations
+## Query-parser notes
 
-`PricingPack.quote()` parses queries with a small built-in parser, which currently
-has three known edges:
+`PricingPack.quote()` parses queries with a small built-in parser. As of v0.2
+it covers the executable query surface: fields and arguments, aliases, named
+and inline fragments, variables, and directives. What each one means for the
+price:
 
-- **Fragments are not supported**: a query containing a fragment spread raises
-  an error rather than mispricing silently.
-- **Aliases are not resolved**: an aliased field is seen under its alias, not
-  its schema field name, so it will not match the priced resolver.
+- **Fragments and aliases cost nothing extra.** They change how a query is
+  written, never what the server does, so a sugared query prices exactly like
+  its hand-flattened equivalent. (The same field requested under two aliases
+  is priced twice: that *is* extra work.)
+- **Polymorphic branches are priced as if every branch fires.** Before a query
+  runs, nobody knows which `... on Type` branch each object resolves to, so
+  the price walks them all. At most one fires per object, so this is an upper
+  bound, and the quote says so in a caveat.
+- **Variables** take their values from `quote(query, variables)` (CLI:
+  `--variables '{"n": 8}'`) or from the declared default. A variable with
+  neither loses its argument, so the ceiling's worst-case bound applies:
+  possibly higher than needed, never an under-price.
+- **Directives are priced as included.** `@skip`/`@include` can only remove
+  work at runtime, so ignoring them never under-prices.
 - **The tokenizer is lenient**: it accepts the common GraphQL query surface
-  (fields, arguments, variables-free literals, comments) rather than enforcing
-  the full spec grammar.
+  rather than enforcing the full spec grammar.
 
-Rewriting a query without fragments/aliases before quoting sidesteps all three.
+The common thread: where the parser must guess, it guesses HIGH, so the
+ceiling stays a ceiling.
 
 ## Non-goals (by design, not omission)
 

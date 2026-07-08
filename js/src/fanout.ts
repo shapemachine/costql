@@ -46,6 +46,16 @@ export class FanoutCounter {
 
     const walk = (sel: Selection, parentType: string, parentInvocations: number,
                   path: string, inherited: number[]): void => {
+      if (sel.on != null) {
+        // Fragment node: no resolver of its own. Children resolve against the
+        // type condition; when that is a branch of an abstract parent, every
+        // branch is walked (at most one fires per object, so the sum is a
+        // safe upper bound: pack.quote attaches a caveat).
+        for (const c of sel.children) {
+          walk(c, sel.on, parentInvocations, `${path}.${c.name}`, inherited);
+        }
+        return;
+      }
       const obj = this.tg.objects.get(parentType);
       if (!obj) return;
       const f = obj.fields.get(sel.name);
