@@ -20,9 +20,9 @@
     <div class="cql-finder__group">
       {[
         { key: 'owner', yes: true, q: 'Do you run the server?', hint: 'you could deploy a change to it' },
-        { key: 'batch', yes: false, q: 'Does your API batch, coalesce, or cache reads?', hint: 'DataLoader, SELECT … WHERE id IN (…), an entity cache' },
+        { key: 'batch', yes: false, q: 'Does your API batch or reuse reads?', hint: 'DataLoader, SELECT … WHERE id IN (…), an entity cache' },
         { key: 'parallel', yes: false, q: 'Does your API do work in parallel inside one request?', hint: 'concurrent downstream calls' },
-        { key: 'external', yes: false, q: 'Does your API call outside paid services your app must price?', hint: 'an LLM, a licensed data feed' },
+        { key: 'external', yes: false, q: 'Does your API call paid outside services?', hint: 'an LLM, a licensed data feed; your app adds their price' },
         { key: 'breakdown', yes: false, q: 'Do you want a per-field cost breakdown in every quote?', hint: '' },
       ].map(({ key, yes, q, hint }) => (
         <div class="cql-finder__q">
@@ -75,33 +75,33 @@
       let tier, text;
       if (!owner) {
         tier = 'T1';
-        text = "T1 asks nothing of a server you can't change, and it still quotes a safe max you can bill on.";
+        text = 'T1 needs nothing from the server. That makes it the fit for an API you do not run. You still get a safe max price to bill with.';
         if (batch || external) {
-          text += ' Your other answers point at T3. If you ever get access to the server, instrument for that.';
+          text += ' Your other answers fit T3. If you get server access one day, set up T3 then.';
         } else if (parallel || breakdown) {
-          text += ' Your other answers point at T2. If you ever get access to the server, instrument for that.';
+          text += ' Your other answers fit T2. If you get server access one day, set up T2 then.';
         }
       } else if (batch && external) {
         tier = 'T3';
-        text = 'Your server reuses work and calls outside services. T3 prices the shared reads once, and it names each outside host so your app can price those calls.';
+        text = 'Your server reuses work, and it calls outside services. T3 sees both. It prices shared work once. It also names each outside service, so your app can add that price.';
       } else if (batch) {
         tier = 'T3';
-        text = 'Your server batches or reuses reads. T3 watches that sharing and prices the work once, instead of charging for every repeat.';
+        text = 'Your server batches or reuses reads. T3 watches that sharing, so it prices the work once instead of charging for every repeat.';
       } else if (external) {
         tier = 'T3';
-        text = "T3 quotes name each outside host and its call count. Your app puts the price on those calls; costQL can't know what an outside service charges.";
+        text = 'At T3, the quote names each outside service and counts its calls. costQL cannot know what that service charges, so your app adds that price.';
       } else if (parallel && breakdown) {
         tier = 'T2';
-        text = 'T2 times each resolver. That timing sees your parallel work and fills the per-field breakdown you want. You said no shared reads, so T3 has nothing extra to watch.';
+        text = 'T2 times each field on the server. That shows the work done in parallel, and it fills the per-field breakdown you want. You said no shared reads, so T3 would see nothing more.';
       } else if (parallel) {
         tier = 'T2';
-        text = 'Your API works in parallel, and one stopwatch on the whole request misses that. T2 times each resolver, so the price follows the real work. You said no shared reads, so T3 has nothing extra to watch.';
+        text = 'Your API does work in parallel. One clock on the whole request cannot see that. T2 times each field, so the price follows the real work. You said no shared reads, so T3 would see nothing more.';
       } else if (breakdown) {
         tier = 'T2';
-        text = 'T2 times each resolver, and that timing fills the per-field breakdown you want. You said no shared reads, so T3 has nothing extra to watch.';
+        text = 'T2 times each field, and that fills the per-field breakdown you want. You said no shared reads, so T3 would see nothing more.';
       } else {
         tier = 'T1';
-        text = 'Your API does its work one step at a time, and one stopwatch measures that well. T1 fits, even with the server yours to change.';
+        text = 'Your API does its work one step at a time. One clock measures that well. T1 fits, even though you run the server.';
       }
 
       chip.textContent = tier;
