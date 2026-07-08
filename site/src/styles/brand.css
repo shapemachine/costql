@@ -1060,12 +1060,14 @@ body {
   font-size: var(--fs-2xs);
   line-height: 1.6;
   color: var(--text-muted);
-  margin-top: 36px;
-  max-width: 68ch;
+  max-width: 34ch;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dotted var(--paper-400);
 }
 .cql-footer__tail {
   border-top: 2px dashed var(--paper-400);
-  margin-top: 20px;
+  margin-top: 36px;
   padding-top: 16px;
   padding-bottom: 32px;
   display: flex;
