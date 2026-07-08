@@ -37,12 +37,40 @@ export interface SharedGroup {
   loader: string;
 }
 
+/** A small muted head naming a receipt section, with an optional info tooltip
+ * — the same head-plus-i idiom as the shared section. */
+export interface SectionHead {
+  label: string;
+  tip?: React.ReactNode;
+}
+
+function SectionHeadRow({ head }: { head: SectionHead }) {
+  return (
+    <div className="cql-receipt__section-head">
+      <span>{head.label}</span>
+      {head.tip && (
+        <span className="cql-tip cql-tip--end">
+          <button
+            type="button"
+            className="cql-tip__trigger cql-tip__trigger--icon"
+            aria-label="What do these lines mean?"
+          >
+            i
+          </button>
+          <span className="cql-tip__bubble" role="tooltip">{head.tip}</span>
+        </span>
+      )}
+    </div>
+  );
+}
+
 export function ReceiptView({
   title = 'costql quote',
   meta,
   items,
   itemsHead,
   extras,
+  extrasHead,
   shared,
   typical,
   typicalLabel = 'typical',
@@ -56,12 +84,14 @@ export function ReceiptView({
   title?: string;
   meta?: string;
   items: ReceiptItem[];
-  /** Section head naming what the line items are, with an optional info
-   * tooltip — the same head-plus-i idiom as the shared section. */
-  itemsHead?: { label: string; tip?: React.ReactNode };
+  /** Head naming what the line items are. */
+  itemsHead?: SectionHead;
   /** Whole-quote lines (per-field base, safety margin): rendered below the
    * scrolling items so their tooltips can't be clipped by the scroll box. */
   extras?: ReceiptItem[];
+  /** Head marking where the per-resolver lines end and the whole-quote
+   * lines begin. */
+  extrasHead?: SectionHead;
   shared?: SharedGroup[];
   typical?: string;
   typicalLabel?: string;
@@ -80,30 +110,19 @@ export function ReceiptView({
         <div className="cql-receipt__title">{title}</div>
         {meta && <div className="cql-receipt__meta">{meta}</div>}
         <div className="cql-receipt__rule" />
-        {itemsHead && (
-          <div className="cql-receipt__items-head">
-            <span>{itemsHead.label}</span>
-            {itemsHead.tip && (
-              <span className="cql-tip cql-tip--end">
-                <button
-                  type="button"
-                  className="cql-tip__trigger cql-tip__trigger--icon"
-                  aria-label="What do these lines mean?"
-                >
-                  i
-                </button>
-                <span className="cql-tip__bubble" role="tooltip">{itemsHead.tip}</span>
-              </span>
-            )}
-          </div>
-        )}
+        {itemsHead && <SectionHeadRow head={itemsHead} />}
         {/* line items scroll so a big query can't run the receipt off the page */}
         <div className="cql-receipt__items">
           {items.map((it, i) => (
             <Row key={i} it={it} />
           ))}
         </div>
-        {extras && extras.map((it, i) => <Row key={i} it={it} />)}
+        {extras && extras.length > 0 && (
+          <>
+            {extrasHead && <SectionHeadRow head={extrasHead} />}
+            {extras.map((it, i) => <Row key={i} it={it} />)}
+          </>
+        )}
         {/* shared work: the T3 lines that used to just say "once", now a labeled
             section you can open, with an info tooltip explaining batching */}
         {shared && shared.length > 0 && (

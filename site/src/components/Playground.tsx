@@ -28,7 +28,7 @@ import {
   type GraphQLSchema,
 } from 'graphql';
 import React, { useEffect, useRef, useState } from 'react';
-import { ReceiptView, type ReceiptItem, type SharedGroup } from './ReceiptView.js';
+import { ReceiptView, type ReceiptItem, type SectionHead, type SharedGroup } from './ReceiptView.js';
 
 /** The playground: an Apollo-sandbox-style composer wired to the REAL costql
  * engine (the npm package) against the committed packs. Three columns: the
@@ -273,8 +273,9 @@ const printed = (n: number): number => Number(n.toFixed(1));
 
 function receiptFromQuote(q: QuoteResult, model: CostModelData): {
   items: ReceiptItem[];
-  itemsHead?: { label: string; tip?: React.ReactNode };
+  itemsHead?: SectionHead;
   extras: ReceiptItem[];
+  extrasHead?: SectionHead;
   shared: SharedGroup[];
   typical?: string;
   typicalLabel: string;
@@ -378,6 +379,7 @@ function receiptFromQuote(q: QuoteResult, model: CostModelData): {
         }
       : undefined,
     extras,
+    extrasHead: extras.length ? { label: 'whole query' } : undefined,
     shared,
     typical: q.typical_price != null ? (q.typical_price as number).toFixed(1) : undefined,
     typicalLabel: `typical (${unit})`,
@@ -759,6 +761,7 @@ export default function Playground() {
                   items={r.items}
                   itemsHead={r.itemsHead}
                   extras={r.extras}
+                  extrasHead={r.extrasHead}
                   shared={r.shared}
                   typical={r.typical}
                   typicalLabel={r.typicalLabel}
