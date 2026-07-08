@@ -44,23 +44,38 @@ under-counted in the proxy. Measured honestly, T1 still performed well where the
 cost is dominated by what a black-box caller actually experiences: ~96% accuracy
 on the public [Rick & Morty API](results/rickmorty.md).
 
-## Size curves are light on the single-resolver dimension
+## When a field's cost grows with an argument
 
-costQL learns how cost grows with size. Today that learning covers one dimension
-well — the **batched loader**: how a shared read's cost grows with the number of
-distinct rows in one batch (a 300-key batch costs more than a 3-key one). The
-[Northwind study](results/northwind.md) calibrated that curve and verified it
-stays ceiling-safe under heavy sharing.
+costQL learns how a cost grows with size by **measuring the same field at several
+sizes** during calibration. It does this for the two size-sensitive shapes that
+dominate real APIs — and that writing an adapter naturally exercises: **batched
+loaders** (a shared read's cost against how many rows it pulls; the
+[Northwind study](results/northwind.md) fit this curve and verified it stays
+ceiling-safe under heavy sharing) and the **list fields** you already vary
+`first:` / `limit:` across in your calibration queries.
 
-The **single-resolver** size dimension is less exercised. A declared `limit` on a
-**leaf compute field** does not scale the quote yet — asking for 500 items prices
-the same as asking for 5. On passthrough-style APIs the measured effect was ~0%
-(the list items arrive inside the parent's single fetch, so there is no per-item
-cost to scale). But on a resolver doing real per-item local work, a large `limit`
-could be under-counted. This is the one place on this page where the gap is in the
-**ceiling**, not just the typical estimate — so we name it plainly rather than
-dress it up. Until that curve is fit, treat a large `limit` on such a field as a
-possible under-count.
+One shape isn't swept by default: a **single resolver whose own per-call work
+grows with an argument** — a field that takes, say, `limit: 500` and does real
+work on all 500 rows in a single call. If calibration only ever measured it
+small, costQL prices it flat, and a much larger request against it can come in
+low.
+
+Two reasons this is a corner, not a cliff:
+
+- **In every case study, its measured effect was ~0%.** On passthrough-style APIs
+  the list items ride inside the parent's single fetch, so there is no per-item
+  cost to scale. It takes an uncommon shape — a field doing heavy per-item local
+  work — to matter at all.
+- **The fix is one calibration query, not a redesign.** If such a field ever
+  surfaces, list it in your calibration queries at a large argument, name its
+  size argument (a [`size_root`](adapters.md)), and rebuild the pack. Building is
+  offline and one-time; the pack is just a file you regenerate. From then on the
+  quote scales correctly.
+
+The honest version: costQL prices what your calibration exercises. The
+size-sensitive fields you would naturally reach for are swept for you; the rare
+one you would not think of is a cheap, known thing to fold in the moment it shows
+up.
 
 ## Polymorphic branches price as an upper bound
 
