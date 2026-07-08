@@ -13,35 +13,33 @@
 
   <div class="cql-modal__body">
     <p class="cql-modal__intro">
-      Five yes-or-no questions. Tick the yeses; the answer updates as you go.
+      Five yes-or-no questions; the answer updates as you go.
       No tier is better than another — the fit is a fact about your API.
     </p>
 
     <div class="cql-finder__group">
-      <label class="cql-finder__option">
-        <input type="checkbox" data-key="owner" checked />
-        <span>Do you run the server?
-          <small>you could deploy a change to it</small></span>
-      </label>
-      <label class="cql-finder__option">
-        <input type="checkbox" data-key="batch" />
-        <span>Does your API batch, coalesce, or cache reads?
-          <small>DataLoader, <code>SELECT … WHERE id IN (…)</code>, an entity cache</small></span>
-      </label>
-      <label class="cql-finder__option">
-        <input type="checkbox" data-key="parallel" />
-        <span>Does your API do work in parallel inside one request?
-          <small>concurrent downstream calls</small></span>
-      </label>
-      <label class="cql-finder__option">
-        <input type="checkbox" data-key="external" />
-        <span>Does your API call outside paid services your app must price?
-          <small>an LLM, a licensed data feed</small></span>
-      </label>
-      <label class="cql-finder__option">
-        <input type="checkbox" data-key="breakdown" />
-        <span>Do you want a per-field cost breakdown in every quote?</span>
-      </label>
+      {[
+        { key: 'owner', yes: true, q: 'Do you run the server?', hint: 'you could deploy a change to it' },
+        { key: 'batch', yes: false, q: 'Does your API batch, coalesce, or cache reads?', hint: 'DataLoader, SELECT … WHERE id IN (…), an entity cache' },
+        { key: 'parallel', yes: false, q: 'Does your API do work in parallel inside one request?', hint: 'concurrent downstream calls' },
+        { key: 'external', yes: false, q: 'Does your API call outside paid services your app must price?', hint: 'an LLM, a licensed data feed' },
+        { key: 'breakdown', yes: false, q: 'Do you want a per-field cost breakdown in every quote?', hint: '' },
+      ].map(({ key, yes, q, hint }) => (
+        <div class="cql-finder__q">
+          <span class="cql-finder__qtext">{q}
+            {hint && <small>{hint}</small>}</span>
+          <span class="cql-finder__toggle">
+            <label>
+              <input type="radio" name={`tf-${key}`} value="yes" checked={yes} />
+              <span>yes</span>
+            </label>
+            <label>
+              <input type="radio" name={`tf-${key}`} value="no" checked={!yes} />
+              <span>no</span>
+            </label>
+          </span>
+        </div>
+      ))}
     </div>
   </div>
 
@@ -62,7 +60,7 @@
     const why = document.getElementById('tf-why');
 
     const update = () => {
-      const on = (k) => dialog.querySelector(`[data-key="${k}"]`).checked;
+      const on = (k) => dialog.querySelector(`[name="tf-${k}"]:checked`).value === 'yes';
       const owner = on('owner');
       const batch = on('batch'), parallel = on('parallel'),
             external = on('external'), breakdown = on('breakdown');
