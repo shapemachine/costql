@@ -91,6 +91,9 @@ Not a ranking — a fact about your API's shape. Ask, in order:
 Whatever the destination, your first pack is still T1. That is a sequence, not
 a rank.
 
+Prefer ticking boxes? The same questions run interactively on
+[the landing page](https://costql.com/#tiers).
+
 ## One more axis: confidence (orthogonal to tier)
 
 Tier is about the *API's* observability; **confidence** is about the *query's*

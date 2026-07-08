@@ -1,0 +1,114 @@
+---
+// "Which tier fits your API?" — a stacked checklist in a modal. Each checked
+// box implies a minimum tier; the fit is the highest one triggered, capped at
+// T1 when the visitor can't change the server. Fit language only: no tier is
+// ever called better, and every combination (including none) has an answer.
+---
+
+<dialog id="tier-finder" class="cql-modal" aria-labelledby="tier-finder-title">
+  <form method="dialog" class="cql-modal__head">
+    <h3 id="tier-finder-title" class="cql-modal__title">Which tier fits your API?</h3>
+    <button class="cql-modal__close" aria-label="close">×</button>
+  </form>
+
+  <div class="cql-modal__body">
+    <p class="cql-modal__intro">
+      Five yes-or-no questions; the answer updates as you go.
+      No tier is better than another — the fit is a fact about your API.
+    </p>
+
+    <div class="cql-finder__group">
+      {[
+        { key: 'owner', yes: true, q: 'Do you run the server?', hint: 'you could deploy a change to it' },
+        { key: 'batch', yes: false, q: 'Does your API batch, coalesce, or cache reads?', hint: 'DataLoader, SELECT … WHERE id IN (…), an entity cache' },
+        { key: 'parallel', yes: false, q: 'Does your API do work in parallel inside one request?', hint: 'concurrent downstream calls' },
+        { key: 'external', yes: false, q: 'Does your API call outside paid services your app must price?', hint: 'an LLM, a licensed data feed' },
+        { key: 'breakdown', yes: false, q: 'Do you want a per-field cost breakdown in every quote?', hint: '' },
+      ].map(({ key, yes, q, hint }) => (
+        <div class="cql-finder__q">
+          <span class="cql-finder__qtext">{q}
+            {hint && <small>{hint}</small>}</span>
+          <span class="cql-finder__toggle">
+            <label>
+              <input type="radio" name={`tf-${key}`} value="yes" checked={yes} />
+              <span>yes</span>
+            </label>
+            <label>
+              <input type="radio" name={`tf-${key}`} value="no" checked={!yes} />
+              <span>no</span>
+            </label>
+          </span>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="cql-finder__result" aria-live="polite">
+    <span class="cql-finder__chip" id="tf-chip">T1</span>
+    <p class="cql-finder__why" id="tf-why"></p>
+  </div>
+
+  <div class="cql-modal__foot">
+    <a href="/docs/tiers/" target="_blank" rel="noopener">How the tiers see work →</a>
+  </div>
+</dialog>
+
+<script is:inline>
+  {
+    const dialog = document.getElementById('tier-finder');
+    const chip = document.getElementById('tf-chip');
+    const why = document.getElementById('tf-why');
+
+    const update = () => {
+      const on = (k) => dialog.querySelector(`[name="tf-${k}"]:checked`).value === 'yes';
+      const owner = on('owner');
+      const batch = on('batch'), parallel = on('parallel'),
+            external = on('external'), breakdown = on('breakdown');
+
+      let tier, text;
+      if (!owner) {
+        tier = 'T1';
+        text = "the fit for an API you can't change: it needs nothing from the server and already quotes with a safe max.";
+        if (batch || external) {
+          text += ' Your API’s shape would put the sharing trace (T3) to work, so if you ever can instrument, that’s the change worth making.';
+        } else if (parallel || breakdown) {
+          text += ' Your API’s shape would put per-resolver timing (T2) to work, so if you ever can instrument, that’s the change worth making.';
+        }
+      } else if (batch && external) {
+        tier = 'T3';
+        text = 'your server shares work and calls outside services — the sharing trace prices the shared reads once and names the outside hosts for your app to price.';
+      } else if (batch) {
+        tier = 'T3';
+        text = 'your server batches or reuses reads, and only the tier that watches sharing can price that work once instead of many times.';
+      } else if (external) {
+        tier = 'T3';
+        text = 'naming outside paid calls is T3 detail: the quote reports the host and call count so your app can put a price on them.';
+      } else if (parallel && breakdown) {
+        tier = 'T2';
+        text = 'per-resolver timing shows your parallel work and gives every quote a per-field breakdown. With no shared reads, there’s nothing extra for T3 to see.';
+      } else if (parallel) {
+        tier = 'T2';
+        text = 'your resolvers work in parallel, so per-resolver timing keeps real work from hiding inside one stopwatch. With no shared reads, there’s nothing extra for T3 to see.';
+      } else if (breakdown) {
+        tier = 'T2';
+        text = 'a per-field breakdown arrives with per-resolver timing. With no shared reads, there’s nothing extra for T3 to see.';
+      } else {
+        tier = 'T1';
+        text = 'serial, unshared work is exactly what one stopwatch measures well. The fit, even though you could instrument.';
+      }
+
+      chip.textContent = tier;
+      why.innerHTML = `<strong>Your fit: ${tier}</strong> — ${text}`;
+    };
+
+    dialog.addEventListener('change', update);
+    dialog.addEventListener('click', (e) => {
+      // backdrop click closes: the dialog element itself is the click target
+      if (e.target === dialog) dialog.close();
+    });
+    update();
+
+    document.querySelectorAll('[data-open-tier-finder]').forEach((btn) =>
+      btn.addEventListener('click', () => dialog.showModal()));
+  }
+</script>

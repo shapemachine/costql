@@ -1,5 +1,7 @@
 ---
-// "One currency, three fidelities": tier cards + the where-you-start callout.
+// "One currency, three fidelities": tier cards + the where-you-start callout,
+// plus the tier-finder modal and its CTA.
+import TierFinder from './TierFinder.astro';
 ---
 
 <section id="tiers" class="cql-tiers">
@@ -40,6 +42,12 @@
       </div>
     </div>
 
+    <div class="cql-tiers__cta">
+      <button class="cql-btn cql-btn--primary" data-open-tier-finder>
+        Which tier fits your API?
+      </button>
+    </div>
+
     <div class="cql-callout cql-callout--panel">
       <span class="cql-callout__label">Where you'll start:</span>
       <span>
@@ -51,4 +59,5 @@
       </span>
     </div>
   </div>
+  <TierFinder />
 </section>
