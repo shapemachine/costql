@@ -13,48 +13,36 @@
 
   <div class="cql-modal__body">
     <p class="cql-modal__intro">
+      Five yes-or-no questions. Tick the yeses; the answer updates as you go.
       No tier is better than another — the fit is a fact about your API.
-      Tick what's true and the answer updates.
     </p>
 
-    <fieldset class="cql-finder__group">
-      <legend>Do you run the server?</legend>
+    <div class="cql-finder__group">
       <label class="cql-finder__option">
-        <input type="radio" name="tf-owner" value="yes" checked />
-        <span>Yes — I can deploy a change</span>
+        <input type="checkbox" data-key="owner" checked />
+        <span>Do you run the server?
+          <small>you could deploy a change to it</small></span>
       </label>
       <label class="cql-finder__option">
-        <input type="radio" name="tf-owner" value="no" />
-        <span>No — it's someone else's API</span>
-      </label>
-    </fieldset>
-
-    <fieldset class="cql-finder__group">
-      <legend>Does your API…</legend>
-      <label class="cql-finder__option">
-        <input type="checkbox" data-need="3" data-key="batch" />
-        <span>batch, coalesce, or cache reads?
+        <input type="checkbox" data-key="batch" />
+        <span>Does your API batch, coalesce, or cache reads?
           <small>DataLoader, <code>SELECT … WHERE id IN (…)</code>, an entity cache</small></span>
       </label>
       <label class="cql-finder__option">
-        <input type="checkbox" data-need="2" data-key="parallel" />
-        <span>do work in parallel inside one request?
+        <input type="checkbox" data-key="parallel" />
+        <span>Does your API do work in parallel inside one request?
           <small>concurrent downstream calls</small></span>
       </label>
       <label class="cql-finder__option">
-        <input type="checkbox" data-need="3" data-key="external" />
-        <span>call outside paid services your app must price?
+        <input type="checkbox" data-key="external" />
+        <span>Does your API call outside paid services your app must price?
           <small>an LLM, a licensed data feed</small></span>
       </label>
-    </fieldset>
-
-    <fieldset class="cql-finder__group">
-      <legend>And do you want…</legend>
       <label class="cql-finder__option">
-        <input type="checkbox" data-need="2" data-key="breakdown" />
-        <span>a per-field cost breakdown in every quote?</span>
+        <input type="checkbox" data-key="breakdown" />
+        <span>Do you want a per-field cost breakdown in every quote?</span>
       </label>
-    </fieldset>
+    </div>
   </div>
 
   <div class="cql-finder__result" aria-live="polite">
@@ -75,7 +63,7 @@
 
     const update = () => {
       const on = (k) => dialog.querySelector(`[data-key="${k}"]`).checked;
-      const owner = dialog.querySelector('[name="tf-owner"]:checked').value === 'yes';
+      const owner = on('owner');
       const batch = on('batch'), parallel = on('parallel'),
             external = on('external'), breakdown = on('breakdown');
 
