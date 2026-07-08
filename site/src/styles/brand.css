@@ -726,7 +726,7 @@ body {
   font-size: var(--fs-xs);
   font-weight: var(--fw-bold);
   color: var(--text-invert);
-  opacity: 0.3; /* the inactive side reads as inactive */
+  opacity: 0.5; /* the inactive side reads as inactive */
 }
 .cql-finder__toggle label + label span { border-left: var(--border-1) solid var(--border-ink); }
 .cql-finder__toggle input:checked + span {
