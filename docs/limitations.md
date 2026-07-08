@@ -72,10 +72,9 @@ Two reasons this is a corner, not a cliff:
   offline and one-time; the pack is just a file you regenerate. From then on the
   quote scales correctly.
 
-The honest version: costQL prices what your calibration exercises. The
-size-sensitive fields you would naturally reach for are swept for you; the rare
-one you would not think of is a cheap, known thing to fold in the moment it shows
-up.
+costQL prices what your calibration exercises. The size-sensitive fields you
+would naturally reach for are swept for you; the rare one you would not think of
+is a cheap, known thing to fold in the moment it shows up.
 
 ## Polymorphic branches price as an upper bound
 
