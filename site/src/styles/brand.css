@@ -711,7 +711,7 @@ body {
   border: var(--border-1) solid var(--border-ink);
   border-radius: var(--radius-1);
   overflow: hidden;
-  background: var(--surface-invert); /* dark track; the white segment is the answer */
+  background: var(--surface-card); /* white track; the green segment is the answer */
 }
 .cql-finder__toggle label { cursor: pointer; }
 .cql-finder__toggle input {
@@ -725,12 +725,12 @@ body {
   font-family: var(--font-mono);
   font-size: var(--fs-xs);
   font-weight: var(--fw-bold);
-  color: var(--text-invert);
+  color: var(--text-strong);
   opacity: 0.5; /* the inactive side reads as inactive */
 }
 .cql-finder__toggle label + label span { border-left: var(--border-1) solid var(--border-ink); }
 .cql-finder__toggle input:checked + span {
-  background: var(--surface-card);
+  background: var(--accent-soft); /* same light green as the callout boxes */
   color: var(--text-strong);
   opacity: 1;
 }
