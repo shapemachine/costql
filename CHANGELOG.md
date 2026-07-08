@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.0: unreleased
+## 0.2.0: 2026-07-08
 
 The full executable query surface. Queries no longer need to be rewritten
 before quoting: both engines (PyPI + npm) now parse what clients actually
