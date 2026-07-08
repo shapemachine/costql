@@ -1,10 +1,12 @@
 ---
-description: "Where costQL is least certain: cyclic-recursion and data-dependent queries. In every case it degrades gracefully to a safe price plus an honest confidence tag."
+description: "Where costQL's typical estimate is least certain — cyclic-recursion and data-dependent queries. In every case the billable ceiling stays safe: costQL degrades gracefully to a priced quote plus an honest confidence tag, never a refusal."
 ---
 
 # Honest limitations
 
-costQL's core guarantee (a billable `price` on every query, with a ceiling that never under-prices) holds everywhere we have measured it. But some queries are genuinely less predictable than others, and some APIs afford less visibility than others. This page states the soft spots plainly, because a pricing tool you can't trust about its own blind spots isn't worth trusting about prices. In every case below, the designed behavior is **graceful degradation, never refusal**: you always get a contract-valid price plus an honest confidence tag.
+costQL gives you **two numbers per quote, and they fail differently.** The *typical* estimate is a best guess for a normal-sized case. The **billable ceiling** is the safe maximum — it never under-prices, and it is the number costQL bills on. Every soft spot below can bend the *typical* estimate on some hard query. In each one the **ceiling still holds**, and costQL tags the query `confidence: low` so you know to lean on the ceiling, not the typical.
+
+So read these as limits on the typical estimate's *precision*, not on costQL's guarantee — a pricing tool you can't trust about its own blind spots isn't worth trusting about prices. The one exception is called out where it lives (the single-resolver size dimension below), because honesty is the whole point of this page. Everywhere else, the designed behavior is **graceful degradation, never refusal**: a contract-valid price plus an honest confidence tag, every time.
 
 ## Cyclic-recursion queries
 
@@ -14,9 +16,10 @@ and the real backend de-duplicates by an amount only *running* the query reveals
 costQL does not fabricate a dedup guess. It prices the query **structurally** (a
 safe max), flags it `confidence: low`, and attaches a caveat: run it once for
 the exact cost. On the [TMDB demo](results/tmdb.md), the 4 cyclic held-out queries
-averaged ~92% error on the typical estimate, which is exactly why they are
-flagged rather than billed on. On [Rick & Morty](results/rickmorty.md), every
-loop-shaped query was auto-flagged.
+averaged ~92% error on the typical estimate — which is exactly why the typical is
+flagged, not trusted as the price. The number you are billed is the structural
+safe max, and it stays above the real cost. On
+[Rick & Morty](results/rickmorty.md), every loop-shaped query was auto-flagged.
 
 ## Data-dependent result sizes
 
@@ -43,13 +46,21 @@ on the public [Rick & Morty API](results/rickmorty.md).
 
 ## Size curves are light on the single-resolver dimension
 
-The learned size→cost curves currently cover the **batched-loader** dimension
-(how a shared read's cost grows with the number of distinct rows in the batch,
-the fix measured in the Northwind study). The **single-resolver** size dimension
-is less exercised: a declared `limit` on a **leaf compute field** does not scale
-the quote yet. On passthrough-style APIs the measured effect of this was ~0%
-(list items arrive inside the parent's single fetch), but on a resolver doing
-real per-item local work it would matter.
+costQL learns how cost grows with size. Today that learning covers one dimension
+well — the **batched loader**: how a shared read's cost grows with the number of
+distinct rows in one batch (a 300-key batch costs more than a 3-key one). The
+[Northwind study](results/northwind.md) calibrated that curve and verified it
+stays ceiling-safe under heavy sharing.
+
+The **single-resolver** size dimension is less exercised. A declared `limit` on a
+**leaf compute field** does not scale the quote yet — asking for 500 items prices
+the same as asking for 5. On passthrough-style APIs the measured effect was ~0%
+(the list items arrive inside the parent's single fetch, so there is no per-item
+cost to scale). But on a resolver doing real per-item local work, a large `limit`
+could be under-counted. This is the one place on this page where the gap is in the
+**ceiling**, not just the typical estimate — so we name it plainly rather than
+dress it up. Until that curve is fit, treat a large `limit` on such a field as a
+possible under-count.
 
 ## Polymorphic branches price as an upper bound
 
@@ -72,5 +83,9 @@ higher than needed, never an under-price. Passing values
   [the architecture](architecture.md).
 - **No dollars, no billing.** costQL speaks cost-units only; the consuming app
   owns the single rate that turns cost-units into money.
+- **No load or traffic model.** A quote prices **one execution** of a query. What
+  you multiply that by — requests per second, concurrent callers, total volume —
+  is your own infrastructure dimension. Pricing *that* (a rate limit, a throughput
+  tier) is the API owner's call, and costQL leaves it to you.
 - **No buyer-facing transparency mechanism.** How much of a quote's breakdown a
   seller shows their customers is the seller's design call, not costQL's.
