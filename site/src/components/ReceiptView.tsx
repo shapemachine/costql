@@ -41,6 +41,7 @@ export function ReceiptView({
   title = 'costql quote',
   meta,
   items,
+  itemsHead,
   extras,
   shared,
   typical,
@@ -55,6 +56,9 @@ export function ReceiptView({
   title?: string;
   meta?: string;
   items: ReceiptItem[];
+  /** Section head naming what the line items are, with an optional info
+   * tooltip — the same head-plus-i idiom as the shared section. */
+  itemsHead?: { label: string; tip?: React.ReactNode };
   /** Whole-quote lines (per-field base, safety margin): rendered below the
    * scrolling items so their tooltips can't be clipped by the scroll box. */
   extras?: ReceiptItem[];
@@ -76,6 +80,23 @@ export function ReceiptView({
         <div className="cql-receipt__title">{title}</div>
         {meta && <div className="cql-receipt__meta">{meta}</div>}
         <div className="cql-receipt__rule" />
+        {itemsHead && (
+          <div className="cql-receipt__items-head">
+            <span>{itemsHead.label}</span>
+            {itemsHead.tip && (
+              <span className="cql-tip cql-tip--end">
+                <button
+                  type="button"
+                  className="cql-tip__trigger cql-tip__trigger--icon"
+                  aria-label="What do these lines mean?"
+                >
+                  i
+                </button>
+                <span className="cql-tip__bubble" role="tooltip">{itemsHead.tip}</span>
+              </span>
+            )}
+          </div>
+        )}
         {/* line items scroll so a big query can't run the receipt off the page */}
         <div className="cql-receipt__items">
           {items.map((it, i) => (

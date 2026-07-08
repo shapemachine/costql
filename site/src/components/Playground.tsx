@@ -273,6 +273,7 @@ const printed = (n: number): number => Number(n.toFixed(1));
 
 function receiptFromQuote(q: QuoteResult, model: CostModelData): {
   items: ReceiptItem[];
+  itemsHead?: { label: string; tip?: React.ReactNode };
   extras: ReceiptItem[];
   shared: SharedGroup[];
   typical?: string;
@@ -362,6 +363,20 @@ function receiptFromQuote(q: QuoteResult, model: CostModelData): {
 
   return {
     items,
+    itemsHead: all.length
+      ? {
+          label: 'work · per resolver',
+          tip: (
+            <>
+              Each line is one resolver &mdash; the piece of server code that
+              fetches one field &mdash; priced at its measured work-time.
+              &times;N means this query makes it run N times; lines are named
+              Type.field from the schema.
+              <a href="/docs/tiers/">Learn more &rarr;</a>
+            </>
+          ),
+        }
+      : undefined,
     extras,
     shared,
     typical: q.typical_price != null ? (q.typical_price as number).toFixed(1) : undefined,
@@ -742,6 +757,7 @@ export default function Playground() {
                   title="costql quote"
                   meta={`${PACKS[idx].file} · offline`}
                   items={r.items}
+                  itemsHead={r.itemsHead}
                   extras={r.extras}
                   shared={r.shared}
                   typical={r.typical}

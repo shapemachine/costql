@@ -281,6 +281,15 @@ body {
 .cql-receipt__footer strong.ok { color: var(--signal-ok); }
 .cql-receipt__footer strong.low { color: var(--signal-low); }
 
+/* section head naming the line items, same idiom as the shared head below.
+   It sits outside the scroll box, so its tooltip never clips. */
+.cql-receipt__items-head {
+  display: flex; align-items: center; gap: 6px;
+  font-size: var(--fs-xs); color: var(--text-muted);
+  letter-spacing: var(--tracking-receipt);
+  padding: 3px 0 1px;
+}
+
 /* scrollable line-item region: a big query can't make the receipt run off the
    page. Only the per-resolver lines scroll; the shared section (with its
    overflowing tooltip) sits below, so nothing clips it. */
