@@ -730,7 +730,7 @@ body {
 }
 .cql-finder__toggle label + label span { border-left: var(--border-1) solid var(--border-ink); }
 .cql-finder__toggle input:checked + span {
-  background: var(--surface-card);
+  background: var(--accent-soft); /* same light green as the callout boxes */
   color: var(--text-strong);
   opacity: 1;
 }
