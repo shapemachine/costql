@@ -35,6 +35,7 @@ export default defineConfig({
         { label: 'Agent-assisted onboarding', slug: 'docs/agents' },
         { label: 'Instrumenting for T2/T3', slug: 'docs/instrumentation' },
         { label: 'External calls', slug: 'docs/external-calls' },
+        { label: 'Publishing a pack', slug: 'docs/publishing' },
         { label: 'FAQ', slug: 'docs/faq' },
         {
           label: 'Reference',
