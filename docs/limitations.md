@@ -4,7 +4,7 @@ description: "Where costQL is least certain: cyclic-recursion and data-dependent
 
 # Honest limitations
 
-costQL's core guarantee (a billable `price` on every query, with a ceiling that never under-prices) holds everywhere we have measured it. But some queries are genuinely less predictable than others, some APIs afford less visibility than others, and v0.1 has real edges. This page states them plainly, because a pricing tool you can't trust about its own blind spots isn't worth trusting about prices. In every case below, the designed behavior is **graceful degradation, never refusal**: you always get a contract-valid price plus an honest confidence tag.
+costQL's core guarantee (a billable `price` on every query, with a ceiling that never under-prices) holds everywhere we have measured it. But some queries are genuinely less predictable than others, and some APIs afford less visibility than others. This page states the soft spots plainly, because a pricing tool you can't trust about its own blind spots isn't worth trusting about prices. In every case below, the designed behavior is **graceful degradation, never refusal**: you always get a contract-valid price plus an honest confidence tag.
 
 ## Cyclic-recursion queries
 
@@ -51,12 +51,14 @@ the quote yet. On passthrough-style APIs the measured effect of this was ~0%
 (list items arrive inside the parent's single fetch), but on a resolver doing
 real per-item local work it would matter.
 
-## Query-parser notes
+## How sugared queries are priced
 
-`PricingPack.quote()` parses queries with a small built-in parser. As of v0.2
-it covers the executable query surface: fields and arguments, aliases, named
-and inline fragments, variables, and directives. What each one means for the
-price:
+`PricingPack.quote()` parses the executable query surface: fields and
+arguments, aliases, named and inline fragments, variables, and directives.
+Queries never need rewriting before quoting. These aren't limitations, but
+they belong on this page because they follow the same design rule as
+everything above: where the price can't be exact, it errs high and says so.
+What each one means for the price:
 
 - **Fragments and aliases cost nothing extra.** They change how a query is
   written, never what the server does, so a sugared query prices exactly like
@@ -74,9 +76,6 @@ price:
   work at runtime, so ignoring them never under-prices.
 - **The tokenizer is lenient**: it accepts the common GraphQL query surface
   rather than enforcing the full spec grammar.
-
-The common thread: where the parser must guess, it guesses HIGH, so the
-ceiling stays a ceiling.
 
 ## Non-goals (by design, not omission)
 
