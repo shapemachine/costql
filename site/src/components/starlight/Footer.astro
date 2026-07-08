@@ -1,0 +1,24 @@
+---
+// Starlight override: keep the default docs footer, add a plain-language
+// disclaimer line beneath it (matches the site footer's fine print).
+import Default from '@astrojs/starlight/components/Footer.astro';
+---
+
+<Default><slot /></Default>
+<p class="cql-docs-disclaimer">
+  costQL gives you a measured estimate, not a guarantee. Whether the prices fit
+  your business is yours to verify. Provided as-is under Apache-2.0, with no
+  warranty.
+</p>
+
+<style>
+  .cql-docs-disclaimer {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--sl-color-hairline);
+    font-size: var(--sl-text-xs);
+    line-height: 1.6;
+    color: var(--sl-color-gray-3);
+    max-width: 68ch;
+  }
+</style>
