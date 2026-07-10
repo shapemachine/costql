@@ -18,25 +18,26 @@ import TierFinder from './TierFinder.astro';
         <span class="cql-tier__tab">T1</span>
         <h3 class="cql-tier__heading">Works with any API</h3>
         <div class="cql-tier__body">
-          costQL times whole queries from the outside. No server changes at all. Every API
-          starts here, and for an API that does its work one step at a time, this is
-          the fit, not just the first step.
+          costQL puts one stopwatch on the whole query from the outside, with no server
+          changes. It fits an API that does its work one step at a time, where outside
+          timing already tells the whole story.
         </div>
       </div>
       <div class="cql-tier">
         <span class="cql-tier__tab">T2</span>
         <h3 class="cql-tier__heading">Sees parallel work</h3>
         <div class="cql-tier__body">
-          Your server times each resolver as it runs, so work that happens in parallel stops
-          hiding inside one stopwatch. Prices track the real work, not just elapsed time.
+          Your server times each resolver as it runs, so work done in parallel stops hiding
+          inside one stopwatch. The price counts the real work, not just elapsed time. It
+          fits an API that runs work side by side.
         </div>
       </div>
       <div class="cql-tier">
         <span class="cql-tier__tab">T3</span>
         <h3 class="cql-tier__heading">Sees shared work</h3>
         <div class="cql-tier__body">
-          Your server reports when it batches or reuses work, and costQL prices that work
-          once instead of many times. The fit for APIs that batch their reads or funnel
+          Your server also reports what it batches and reuses, so costQL counts shared work
+          once instead of many times. It fits an API that batches its reads or funnels
           queries onto a few shared entities.
         </div>
       </div>
@@ -49,13 +50,14 @@ import TierFinder from './TierFinder.astro';
     </div>
 
     <div class="cql-callout cql-callout--panel">
-      <span class="cql-callout__label">Where you'll start:</span>
+      <span class="cql-callout__label">Where to start:</span>
       <span>
-        your first pack will be T1. It works today, with no server changes, and it already
-        gives you a safe max. The packs in the playground are T3 because we run those demo
-        servers ourselves, and they batch their reads. <a href="/docs/tiers/"
-        target="_blank" rel="noopener">The tiers guide</a> covers the one server change
-        the instrumented tiers ask for.
+        T1 needs no server changes and works today, so it's the easy way in: you get a safe
+        max right away. Already emit per-resolver timings, or ready to add them? Start at T2
+        or T3 and see parallel or shared work from day one. (The packs in the playground are
+        T3 because the demo servers are instrumented to report their sharing.) <a
+        href="/docs/tiers/" target="_blank" rel="noopener">The tiers guide</a> walks through
+        the one server change the higher tiers ask for.
       </span>
     </div>
   </div>
