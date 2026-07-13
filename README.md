@@ -4,9 +4,12 @@
 [![PyPI](https://img.shields.io/pypi/v/costql?logo=pypi&logoColor=white&label=PyPI)](https://pypi.org/project/costql/)
 [![npm](https://img.shields.io/npm/v/costql?logo=npm&label=npm)](https://www.npmjs.com/package/costql)
 
-**Price GraphQL queries before they run.** costQL calibrates a live GraphQL
-API into a **pricing pack**, one self-contained JSON file, then quotes any
-query against that pack fully offline. No server, no network, no measurement.
+**Measure what a GraphQL query costs before it runs.** Every other GraphQL
+cost tool makes you hand-author a number on each field, a guess that rots as
+the resolver changes. costQL times your real API once into a **pricing pack**
+(one self-contained JSON file), then prices any query fully offline: no server,
+no network. One number you can **bill on or block on**, guaranteed never below
+the real cost.
 
 ```bash
 pip install costql        # Python: build packs + quote
@@ -88,13 +91,51 @@ Cyclic-recursion queries (whose runtime dedup is unknowable pre-execution) are
 automatically flagged **low confidence** and priced as a structural ceiling.
 Flagged, not silently billed.
 
+## Adding limits on expensive queries?
+
+If you came to stop expensive or abusive queries, a query-complexity limit,
+demand control, DoS protection, you're in the right neighborhood. All of those
+need the same thing: **a cost per query to threshold on.** Today you hand-author
+that cost (`@cost` directives, per-field weights) and hope the numbers are right.
+
+costQL is the measured version of that number. It won't reject the query for
+you, you still write `if quote["price"] > budget: reject`, but now the budget
+means something, because the price came from timing your real API, not a guess.
+And the queries hand-weights get wrong (batched resolvers priced far too high,
+recursive queries priced too low) are exactly the ones costQL gets right. See
+[docs/guides/query-limits.md](docs/guides/query-limits.md).
+
+## Why not just write this yourself?
+
+You could count fields and multiply by pagination in an afternoon, most people
+do, and there are libraries for it (`graphql-query-complexity`,
+`graphql-cost-analysis`, Apollo demand control). They share one weakness: **you**
+supply each field's cost by hand. That guess is wrong in the two cases that
+matter most:
+
+- **Batching.** A resolver behind a DataLoader does a list of 100 in one
+  round-trip, not 100. Field-multiplier math prices it at 100× and punishes your
+  best-built resolver. costQL prices shared work once; on our share-heaviest test
+  that cut error from 315% to 12%.
+- **Recursion.** A cyclic query is the classic GraphQL DoS. A hand-authored
+  weight never sees it coming. costQL flags cycles automatically and prices them
+  at a safe ceiling.
+
+The hard part isn't summing a tree, it's knowing the per-field number is *right*,
+and the only way to know is to measure the real API. That's the part a
+from-scratch build skips, and it's why the DIY version quietly undercharges
+(billing) or lets the expensive query through (protection). If your API is
+simple and you never bill on the number, hand-weights are fine. The moment
+undercharging or a DoS query actually costs you, you want it measured.
+
 ## What costQL is not
 
 - **Not a service.** The pack is static and local by design: no sidecar, no
   pricing endpoint, no extra API call.
 - **Not billing.** costQL speaks cost-units, never dollars; converting to money
   is the consuming app's job.
-- **Not a rate limiter.** It prices; what you do with the price is up to you.
+- **Not a rate limiter.** It prices; you decide the limit and enforce it, see
+  [limiting expensive queries](docs/guides/query-limits.md).
 
 ## Docs
 
