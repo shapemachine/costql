@@ -31,14 +31,19 @@ export default defineConfig({
       sidebar: [
         { label: 'Playground', link: '/playground/' },
         { label: 'Quickstart', slug: 'docs/quickstart' },
-        { label: 'Limiting expensive queries', slug: 'docs/guides/query-limits' },
         { label: 'Tier fidelity', slug: 'docs/tiers' },
-        { label: 'Writing an adapter', slug: 'docs/adapters' },
-        { label: 'Agent-assisted onboarding', slug: 'docs/agents' },
-        { label: 'Instrumenting for T2/T3', slug: 'docs/instrumentation' },
-        { label: 'External calls', slug: 'docs/external-calls' },
-        { label: 'Publishing a pack', slug: 'docs/publishing' },
         { label: 'FAQ', slug: 'docs/faq' },
+        {
+          label: 'Guides',
+          items: [
+            { label: 'Limiting expensive queries', slug: 'docs/guides/query-limits' },
+            { label: 'Writing an adapter', slug: 'docs/adapters' },
+            { label: 'Agent-assisted onboarding', slug: 'docs/agents' },
+            { label: 'Instrumenting for T2/T3', slug: 'docs/instrumentation' },
+            { label: 'Publishing a pack', slug: 'docs/publishing' },
+            { label: 'Paying per query with x402', slug: 'docs/guides/x402' },
+          ],
+        },
         {
           label: 'Reference',
           items: [
@@ -47,6 +52,7 @@ export default defineConfig({
             { label: 'Architecture', slug: 'docs/architecture' },
             { label: 'The JS package', slug: 'docs/js' },
             { label: 'Quoting queries', slug: 'docs/quoting' },
+            { label: 'External calls', slug: 'docs/external-calls' },
             { label: 'Limitations', slug: 'docs/limitations' },
           ],
         },

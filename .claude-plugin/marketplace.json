@@ -5,7 +5,7 @@
     {
       "name": "costql",
       "source": ".",
-      "description": "Skills for costQL workflows: write an adapter for a new GraphQL API, build a pricing pack, and interpret/debug quote results."
+      "description": "Skills for costQL workflows: write an adapter for a new GraphQL API, build a pricing pack, interpret/debug quote results, and wire costQL into an x402 payment flow."
     }
   ]
 }

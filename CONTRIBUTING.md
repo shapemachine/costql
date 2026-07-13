@@ -47,6 +47,26 @@ The `conformance/quotes.json` diff **is** the review artifact: reviewers judge
 the price changes there. CI fails if the committed oracle doesn't match the
 engine. The TS port must then be updated in the same PR to stay conformant.
 
+## Docs: where a new page goes
+
+The sidebar (`site/astro.config.mjs`) has four homes. Classify a new page by
+what the reader is *doing* when they open it, not by its content — a page full
+of spec tables is still a Guide if the reader came to *do* something.
+
+- **Top-level** — orientation, read before the reader has a task. The spine;
+  keep it to a handful (Playground, Quickstart, Tier fidelity, FAQ). Test:
+  "would a first-time visitor open this *before* knowing what they want to do?"
+- **Guides** — task recipes, followed start-to-finish to accomplish one thing.
+  Test: "does the title fit *How to ___*?"
+- **Reference** — descriptive lookup, consulted mid-task and left; a spec or
+  definition, not read in sequence. Test: "would I jump here for a fact, then
+  bounce back?"
+- **Evidence** — a record of what was measured; backward-looking, defends a
+  claim. Test: "does this report a result or experiment?"
+
+Straddlers go by the reader's **primary verb**. A concept/explainer page is
+Top-level if it's foundational for everyone, otherwise Reference.
+
 ## Versioning & releases
 
 Semver. Releases are tag-driven (`git tag v0.x.y && git push --tags`):
