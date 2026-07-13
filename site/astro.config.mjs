@@ -32,7 +32,6 @@ export default defineConfig({
         { label: 'Playground', link: '/playground/' },
         { label: 'Quickstart', slug: 'docs/quickstart' },
         { label: 'Limiting expensive queries', slug: 'docs/guides/query-limits' },
-        { label: 'Paying per query with x402', slug: 'docs/guides/x402' },
         { label: 'Tier fidelity', slug: 'docs/tiers' },
         { label: 'Writing an adapter', slug: 'docs/adapters' },
         { label: 'Agent-assisted onboarding', slug: 'docs/agents' },
@@ -49,6 +48,7 @@ export default defineConfig({
             { label: 'The JS package', slug: 'docs/js' },
             { label: 'Quoting queries', slug: 'docs/quoting' },
             { label: 'Limitations', slug: 'docs/limitations' },
+            { label: 'Paying per query with x402', slug: 'docs/guides/x402' },
           ],
         },
         {
